@@ -1,0 +1,46 @@
+{
+    "name": "sassnowski/roach",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kai Sassnowski",
+            "email": "me@kai-sassnowski.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "guzzlehttp/guzzle": "^7.3",
+        "monolog/monolog": "^2.3",
+        "symfony/css-selector": "^5.3",
+        "symfony/dom-crawler": "^5.3",
+        "symfony/event-dispatcher": "^5.3"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.15",
+        "ergebnis/php-cs-fixer-config": "^3.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sassnowski\\Roach\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sassnowski\\Roach\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "composer normalize"
+        ],
+        "post-update-cmd": [
+            "composer normalize"
+        ],
+        "coding-standards": [
+            "mkdir -p .build/php-cs-fixer",
+            "php-cs-fixer fix --diff --verbose"
+        ]
+    }
+}
