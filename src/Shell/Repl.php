@@ -35,7 +35,7 @@ final class Repl extends Command
             ->addArgument('url', InputArgument::REQUIRED, 'The URL to fetch');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $input->setOption('ansi', true);
 
@@ -55,5 +55,7 @@ final class Repl extends Command
         $command->run(new ArrayInput(['url' => $url]), $output);
 
         $shell->run();
+
+        return 0;
     }
 }
