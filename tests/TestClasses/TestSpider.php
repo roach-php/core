@@ -22,11 +22,10 @@ final class TestSpider extends AbstractSpider
 {
     public function __construct(
         protected array $startUrls,
-        array $middleware,
-        array $itemProcesors,
+        protected array $middleware,
+        protected array $processors,
         private Closure $parseCallback,
     ) {
-        parent::__construct($middleware, $itemProcesors);
     }
 
     public function parse(Response $response): Generator

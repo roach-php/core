@@ -24,8 +24,11 @@ final class RequestDeduplicationMiddleware extends RequestMiddleware
      */
     private array $seenUris = [];
 
-    public function __construct(private Logger $logger)
+    private Logger $logger;
+
+    public function __construct(Logger $logger)
     {
+        $this->logger = $logger->withName('middleware.request_deduplication');
     }
 
     public function handle(Request $request, Handler $next): PromiseInterface

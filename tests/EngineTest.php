@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Tests;
 
 use GuzzleHttp\Promise\PromiseInterface;
+use Sassnowski\Roach\Container\SimpleContainer;
 use Sassnowski\Roach\Engine;
 use Sassnowski\Roach\Http\Middleware\Handler;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
@@ -36,6 +37,7 @@ final class EngineTest extends IntegrationTest
         parent::setUp();
 
         $_SERVER['__parse.called'] = 0;
+        $_SERVER['__processor.called'] = 0;
     }
 
     public function testCrawlsStartUrls(): void
@@ -46,7 +48,7 @@ final class EngineTest extends IntegrationTest
                 'http://localhost:8000/test2',
             )->build();
 
-        Engine::run($spider);
+        $this->startSpider($spider);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
@@ -63,7 +65,7 @@ final class EngineTest extends IntegrationTest
             })
             ->build();
 
-        Engine::run($spider);
+        $this->startSpider($spider);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test3', 1);
@@ -86,10 +88,10 @@ final class EngineTest extends IntegrationTest
                 'http://localhost:8000/test1',
                 'http://localhost:8000/test2',
             )
-            ->withMiddleware(new $middleware())
+            ->withMiddleware($middleware::class)
             ->build();
 
-        Engine::run($spider);
+        $this->startSpider($spider);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasNotCrawled('/test2');
@@ -106,7 +108,7 @@ final class EngineTest extends IntegrationTest
             ->withStartUrls('http://localhost:8000/test1')
             ->build();
 
-        Engine::run($spider);
+        $this->startSpider($spider);
 
         self::assertEquals(1, $_SERVER['__parse.called']);
     }
@@ -118,14 +120,14 @@ final class EngineTest extends IntegrationTest
 
             public function processItem(mixed $item)
             {
-                $this->item = $item;
+                ++$_SERVER['__processor.called'];
 
                 return $item;
             }
         };
         $spider = SpiderBuilder::new()
             ->withStartUrls('http://localhost:8000/test1')
-            ->withItemProcessors($processor)
+            ->withItemProcessors($processor::class)
             ->parseResponse(static function (Response $response, AbstractSpider $spider) {
                 $title = $response->filter('h1#headline')->text();
 
@@ -135,26 +137,24 @@ final class EngineTest extends IntegrationTest
             })
             ->build();
 
-        Engine::run($spider);
+        $this->startSpider($spider);
 
-        self::assertSame($processor->item, ['title' => 'Such headline, wow']);
+        self::assertEquals(1, $_SERVER['__processor.called']);
     }
 
     public function testHandleBothRequestAndItemEmittedFromSameParseCallback(): void
     {
         $processor = new class() {
-            public mixed $item = null;
-
             public function processItem(mixed $item)
             {
-                $this->item = $item;
+                ++$_SERVER['__processor.called'];
 
                 return $item;
             }
         };
         $spider = SpiderBuilder::new()
             ->withStartUrls('http://localhost:8000/test1')
-            ->withItemProcessors($processor)
+            ->withItemProcessors($processor::class)
             ->parseResponse(static function (Response $response, AbstractSpider $spider) {
                 yield ParseResult::item(['title' => '::title::']);
 
@@ -163,9 +163,14 @@ final class EngineTest extends IntegrationTest
             })
             ->build();
 
-        Engine::run($spider);
+        $this->startSpider($spider);
 
-        self::assertSame($processor->item, ['title' => '::title::']);
+        self::assertSame(1, $_SERVER['__processor.called']);
         $this->assertRouteWasCrawledTimes('/test2', 1);
+    }
+
+    private function startSpider(AbstractSpider $spider): void
+    {
+        (new Engine($spider, new ArrayRequestQueue(), new SimpleContainer()))->start();
     }
 }

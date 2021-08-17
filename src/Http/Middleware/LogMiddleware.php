@@ -20,8 +20,11 @@ use Sassnowski\Roach\Http\Response;
 
 final class LogMiddleware implements RequestMiddlewareInterface
 {
-    public function __construct(private Logger $logger)
+    private Logger $logger;
+
+    public function __construct(Logger $logger)
     {
+        $this->logger = $logger->withName('middleware.logging');
     }
 
     public function handle(Request $request, Handler $next): PromiseInterface

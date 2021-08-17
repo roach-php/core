@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.0",
         "guzzlehttp/guzzle": "^7.3",
+        "league/container": "^3.0",
         "monolog/monolog": "^2.3",
         "psy/psysh": "@stable",
         "symfony/console": "^5.3",

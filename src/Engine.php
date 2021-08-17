@@ -17,6 +17,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
+use League\Container\Container;
+use League\Container\ReflectionContainer;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Request;
@@ -38,16 +43,39 @@ final class Engine
     public function __construct(
         private AbstractSpider $spider,
         private RequestQueue $requestQueue,
+        private ContainerInterface $container,
         ?Client $client = null,
     ) {
         $this->client = $client ?: new Client();
-        $this->itemPipeline = new Pipeline($this->spider->getItemProcessors());
-        $this->middlewareStack = MiddlewareStack::create(...$this->spider->middleware());
+        $this->itemPipeline = new Pipeline(
+            \array_map(
+                fn (string $processor) => $this->container->get($processor),
+                $this->spider->processors(),
+            ),
+        );
+        $this->middlewareStack = MiddlewareStack::create(
+            ...\array_map(
+                fn (string $middleware) => $this->container->get($middleware),
+                $this->spider->middleware(),
+            ),
+        );
     }
 
-    public static function run(AbstractSpider $spider): void
+    public static function run(string $spider): void
     {
-        $engine = new Engine($spider, new ArrayRequestQueue());
+        $container = new Container();
+        $delegate = new ReflectionContainer();
+        $container->delegate($delegate);
+
+        $container->share(Logger::class, function () {
+            return (new Logger('default'))->pushHandler(new StreamHandler('php://stdout'));
+        });
+
+        $engine = new self(
+            $container->get($spider),
+            new ArrayRequestQueue(),
+            $container,
+        );
 
         $engine->start();
     }

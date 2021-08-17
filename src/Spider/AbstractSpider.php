@@ -14,8 +14,6 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Spider;
 
 use Generator;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Sassnowski\Roach\Http\Middleware\LogMiddleware;
 use Sassnowski\Roach\Http\Middleware\RequestDeduplicationMiddleware;
 use Sassnowski\Roach\Http\Request;
@@ -27,12 +25,9 @@ abstract class AbstractSpider
 
     protected array $startUrls = [];
 
-    private array $itemPipeline;
+    protected array $middleware = [];
 
-    public function __construct(private ?array $middleware = null, array $itemPipeline = [])
-    {
-        $this->itemPipeline = $itemPipeline;
-    }
+    protected array $processors = [];
 
     abstract public function parse(Response $response): Generator;
 
@@ -41,9 +36,9 @@ abstract class AbstractSpider
         return $this->getMiddleware();
     }
 
-    final public function getItemProcessors(): array
+    final public function processors(): array
     {
-        return $this->itemPipeline;
+        return $this->getProcessors();
     }
 
     /**
@@ -73,17 +68,19 @@ abstract class AbstractSpider
 
     protected function getMiddleware(): array
     {
-        return $this->middleware ?? $this->defaultMiddleware();
+        return !empty($this->middleware) ? $this->middleware : $this->defaultMiddleware();
     }
 
     protected function defaultMiddleware(): array
     {
-        $logger = new Logger(static::$name);
-        $logger->pushHandler(new StreamHandler('php://stdout'));
-
         return [
-            new RequestDeduplicationMiddleware($logger),
-            new LogMiddleware($logger),
+            RequestDeduplicationMiddleware::class,
+            LogMiddleware::class,
         ];
+    }
+
+    protected function getProcessors(): array
+    {
+        return $this->processors;
     }
 }

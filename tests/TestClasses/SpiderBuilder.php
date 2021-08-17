@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Tests\TestClasses;
 
 use Closure;
-use Sassnowski\Roach\Http\Middleware\RequestMiddlewareInterface;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\Spider\ParseResult;
 
@@ -37,7 +36,7 @@ final class SpiderBuilder
         return new self();
     }
 
-    public function withMiddleware(RequestMiddlewareInterface ...$middleware): self
+    public function withMiddleware(string ...$middleware): self
     {
         $this->middleware = $middleware;
 

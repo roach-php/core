@@ -27,7 +27,11 @@ abstract class IntegrationTest extends TestCase
     protected function setUp(): void
     {
         $this->skipIfServerNotRunning();
-        @\unlink(__DIR__ . '/Server/tmp/crawled.json');
+
+        try {
+            \unlink(__DIR__ . '/Server/tmp/crawled.json');
+        } catch (Throwable) {
+        }
     }
 
     protected function skipIfServerNotRunning(): void
@@ -41,12 +45,7 @@ abstract class IntegrationTest extends TestCase
 
     protected function assertRouteWasCrawledTimes(string $route, int $times): void
     {
-        $crawledRoutes = \json_decode(
-            \file_get_contents("{$this->serverUrl}/crawled-routes"),
-            true,
-            512,
-            JSON_THROW_ON_ERROR,
-        );
+        $crawledRoutes = $this->getCrawledRoutes();
 
         self::assertArrayHasKey($route, $crawledRoutes);
         self::assertSame($times, $crawledRoutes[$route]);
@@ -54,13 +53,16 @@ abstract class IntegrationTest extends TestCase
 
     protected function assertRouteWasNotCrawled(string $route): void
     {
-        $crawledRoutes = \json_decode(
+        self::assertArrayNotHasKey($route, $this->getCrawledRoutes());
+    }
+
+    private function getCrawledRoutes(): array
+    {
+        return \json_decode(
             \file_get_contents("{$this->serverUrl}/crawled-routes"),
             true,
             512,
             JSON_THROW_ON_ERROR,
         );
-
-        self::assertArrayNotHasKey($route, $crawledRoutes);
     }
 }
