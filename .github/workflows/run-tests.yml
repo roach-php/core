@@ -1,0 +1,35 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        php: [8.0]
+        dependency-version: [prefer-lowest, prefer-stable]
+
+    name: P${{ matrix.php }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --${{ matrix.dependency-version }} --no-interaction --prefer-source
+
+      - name: Start server
+        run: (php -S localhost:8000 -t ./tests/Server &) || /bin/true
+
+      - name: Execute tests
+        run: vendor/bin/phpunit
