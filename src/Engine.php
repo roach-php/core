@@ -8,7 +8,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
  *
- * @see https://github.com/ksassnowski/roach
+ * @see https://github.com/roach-php/roach
  */
 
 namespace Sassnowski\Roach;
@@ -67,7 +67,7 @@ final class Engine
         $delegate = new ReflectionContainer();
         $container->delegate($delegate);
 
-        $container->share(Logger::class, function () {
+        $container->share(Logger::class, static function () {
             return (new Logger('default'))->pushHandler(new StreamHandler('php://stdout'));
         });
 

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
  *
- * @see https://github.com/ksassnowski/roach
+ * @see https://github.com/roach-php/roach
  */
 
 namespace Sassnowski\Roach\Tests;
@@ -19,7 +19,6 @@ use Sassnowski\Roach\Http\Middleware\Handler;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Queue\ArrayRequestQueue;
 use Sassnowski\Roach\Spider\AbstractSpider;
 use Sassnowski\Roach\Spider\ParseResult;
 use Sassnowski\Roach\Tests\TestClasses\SpiderBuilder;
