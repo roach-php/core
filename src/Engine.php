@@ -22,6 +22,7 @@ use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\Pipeline;
+use Sassnowski\Roach\Queue\ArrayRequestQueue;
 use Sassnowski\Roach\Queue\RequestQueue;
 use Sassnowski\Roach\Spider\AbstractSpider;
 use Sassnowski\Roach\Spider\ParseResult;
@@ -42,6 +43,13 @@ final class Engine
         $this->client = $client ?: new Client();
         $this->itemPipeline = new Pipeline($this->spider->getItemProcessors());
         $this->middlewareStack = MiddlewareStack::create(...$this->spider->middleware());
+    }
+
+    public static function run(AbstractSpider $spider): void
+    {
+        $engine = new Engine($spider, new ArrayRequestQueue());
+
+        $engine->start();
     }
 
     public function start(): void

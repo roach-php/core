@@ -45,9 +45,8 @@ final class EngineTest extends IntegrationTest
                 'http://localhost:8000/test1',
                 'http://localhost:8000/test2',
             )->build();
-        $engine = new Engine($spider, new ArrayRequestQueue());
 
-        $engine->start();
+        Engine::run($spider);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
@@ -63,9 +62,8 @@ final class EngineTest extends IntegrationTest
                 }
             })
             ->build();
-        $engine = new Engine($spider, new ArrayRequestQueue());
 
-        $engine->start();
+        Engine::run($spider);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test3', 1);
@@ -90,9 +88,8 @@ final class EngineTest extends IntegrationTest
             )
             ->withMiddleware(new $middleware())
             ->build();
-        $engine = new Engine($spider, new ArrayRequestQueue());
 
-        $engine->start();
+        Engine::run($spider);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasNotCrawled('/test2');
@@ -108,9 +105,8 @@ final class EngineTest extends IntegrationTest
             })
             ->withStartUrls('http://localhost:8000/test1')
             ->build();
-        $engine = new Engine($spider, new ArrayRequestQueue());
 
-        $engine->start();
+        Engine::run($spider);
 
         self::assertEquals(1, $_SERVER['__parse.called']);
     }
@@ -138,9 +134,8 @@ final class EngineTest extends IntegrationTest
                 ]);
             })
             ->build();
-        $engine = new Engine($spider, new ArrayRequestQueue());
 
-        $engine->start();
+        Engine::run($spider);
 
         self::assertSame($processor->item, ['title' => 'Such headline, wow']);
     }
@@ -167,9 +162,8 @@ final class EngineTest extends IntegrationTest
                 });
             })
             ->build();
-        $engine = new Engine($spider, new ArrayRequestQueue());
 
-        $engine->start();
+        Engine::run($spider);
 
         self::assertSame($processor->item, ['title' => '::title::']);
         $this->assertRouteWasCrawledTimes('/test2', 1);
