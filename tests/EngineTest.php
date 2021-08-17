@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Tests;
 
 use GuzzleHttp\Promise\PromiseInterface;
-use Sassnowski\Roach\Container\SimpleContainer;
 use Sassnowski\Roach\Engine;
 use Sassnowski\Roach\Http\Middleware\Handler;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
@@ -48,7 +47,7 @@ final class EngineTest extends IntegrationTest
                 'http://localhost:8000/test2',
             )->build();
 
-        $this->startSpider($spider);
+        Engine::run($spider);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
@@ -65,7 +64,7 @@ final class EngineTest extends IntegrationTest
             })
             ->build();
 
-        $this->startSpider($spider);
+        Engine::run($spider);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test3', 1);
@@ -91,7 +90,7 @@ final class EngineTest extends IntegrationTest
             ->withMiddleware($middleware::class)
             ->build();
 
-        $this->startSpider($spider);
+        Engine::run($spider);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasNotCrawled('/test2');
@@ -108,7 +107,7 @@ final class EngineTest extends IntegrationTest
             ->withStartUrls('http://localhost:8000/test1')
             ->build();
 
-        $this->startSpider($spider);
+        Engine::run($spider);
 
         self::assertEquals(1, $_SERVER['__parse.called']);
     }
@@ -137,7 +136,7 @@ final class EngineTest extends IntegrationTest
             })
             ->build();
 
-        $this->startSpider($spider);
+        Engine::run($spider);
 
         self::assertEquals(1, $_SERVER['__processor.called']);
     }
@@ -163,14 +162,9 @@ final class EngineTest extends IntegrationTest
             })
             ->build();
 
-        $this->startSpider($spider);
+        Engine::run($spider);
 
         self::assertSame(1, $_SERVER['__processor.called']);
         $this->assertRouteWasCrawledTimes('/test2', 1);
-    }
-
-    private function startSpider(AbstractSpider $spider): void
-    {
-        (new Engine($spider, new ArrayRequestQueue(), new SimpleContainer()))->start();
     }
 }

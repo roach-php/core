@@ -61,7 +61,7 @@ final class Engine
         );
     }
 
-    public static function run(string $spider): void
+    public static function run(AbstractSpider $spider): void
     {
         $container = new Container();
         $delegate = new ReflectionContainer();
@@ -72,7 +72,7 @@ final class Engine
         });
 
         $engine = new self(
-            $container->get($spider),
+            $spider,
             new ArrayRequestQueue(),
             $container,
         );

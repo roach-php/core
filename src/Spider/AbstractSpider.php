@@ -68,15 +68,7 @@ abstract class AbstractSpider
 
     protected function getMiddleware(): array
     {
-        return !empty($this->middleware) ? $this->middleware : $this->defaultMiddleware();
-    }
-
-    protected function defaultMiddleware(): array
-    {
-        return [
-            RequestDeduplicationMiddleware::class,
-            LogMiddleware::class,
-        ];
+        return $this->middleware;
     }
 
     protected function getProcessors(): array
