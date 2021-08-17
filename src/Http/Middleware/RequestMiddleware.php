@@ -11,17 +11,17 @@ declare(strict_types=1);
  * @see https://github.com/ksassnowski/roach
  */
 
-namespace Sassnowski\Roach\Queue;
+namespace Sassnowski\Roach\Http\Middleware;
 
 use Sassnowski\Roach\Http\Request;
 
-interface RequestQueue
+abstract class RequestMiddleware implements RequestMiddlewareInterface
 {
-    public function enqueue(Request $request): void;
-
-    public function dequeue(): array;
-
-    public function empty(): bool;
-
-    public function count(): int;
+    /**
+     * @throws DropRequestException
+     */
+    protected function dropRequest(Request $request): void
+    {
+        throw new DropRequestException($request);
+    }
 }

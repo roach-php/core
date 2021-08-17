@@ -11,17 +11,15 @@ declare(strict_types=1);
  * @see https://github.com/ksassnowski/roach
  */
 
-namespace Sassnowski\Roach\Queue;
+namespace Sassnowski\Roach\Http\Middleware;
 
+use Exception;
 use Sassnowski\Roach\Http\Request;
 
-interface RequestQueue
+final class DropRequestException extends Exception
 {
-    public function enqueue(Request $request): void;
-
-    public function dequeue(): array;
-
-    public function empty(): bool;
-
-    public function count(): int;
+    public function __construct(public Request $request)
+    {
+        parent::__construct('Dropping request ' . $this->request->getUri());
+    }
 }

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Queue;
 
-use Sassnowski\Roach\Spider\Request;
+use Sassnowski\Roach\Http\Request;
 
 final class ArrayRequestQueue implements RequestQueue
 {
@@ -24,7 +24,7 @@ final class ArrayRequestQueue implements RequestQueue
         $this->requests[] = $request;
     }
 
-    public function dequeue(int $n = 1): array
+    public function dequeue(): array
     {
         $result = $this->requests;
 
@@ -36,5 +36,10 @@ final class ArrayRequestQueue implements RequestQueue
     public function count(): int
     {
         return \count($this->requests);
+    }
+
+    public function empty(): bool
+    {
+        return $this->count() === 0;
     }
 }

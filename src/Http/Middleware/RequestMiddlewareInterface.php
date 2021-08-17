@@ -11,17 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/ksassnowski/roach
  */
 
-namespace Sassnowski\Roach\Queue;
+namespace Sassnowski\Roach\Http\Middleware;
 
+use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Http\Request;
 
-interface RequestQueue
+interface RequestMiddlewareInterface
 {
-    public function enqueue(Request $request): void;
-
-    public function dequeue(): array;
-
-    public function empty(): bool;
-
-    public function count(): int;
+    public function handle(Request $request, Handler $next): PromiseInterface;
 }

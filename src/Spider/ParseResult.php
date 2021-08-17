@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Spider;
 
 use Exception;
+use Sassnowski\Roach\Http\Request;
 
 final class ParseResult
 {
@@ -26,10 +27,10 @@ final class ParseResult
         return new self(null, $item);
     }
 
-    public static function request(string $url, string $parseCallback = 'parse'): self
+    public static function request(string $url, callable $parseCallback): self
     {
         return new self(
-            new Request($url, 'GET', $parseCallback),
+            new Request($url, $parseCallback),
             null,
         );
     }

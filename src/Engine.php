@@ -16,34 +16,32 @@ namespace Sassnowski\Roach;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\PromiseInterface;
-use GuzzleHttp\Psr7\Response;
 use Iterator;
 use Psr\Http\Message\ResponseInterface;
-use Sassnowski\Roach\Events\ItemEmitted;
-use Sassnowski\Roach\Events\RequestDropped;
-use Sassnowski\Roach\Events\RequestScheduling;
-use Sassnowski\Roach\Events\RequestSending;
-use Sassnowski\Roach\Events\RequestSent;
-use Sassnowski\Roach\Events\ResponseReceived;
-use Sassnowski\Roach\Events\RunFinished;
-use Sassnowski\Roach\Scheduler\Scheduler;
+use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
+use Sassnowski\Roach\Http\Request;
+use Sassnowski\Roach\Http\Response;
+use Sassnowski\Roach\ItemPipeline\Pipeline;
+use Sassnowski\Roach\Queue\RequestQueue;
 use Sassnowski\Roach\Spider\AbstractSpider;
 use Sassnowski\Roach\Spider\ParseResult;
-use Sassnowski\Roach\Spider\Request;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Engine
 {
     private Client $client;
 
+    private Pipeline $itemPipeline;
+
+    private MiddlewareStack $middlewareStack;
+
     public function __construct(
         private AbstractSpider $spider,
-        private Scheduler $scheduler,
-        private EventDispatcherInterface $dispatcher,
+        private RequestQueue $requestQueue,
         ?Client $client = null,
     ) {
         $this->client = $client ?: new Client();
+        $this->itemPipeline = new Pipeline($this->spider->getItemProcessors());
+        $this->middlewareStack = MiddlewareStack::create(...$this->spider->middleware());
     }
 
     public function start(): void
@@ -53,18 +51,13 @@ final class Engine
         }
 
         $this->work();
-
-        $this->dispatcher->dispatch(
-            new RunFinished(),
-            RunFinished::NAME,
-        );
     }
 
     private function work(): void
     {
-        while ($this->scheduler->hasRequests()) {
+        while (!$this->requestQueue->empty()) {
             $requests = function () {
-                foreach ($this->scheduler->nextRequests() as $request) {
+                foreach ($this->requestQueue->dequeue() as $request) {
                     yield function () use ($request) {
                         return $this->sendRequest($request);
                     };
@@ -75,78 +68,33 @@ final class Engine
         }
     }
 
-    private function onFulfilled(Response $response, Request $request): void
+    private function onFulfilled(Http\Response $response, Request $request): void
     {
-        $this->dispatcher->dispatch(
-            new ResponseReceived($response, $request),
-            ResponseReceived::NAME,
-        );
-
-        $crawler = new Crawler((string) $response->getBody(), $this->spider->baseUri);
-
         /** @var ParseResult[] $parseResults */
-        $parseResults = $this->spider->{$request->parseMethod}($crawler);
+        $parseResults = ($request->callback)($response);
 
         foreach ($parseResults as $result) {
-            $request = $this->handleParseResult($result);
-
-            if (null !== $request) {
-                $this->scheduleRequest($request);
-            }
+            $result->isRequest()
+                ? $this->scheduleRequest($result->getRequest())
+                : $this->itemPipeline->sendThroughPipeline($result->getItem());
         }
     }
 
-    private function handleParseResult(ParseResult $result): ?Request
+    private function sendRequest(Request $request): ?PromiseInterface
     {
-        if ($result->isItem()) {
-            $this->dispatcher->dispatch(
-                new ItemEmitted($result->getItem()),
-                ItemEmitted::NAME,
-            );
-
-            return null;
-        }
-
-        return $result->getRequest();
-    }
-
-    private function sendRequest(Request $request): PromiseInterface
-    {
-        $this->dispatcher->dispatch(
-            new RequestSending($request),
-            RequestSending::NAME,
-        );
-
-        $promise = $this->client->sendAsync($request)
-            ->then(function (ResponseInterface $response) use ($request): void {
-                $this->onFulfilled($response, $request);
-            });
-
-        $this->dispatcher->dispatch(
-            new RequestSent($request),
-            RequestSent::NAME,
-        );
-
-        return $promise;
+        return $this->middlewareStack->dispatchRequest(
+            $request,
+            fn (Request $r) => $this->client->sendAsync($r)->then(
+                static fn (ResponseInterface $response) => new Http\Response($response, $r),
+            ),
+        )?->then(function (Response $response) use ($request): void {
+            $this->onFulfilled($response, $request);
+        });
     }
 
     private function scheduleRequest(Request $request): void
     {
-        $this->dispatcher->dispatch(
-            new RequestScheduling($request),
-            RequestScheduling::NAME,
-        );
-
-        if ($request->wasDropped()) {
-            $this->dispatcher->dispatch(
-                new RequestDropped($request),
-                RequestDropped::NAME,
-            );
-
-            return;
-        }
-
-        $this->scheduler->scheduleRequest($request);
+        $this->requestQueue->enqueue($request);
     }
 
     private function sendRequestsConcurrently(array | Iterator $requests): void

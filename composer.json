@@ -19,7 +19,11 @@
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",
         "ergebnis/php-cs-fixer-config": "^3.0",
-        "phpunit/phpunit": "^9.5"
+        "http-interop/http-factory-guzzle": "^1.2",
+        "phpunit/phpunit": "^9.5",
+        "psy/psysh": "@stable",
+        "slim/slim": "4.*",
+        "symfony/console": "^5.3"
     },
     "autoload": {
         "psr-4": {
@@ -31,6 +35,9 @@
             "Sassnowski\\Roach\\Tests\\": "tests/"
         }
     },
+    "bin": [
+        "bin/roach"
+    ],
     "scripts": {
         "post-install-cmd": [
             "composer normalize"
