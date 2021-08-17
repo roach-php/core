@@ -12,18 +12,17 @@
         "php": "^8.0",
         "guzzlehttp/guzzle": "^7.3",
         "monolog/monolog": "^2.3",
+        "psy/psysh": "@stable",
+        "symfony/console": "^5.3",
         "symfony/css-selector": "^5.3",
-        "symfony/dom-crawler": "^5.3",
-        "symfony/event-dispatcher": "^5.3"
+        "symfony/dom-crawler": "^5.3"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",
         "ergebnis/php-cs-fixer-config": "^3.0",
         "http-interop/http-factory-guzzle": "^1.2",
         "phpunit/phpunit": "^9.5",
-        "psy/psysh": "@stable",
-        "slim/slim": "4.*",
-        "symfony/console": "^5.3"
+        "slim/slim": "4.*"
     },
     "autoload": {
         "psr-4": {

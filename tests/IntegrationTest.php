@@ -27,7 +27,7 @@ abstract class IntegrationTest extends TestCase
     protected function setUp(): void
     {
         $this->skipIfServerNotRunning();
-        \unlink(__DIR__ . '/Server/tmp/crawled.json');
+        @\unlink(__DIR__ . '/Server/tmp/crawled.json');
     }
 
     protected function skipIfServerNotRunning(): void
