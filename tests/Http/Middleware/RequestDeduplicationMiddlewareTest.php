@@ -45,7 +45,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testDropsRequestIfItWasAlreadySeenBefore(): void
     {
-        $request = $this->createRequest();
+        $request = $this->createRequest('https://example.com');
 
         $this->middleware->handle($request, $this->handler);
 
@@ -55,8 +55,8 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testPassesRequestAlongIfItHasntBeenSeenBefore(): void
     {
-        $requestA = $this->createRequest('::url-a::');
-        $requestB = $this->createRequest('::url-b::');
+        $requestA = $this->createRequest('https://example.com/a');
+        $requestB = $this->createRequest('https://example.com/b');
 
         $this->middleware->handle($requestA, $this->handler);
         $this->middleware->handle($requestB, $this->handler);
@@ -67,7 +67,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testLogDroppedRequestsIfLoggerWasProvided(): void
     {
-        $request = $this->createRequest();
+        $request = $this->createRequest('https://example.com');
 
         $this->middleware->handle($request, $this->handler);
 
@@ -80,8 +80,95 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
             $this->logger->messageWasLogged(
                 'info',
                 '[RequestDeduplicationMiddleware] Dropping duplicate request',
-                ['uri' => '::url::'],
+                ['uri' => 'https://example.com'],
             ),
         );
+    }
+
+    public function testIgnoresTrailingSlashesByDefaultWhenComparingUrls(): void
+    {
+        $requestA = $this->createRequest('https://example.com');
+        $requestB = $this->createRequest('https://example.com/');
+
+        $this->middleware->handle($requestA, $this->handler);
+
+        $this->expectException(DropRequestException::class);
+        $this->middleware->handle($requestB, $this->handler);
+    }
+
+    public function testCanBeConfiguredToIncludeTrailingSlashesWhenComparingUrls(): void
+    {
+        $requestA = $this->createRequest('https://example.com');
+        $requestB = $this->createRequest('https://example.com/');
+        $this->middleware->configure(['ignore_trailing_slashes' => false]);
+
+        $this->middleware->handle($requestA, $this->handler);
+        $this->middleware->handle($requestB, $this->handler);
+
+        $this->handler->assertWasCalledWith($requestA);
+        $this->handler->assertWasCalledWith($requestB);
+    }
+
+    public function testHandlesTrailingSlashesCorrectlyWhenUrlHasFragments(): void
+    {
+        $requestA = $this->createRequest('https://example.com#fragment');
+        $requestB = $this->createRequest('https://example.com/#fragment');
+        $this->middleware->configure([
+            'ignore_trailing_slashes' => true,
+            'ignore_url_fragments' => false,
+        ]);
+
+        $this->middleware->handle($requestA, $this->handler);
+
+        $this->expectException(DropRequestException::class);
+        $this->middleware->handle($requestB, $this->handler);
+    }
+
+    public function testIncludesUrlFragmentsByDefaultWhenComparingUrls(): void
+    {
+        $requestA = $this->createRequest('https://example.com');
+        $requestB = $this->createRequest('https://example.com#fragment');
+
+        $this->middleware->handle($requestA, $this->handler);
+        $this->middleware->handle($requestB, $this->handler);
+
+        $this->handler->assertWasCalledWith($requestA);
+        $this->handler->assertWasCalledWith($requestB);
+    }
+
+    public function testCanBeConfiguredToIgnoreUrlFragments(): void
+    {
+        $requestA = $this->createRequest('https://example.com');
+        $requestB = $this->createRequest('https://example.com#fragment');
+        $this->middleware->configure(['ignore_url_fragments' => true]);
+
+        $this->middleware->handle($requestA, $this->handler);
+
+        $this->expectException(DropRequestException::class);
+        $this->middleware->handle($requestB, $this->handler);
+    }
+
+    public function testIncludesQueryStringByDefaultWhenComparingUrls(): void
+    {
+        $requestA = $this->createRequest('https://example.com');
+        $requestB = $this->createRequest('https://example.com?foo=bar');
+
+        $this->middleware->handle($requestA, $this->handler);
+        $this->middleware->handle($requestB, $this->handler);
+
+        $this->handler->assertWasCalledWith($requestA);
+        $this->handler->assertWasCalledWith($requestB);
+    }
+
+    public function testCanBeConfiguredToIgnoreQueryStringsWhenComparingUrls(): void
+    {
+        $requestA = $this->createRequest('https://example.com');
+        $requestB = $this->createRequest('https://example.com?foo=bar');
+        $this->middleware->configure(['ignore_query_string' => true]);
+
+        $this->middleware->handle($requestA, $this->handler);
+
+        $this->expectException(DropRequestException::class);
+        $this->middleware->handle($requestB, $this->handler);
     }
 }
