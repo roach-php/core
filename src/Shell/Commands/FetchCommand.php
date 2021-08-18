@@ -45,7 +45,7 @@ Available variables:
     \$response:      <{$response->getStatus()} '{$url}'>
     \$html:          Raw HTML contents of response
 Commands:
-    fetch <url>     Fetch URL and update \$response object
+    fetch <url>     Fetch URL and update the \$response and \$html objects
 </info>
 TEXT
         );
