@@ -22,8 +22,6 @@ use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\Spider\ParseResult;
 
 /**
- * @covers \Sassnowski\Roach\Engine
- *
  * @internal
  * @group integration
  */

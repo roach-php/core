@@ -18,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Logging\FakeLogger;
 
 /**
- * @covers \Sassnowski\Roach\Logging\FakeLogger
  * @group testing
  *
  * @internal

@@ -23,7 +23,6 @@ use Sassnowski\Roach\Logging\FakeLogger;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
- * @covers \Sassnowski\Roach\Http\Middleware\RequestDeduplicationMiddleware
  * @group middleware
  *
  * @internal
@@ -76,7 +75,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
         $middleware->handle($request, $handler);
 
         self::assertTrue(
-            $logger->messageWasLogged('info', 'Dropping duplicate request', ['uri' => '::url::'])
+            $logger->messageWasLogged('info', 'Dropping duplicate request', ['uri' => '::url::']),
         );
     }
 

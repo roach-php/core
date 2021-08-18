@@ -18,7 +18,6 @@ use Sassnowski\Roach\Queue\ArrayRequestQueue;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
- * @covers \Sassnowski\Roach\Queue\ArrayRequestQueue
  * @group queue
  *
  * @internal

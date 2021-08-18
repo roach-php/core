@@ -26,7 +26,6 @@ use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
- * @covers \Sassnowski\Roach\Http\Middleware\MiddlewareStack
  * @group middleware
  *
  * @internal

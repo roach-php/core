@@ -1,6 +1,7 @@
 <?php
 
 use Ergebnis\PhpCsFixer\Config;
+use PhpCsFixer\RuleSet\RuleSet;
 
 $header = <<<EOF
 Copyright (c) 2021 Kai Sassnowski
@@ -11,7 +12,9 @@ the LICENSE file that was distributed with this source code.
 @see https://github.com/roach-php/roach
 EOF;
 
-$config = Config\Factory::fromRuleSet(new Config\RuleSet\Php80($header));
+$config = Config\Factory::fromRuleSet(new Config\RuleSet\Php80($header), [
+    'php_unit_test_class_requires_covers' => false,
+]);
 
 $config->getFinder()->in(__DIR__);
 $config->setCacheFile(__DIR__ . '/.build/php-cs-fixer/.php-cs-fixer.cache');
