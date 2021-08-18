@@ -16,7 +16,8 @@
         "psy/psysh": "@stable",
         "symfony/console": "^5.3",
         "symfony/css-selector": "^5.3",
-        "symfony/dom-crawler": "^5.3"
+        "symfony/dom-crawler": "^5.3",
+        "symfony/options-resolver": "^5.3"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",

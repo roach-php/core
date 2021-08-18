@@ -21,7 +21,6 @@ use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Middleware\HandlerInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
-use Sassnowski\Roach\Http\Middleware\RequestMiddlewareInterface;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
@@ -81,7 +80,7 @@ final class MiddlewareStackTest extends TestCase
     }
 }
 
-final class MiddlewareA implements RequestMiddlewareInterface
+final class MiddlewareA extends RequestMiddleware
 {
     public function handle(Request $request, HandlerInterface $next): PromiseInterface
     {
@@ -89,7 +88,7 @@ final class MiddlewareA implements RequestMiddlewareInterface
     }
 }
 
-final class MiddlewareB implements RequestMiddlewareInterface
+final class MiddlewareB extends RequestMiddleware
 {
     public function handle(Request $request, HandlerInterface $next): PromiseInterface
     {

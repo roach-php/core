@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Tests\Http\Middleware;
 
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Http\Middleware\SetUserAgentMiddleware;
+use Sassnowski\Roach\Http\Middleware\UserAgentMiddleware;
 use Sassnowski\Roach\Testing\FakeHandler;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
@@ -35,7 +35,7 @@ final class UserAgentMiddlewareTest extends TestCase
 
     public function testSetDefaultUserAgentOnRequest(): void
     {
-        $middleware = new SetUserAgentMiddleware();
+        $middleware = new UserAgentMiddleware();
 
         $response = $middleware->handle($this->createRequest(), $this->handler)->wait();
 
@@ -46,7 +46,8 @@ final class UserAgentMiddlewareTest extends TestCase
 
     public function testSetCustomUserAgentOnRequest(): void
     {
-        $middleware = new SetUserAgentMiddleware('custom');
+        $middleware = new UserAgentMiddleware();
+        $middleware->configure(['userAgent' => 'custom']);
 
         $response = $middleware->handle($this->createRequest(), $this->handler)->wait();
 

@@ -14,9 +14,24 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Http\Middleware;
 
 use Sassnowski\Roach\Http\Request;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class RequestMiddleware implements RequestMiddlewareInterface
 {
+    private OptionsResolver $resolver;
+
+    public function __construct(protected array $options = [])
+    {
+        $this->resolver = new OptionsResolver();
+
+        $this->resolver->setDefaults($options);
+    }
+
+    final public function configure(array $options): void
+    {
+        $this->options = $this->resolver->resolve($options);
+    }
+
     /**
      * @throws DropRequestException
      */

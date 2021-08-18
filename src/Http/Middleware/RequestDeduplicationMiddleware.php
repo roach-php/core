@@ -26,6 +26,7 @@ final class RequestDeduplicationMiddleware extends RequestMiddleware
 
     public function __construct(private ?LoggerInterface $logger = null)
     {
+        parent::__construct();
     }
 
     public function handle(Request $request, HandlerInterface $next): PromiseInterface

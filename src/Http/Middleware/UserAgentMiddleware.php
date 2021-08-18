@@ -16,14 +16,19 @@ namespace Sassnowski\Roach\Http\Middleware;
 use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Http\Request;
 
-final class SetUserAgentMiddleware implements RequestMiddlewareInterface
+final class UserAgentMiddleware extends RequestMiddleware
 {
-    public function __construct(private string $userAgent = 'roach-php')
+    protected string $agent;
+
+    public function __construct()
     {
+        parent::__construct(['userAgent' => 'roach-php']);
     }
 
     public function handle(Request $request, HandlerInterface $next): PromiseInterface
     {
-        return $next($request->withHeader('User-Agent', $this->userAgent));
+        return $next(
+            $request->withHeader('User-Agent', $this->options['userAgent']),
+        );
     }
 }

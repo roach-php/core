@@ -22,4 +22,6 @@ interface RequestMiddlewareInterface
      * @throws DropRequestException thrown if the request should not be processed further
      */
     public function handle(Request $request, HandlerInterface $next): PromiseInterface;
+
+    public function configure(array $options): void;
 }

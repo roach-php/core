@@ -17,10 +17,11 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Log\LoggerInterface;
 use Sassnowski\Roach\Http\Request;
 
-final class LoggerMiddleware implements RequestMiddlewareInterface
+final class LoggerMiddleware extends RequestMiddleware
 {
     public function __construct(private LoggerInterface $logger)
     {
+        parent::__construct();
     }
 
     public function handle(Request $request, HandlerInterface $next): PromiseInterface
