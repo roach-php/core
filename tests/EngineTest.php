@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Tests;
 
-use Closure;
 use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Engine;
 use Sassnowski\Roach\Http\Middleware\Handler;
@@ -30,6 +29,8 @@ use Sassnowski\Roach\Spider\ParseResult;
  */
 final class EngineTest extends IntegrationTest
 {
+    use InteractsWithRequests;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -159,13 +160,5 @@ final class EngineTest extends IntegrationTest
         self::assertSame(['title' => '::title::'], $processor->item);
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
-    }
-
-    private function createRequest(string $url, ?Closure $callback = null): Request
-    {
-        $callback ??= static function (Response $response): void {
-        };
-
-        return new Request($url, $callback);
     }
 }
