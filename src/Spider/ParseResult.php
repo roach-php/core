@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Spider;
 
-use Exception;
+use Closure;
 use Sassnowski\Roach\Http\Request;
 
 final class ParseResult
 {
-    private function __construct(private ?Request $request, private $item)
+    private function __construct(private ?Request $request, private mixed $item)
     {
     }
 
@@ -35,31 +35,10 @@ final class ParseResult
         );
     }
 
-    public function isRequest(): bool
+    public function apply(Closure $ifRequest, Closure $ifItem): void
     {
-        return null !== $this->request;
-    }
-
-    public function isItem(): bool
-    {
-        return null !== $this->item;
-    }
-
-    public function getRequest(): Request
-    {
-        if (!$this->isRequest()) {
-            throw new Exception('no request');
-        }
-
-        return $this->request;
-    }
-
-    public function getItem(): mixed
-    {
-        if (!$this->isItem()) {
-            throw new Exception('no item');
-        }
-
-        return $this->item;
+        $this->request !== null
+            ? $ifRequest($this->request)
+            : $ifItem($this->item);
     }
 }

@@ -83,9 +83,10 @@ final class Engine
         $parseResults = ($request->callback)($response);
 
         foreach ($parseResults as $result) {
-            $result->isRequest()
-                ? $this->scheduleRequest($result->getRequest())
-                : $this->itemPipeline->sendThroughPipeline($result->getItem());
+            $result->apply(
+                fn (Request $request) => $this->scheduleRequest($request),
+                fn (mixed $item) => $this->itemPipeline->sendThroughPipeline($item),
+            );
         }
     }
 
