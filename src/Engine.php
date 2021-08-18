@@ -17,11 +17,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
-use League\Container\Container;
-use League\Container\ReflectionContainer;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Request;
@@ -29,60 +24,38 @@ use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\Pipeline;
 use Sassnowski\Roach\Queue\ArrayRequestQueue;
 use Sassnowski\Roach\Queue\RequestQueue;
-use Sassnowski\Roach\Spider\AbstractSpider;
 use Sassnowski\Roach\Spider\ParseResult;
 
 final class Engine
 {
-    private Client $client;
-
-    private Pipeline $itemPipeline;
-
-    private MiddlewareStack $middlewareStack;
-
     public function __construct(
-        private AbstractSpider $spider,
+        private array $startRequests,
         private RequestQueue $requestQueue,
-        private ContainerInterface $container,
-        ?Client $client = null,
+        private MiddlewareStack $middlewareStack,
+        private Pipeline $itemPipeline,
+        private Client $client,
     ) {
-        $this->client = $client ?: new Client();
-        $this->itemPipeline = new Pipeline(
-            \array_map(
-                fn (string $processor) => $this->container->get($processor),
-                $this->spider->processors(),
-            ),
-        );
-        $this->middlewareStack = MiddlewareStack::create(
-            ...\array_map(
-                fn (string $middleware) => $this->container->get($middleware),
-                $this->spider->middleware(),
-            ),
-        );
     }
 
-    public static function run(AbstractSpider $spider): void
-    {
-        $container = new Container();
-        $delegate = new ReflectionContainer();
-        $container->delegate($delegate);
-
-        $container->share(Logger::class, static function () {
-            return (new Logger('default'))->pushHandler(new StreamHandler('php://stdout'));
-        });
-
-        $engine = new self(
-            $spider,
-            new ArrayRequestQueue(),
-            $container,
+    public static function create(
+        array $startRequests,
+        ?RequestQueue $requestQueue = null,
+        array $middleware = [],
+        array $itemProcessors = [],
+        ?Client $client = null,
+    ): self {
+        return new self(
+            $startRequests,
+            $requestQueue ?: new ArrayRequestQueue(),
+            MiddlewareStack::create(...$middleware),
+            new Pipeline($itemProcessors),
+            $client ?: new Client(),
         );
-
-        $engine->start();
     }
 
     public function start(): void
     {
-        foreach ($this->spider->startRequests() as $request) {
+        foreach ($this->startRequests as $request) {
             $this->scheduleRequest($request);
         }
 
@@ -120,8 +93,8 @@ final class Engine
     {
         return $this->middlewareStack->dispatchRequest(
             $request,
-            fn (Request $r) => $this->client->sendAsync($r)->then(
-                static fn (ResponseInterface $response) => new Http\Response($response, $r),
+            fn (Request $req) => $this->client->sendAsync($req)->then(
+                static fn (ResponseInterface $response) => new Http\Response($response, $req),
             ),
         )?->then(function (Response $response) use ($request): void {
             $this->onFulfilled($response, $request);

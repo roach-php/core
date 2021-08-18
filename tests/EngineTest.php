@@ -13,20 +13,20 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Tests;
 
+use Closure;
 use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Engine;
 use Sassnowski\Roach\Http\Middleware\Handler;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Spider\AbstractSpider;
 use Sassnowski\Roach\Spider\ParseResult;
-use Sassnowski\Roach\Tests\TestClasses\SpiderBuilder;
 
 /**
  * @covers \Sassnowski\Roach\Engine
  *
  * @internal
+ * @group integration
  */
 final class EngineTest extends IntegrationTest
 {
@@ -35,18 +35,16 @@ final class EngineTest extends IntegrationTest
         parent::setUp();
 
         $_SERVER['__parse.called'] = 0;
-        $_SERVER['__processor.called'] = 0;
     }
 
     public function testCrawlsStartUrls(): void
     {
-        $spider = SpiderBuilder::new()
-            ->withStartUrls(
-                'http://localhost:8000/test1',
-                'http://localhost:8000/test2',
-            )->build();
+        $startRequests = [
+            $this->createRequest('http://localhost:8000/test1'),
+            $this->createRequest('http://localhost:8000/test2'),
+        ];
 
-        Engine::run($spider);
+        Engine::create($startRequests)->start();
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
@@ -54,16 +52,16 @@ final class EngineTest extends IntegrationTest
 
     public function testCrawlUrlsReturnedFromParseCallback(): void
     {
-        $spider = SpiderBuilder::new()
-            ->withStartUrls('http://localhost:8000/test2')
-            ->parseResponse(static function (Response $response, AbstractSpider $spider) {
-                foreach ($response->filter('a')->links() as $link) {
-                    yield ParseResult::request($link->getUri(), [$spider, 'parse']);
-                }
-            })
-            ->build();
+        $parseFunction = static function (Response $response) {
+            foreach ($response->filter('a')->links() as $link) {
+                yield ParseResult::request($link->getUri(), static fn (Response $response) => yield from []);
+            }
+        };
+        $startRequests = [
+            $this->createRequest('http://localhost:8000/test2', $parseFunction),
+        ];
 
-        Engine::run($spider);
+        Engine::create($startRequests)->start();
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test3', 1);
@@ -81,15 +79,13 @@ final class EngineTest extends IntegrationTest
                 return $next($request);
             }
         };
-        $spider = SpiderBuilder::new()
-            ->withStartUrls(
-                'http://localhost:8000/test1',
-                'http://localhost:8000/test2',
-            )
-            ->withMiddleware($middleware::class)
-            ->build();
+        $startRequests = [
+            $this->createRequest('http://localhost:8000/test1'),
+            $this->createRequest('http://localhost:8000/test2'),
+        ];
 
-        Engine::run($spider);
+        Engine::create($startRequests, middleware: [$middleware])
+            ->start();
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasNotCrawled('/test2');
@@ -97,16 +93,16 @@ final class EngineTest extends IntegrationTest
 
     public function testCallCorrectParseCallbackForRequest(): void
     {
-        $spider = SpiderBuilder::new()
-            ->parseResponse(static function (Response $response, AbstractSpider $spider) {
-                yield ParseResult::request('http://localhost:8000/test2', static function (Response $response): void {
-                    ++$_SERVER['__parse.called'];
-                });
-            })
-            ->withStartUrls('http://localhost:8000/test1')
-            ->build();
+        $parseCallback = static function (Response $response) {
+            yield ParseResult::request('http://localhost:8000/test2', static function (Response $response): void {
+                ++$_SERVER['__parse.called'];
+            });
+        };
+        $startRequests = [
+            $this->createRequest('http://localhost:8000/test1', $parseCallback),
+        ];
 
-        Engine::run($spider);
+        Engine::create($startRequests)->start();
 
         self::assertEquals(1, $_SERVER['__parse.called']);
     }
@@ -118,52 +114,58 @@ final class EngineTest extends IntegrationTest
 
             public function processItem(mixed $item)
             {
-                ++$_SERVER['__processor.called'];
+                $this->item = $item;
 
                 return $item;
             }
         };
-        $spider = SpiderBuilder::new()
-            ->withStartUrls('http://localhost:8000/test1')
-            ->withItemProcessors($processor::class)
-            ->parseResponse(static function (Response $response, AbstractSpider $spider) {
-                $title = $response->filter('h1#headline')->text();
-
+        $startRequests = [
+            $this->createRequest('http://localhost:8000/test1', static function (Response $response) {
                 yield ParseResult::item([
-                    'title' => $title,
+                    'title' => $response->filter('h1#headline')->text(),
                 ]);
-            })
-            ->build();
+            }),
+        ];
 
-        Engine::run($spider);
+        Engine::create($startRequests, itemProcessors: [$processor])->start();
 
-        self::assertEquals(1, $_SERVER['__processor.called']);
+        self::assertSame(['title' => 'Such headline, wow'], $processor->item);
     }
 
     public function testHandleBothRequestAndItemEmittedFromSameParseCallback(): void
     {
         $processor = new class() {
+            public mixed $item = null;
+
             public function processItem(mixed $item)
             {
-                ++$_SERVER['__processor.called'];
+                $this->item = $item;
 
                 return $item;
             }
         };
-        $spider = SpiderBuilder::new()
-            ->withStartUrls('http://localhost:8000/test1')
-            ->withItemProcessors($processor::class)
-            ->parseResponse(static function (Response $response, AbstractSpider $spider) {
-                yield ParseResult::item(['title' => '::title::']);
+        $parseCallback = static function (Response $response) {
+            yield ParseResult::item(['title' => '::title::']);
 
-                yield ParseResult::request('http://localhost:8000/test2', static function (): void {
-                });
-            })
-            ->build();
+            yield ParseResult::request('http://localhost:8000/test2', static function (): void {
+            });
+        };
+        $startRequests = [
+            $this->createRequest('http://localhost:8000/test1', $parseCallback),
+        ];
 
-        Engine::run($spider);
+        Engine::create($startRequests, itemProcessors: [$processor])->start();
 
-        self::assertSame(1, $_SERVER['__processor.called']);
+        self::assertSame(['title' => '::title::'], $processor->item);
+        $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
+    }
+
+    private function createRequest(string $url, ?Closure $callback = null): Request
+    {
+        $callback ??= static function (Response $response): void {
+        };
+
+        return new Request($url, $callback);
     }
 }
