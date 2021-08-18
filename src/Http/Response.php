@@ -23,7 +23,7 @@ final class Response
 {
     private Crawler $crawler;
 
-    public function __construct(private GuzzleResponse $response, Request $request)
+    public function __construct(private GuzzleResponse $response, private Request $request)
     {
         $this->crawler = new Crawler((string) $response->getBody(), (string) $request->getUri());
     }
@@ -31,6 +31,11 @@ final class Response
     public function __call(string $method, array $args)
     {
         return $this->crawler->{$method}(...$args);
+    }
+
+    public function getRequest(): Request
+    {
+        return $this->request;
     }
 
     public function getStatus(): int

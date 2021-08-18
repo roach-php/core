@@ -15,12 +15,13 @@ namespace Sassnowski\Roach\Tests\Http\Middleware;
 
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Middleware\LoggerMiddleware;
-use Sassnowski\Roach\Testing\FakeLogger;
 use Sassnowski\Roach\Testing\FakeHandler;
+use Sassnowski\Roach\Testing\FakeLogger;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
  * @internal
+ * @group middleware
  */
 final class LoggerMiddlewareTest extends TestCase
 {
