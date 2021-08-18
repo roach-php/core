@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Http\Middleware;
 
 use GuzzleHttp\Promise\PromiseInterface;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Sassnowski\Roach\Http\Request;
 
 final class RequestDeduplicationMiddleware extends RequestMiddleware
@@ -24,11 +24,8 @@ final class RequestDeduplicationMiddleware extends RequestMiddleware
      */
     private array $seenUris = [];
 
-    private Logger $logger;
-
-    public function __construct(Logger $logger)
+    public function __construct(private ?LoggerInterface $logger = null)
     {
-        $this->logger = $logger->withName('middleware.request_deduplication');
     }
 
     public function handle(Request $request, Handler $next): PromiseInterface
@@ -36,7 +33,7 @@ final class RequestDeduplicationMiddleware extends RequestMiddleware
         $uri = (string) $request->getUri();
 
         if (\in_array($uri, $this->seenUris, true)) {
-            $this->logger->info('Dropping duplicate request', ['uri' => $uri]);
+            $this->logger?->info('Dropping duplicate request', ['uri' => $uri]);
             $this->dropRequest($request);
         }
 
