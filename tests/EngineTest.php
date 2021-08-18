@@ -16,10 +16,14 @@ namespace Sassnowski\Roach\Tests;
 use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Engine;
+use Sassnowski\Roach\Http\Client;
 use Sassnowski\Roach\Http\Middleware\HandlerInterface;
+use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
+use Sassnowski\Roach\ItemPipeline\Pipeline;
+use Sassnowski\Roach\Queue\ArrayRequestQueue;
 use Sassnowski\Roach\Spider\ParseResult;
 use Sassnowski\Roach\Testing\FakeLogger;
 
@@ -31,9 +35,20 @@ final class EngineTest extends IntegrationTest
 {
     use InteractsWithRequests;
 
+    private FakeLogger $logger;
+
+    private Engine $engine;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->logger = new FakeLogger();
+        $this->engine = new Engine(
+            new ArrayRequestQueue(),
+            new Client(),
+            $this->logger,
+        );
 
         $_SERVER['__parse.called'] = 0;
     }
@@ -45,7 +60,7 @@ final class EngineTest extends IntegrationTest
             $this->createRequest('http://localhost:8000/test2'),
         ];
 
-        Engine::create($startRequests)->start();
+        $this->engine->start($startRequests);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
@@ -58,11 +73,9 @@ final class EngineTest extends IntegrationTest
                 yield ParseResult::request($link->getUri(), static fn (Response $response) => yield from []);
             }
         };
-        $startRequests = [
+        $this->engine->start([
             $this->createRequest('http://localhost:8000/test2', $parseFunction),
-        ];
-
-        Engine::create($startRequests)->start();
+        ]);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test3', 1);
@@ -73,20 +86,17 @@ final class EngineTest extends IntegrationTest
         $middleware = new class() extends RequestMiddleware {
             public function handle(Request $request, HandlerInterface $next): PromiseInterface
             {
-                if ($request->getUri()->getPath() === '/test2') {
+                if ($request->getPath() === '/test2') {
                     $this->dropRequest($request);
                 }
 
                 return $next($request);
             }
         };
-        $startRequests = [
+        $this->engine->start([
             $this->createRequest('http://localhost:8000/test1'),
             $this->createRequest('http://localhost:8000/test2'),
-        ];
-
-        Engine::create($startRequests, middleware: [$middleware])
-            ->start();
+        ], MiddlewareStack::create($middleware));
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasNotCrawled('/test2');
@@ -99,11 +109,10 @@ final class EngineTest extends IntegrationTest
                 ++$_SERVER['__parse.called'];
             });
         };
-        $startRequests = [
-            $this->createRequest('http://localhost:8000/test1', $parseCallback),
-        ];
 
-        Engine::create($startRequests)->start();
+        $this->engine->start([
+            $this->createRequest('http://localhost:8000/test1', $parseCallback),
+        ]);
 
         self::assertEquals(1, $_SERVER['__parse.called']);
     }
@@ -128,7 +137,11 @@ final class EngineTest extends IntegrationTest
             }),
         ];
 
-        Engine::create($startRequests, itemProcessors: [$processor])->start();
+        $this->engine->start(
+            $startRequests,
+            MiddlewareStack::create(),
+            new Pipeline([$processor]),
+        );
 
         self::assertSame(['title' => 'Such headline, wow'], $processor->item);
     }
@@ -151,11 +164,10 @@ final class EngineTest extends IntegrationTest
             yield ParseResult::request('http://localhost:8000/test2', static function (): void {
             });
         };
-        $startRequests = [
-            $this->createRequest('http://localhost:8000/test1', $parseCallback),
-        ];
 
-        Engine::create($startRequests, itemProcessors: [$processor])->start();
+        $this->engine->start([
+            $this->createRequest('http://localhost:8000/test1', $parseCallback),
+        ], MiddlewareStack::create(), new Pipeline([$processor]));
 
         self::assertSame(['title' => '::title::'], $processor->item);
         $this->assertRouteWasCrawledTimes('/test1', 1);
@@ -164,7 +176,6 @@ final class EngineTest extends IntegrationTest
 
     public function testLogErrorIfExceptionOccursWhenParsingResponse(): void
     {
-        $logger = new FakeLogger();
         $startRequests = [
             $this->createRequest(
                 'http://localhost:8000/test1',
@@ -172,34 +183,28 @@ final class EngineTest extends IntegrationTest
             ),
         ];
 
-        Engine::create($startRequests, logger: $logger)->start();
+        $this->engine->start($startRequests);
 
         self::assertTrue(
-            $logger->messageWasLogged('error', '[Engine] Error while processing response'),
+            $this->logger->messageWasLogged('error', '[Engine] Error while processing response'),
         );
     }
 
     public function testLogErrorIfAnErrorOccursInsideRequestMiddleware(): void
     {
-        $logger = new FakeLogger();
         $exceptionMiddleware = new class() extends RequestMiddleware {
             public function handle(Request $request, HandlerInterface $next): PromiseInterface
             {
                 throw new Exception('boom');
             }
         };
-        $startRequests = [
-            $this->createRequest('http://localhost:8000/test1'),
-        ];
 
-        Engine::create(
-            $startRequests,
-            middleware: [$exceptionMiddleware],
-            logger: $logger,
-        )->start();
+        $this->engine->start([
+            $this->createRequest('http://localhost:8000/test1'),
+        ], MiddlewareStack::create($exceptionMiddleware));
 
         self::assertTrue(
-            $logger->messageWasLogged('error', '[Engine] Error while dispatching request'),
+            $this->logger->messageWasLogged('error', '[Engine] Error while dispatching request'),
         );
     }
 }

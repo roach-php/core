@@ -28,7 +28,7 @@ final class UserAgentMiddleware extends RequestMiddleware
     public function handle(Request $request, HandlerInterface $next): PromiseInterface
     {
         return $next(
-            $request->withHeader('User-Agent', $this->options['userAgent']),
+            $request->addHeader('User-Agent', $this->options['userAgent']),
         );
     }
 }

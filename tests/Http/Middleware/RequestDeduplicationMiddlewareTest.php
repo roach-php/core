@@ -21,6 +21,7 @@ use Sassnowski\Roach\Testing\FakeLogger;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
+ * @group http
  * @group middleware
  *
  * @internal

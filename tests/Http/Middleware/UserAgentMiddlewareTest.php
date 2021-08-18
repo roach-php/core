@@ -19,8 +19,10 @@ use Sassnowski\Roach\Testing\FakeHandler;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
- * @internal
+ * @group http
  * @group middleware
+ *
+ * @internal
  */
 final class UserAgentMiddlewareTest extends TestCase
 {
@@ -41,7 +43,7 @@ final class UserAgentMiddlewareTest extends TestCase
 
         $request = $response->getRequest();
         self::assertTrue($request->hasHeader('User-Agent'));
-        self::assertSame('roach-php', $request->getHeaderLine('User-Agent'));
+        self::assertSame('roach-php', $request->getHeader('User-Agent')[0]);
     }
 
     public function testSetCustomUserAgentOnRequest(): void
@@ -53,6 +55,6 @@ final class UserAgentMiddlewareTest extends TestCase
 
         $request = $response->getRequest();
         self::assertTrue($request->hasHeader('User-Agent'));
-        self::assertSame('custom', $request->getHeaderLine('User-Agent'));
+        self::assertSame('custom', $request->getHeader('User-Agent')[0]);
     }
 }

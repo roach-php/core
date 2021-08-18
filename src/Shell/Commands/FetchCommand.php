@@ -30,13 +30,15 @@ final class FetchCommand extends Command
         $this->addArgument('url', InputArgument::REQUIRED);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $client = new Client();
         $url = $input->getArgument('url');
-        $request = new Request($url, static function (): void {
-        });
-        $response = new Response($client->send($request), $request);
+        $request = new Request($url, static fn () => null);
+        $response = new Response(
+            $client->send($request->getGuzzleRequest()),
+            $request
+        );
 
         $output->writeln(
             <<<TEXT

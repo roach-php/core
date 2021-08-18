@@ -26,9 +26,9 @@ final class LoggerMiddleware extends RequestMiddleware
 
     public function handle(Request $request, HandlerInterface $next): PromiseInterface
     {
-        $this->logger?->info(
+        $this->logger->info(
             '[LoggerMiddleware] Dispatching request',
-            ['uri' => (string) $request->getUri()],
+            ['uri' => $request->getUri()],
         );
 
         return $next($request);

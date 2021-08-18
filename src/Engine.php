@@ -13,110 +13,92 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\PromiseInterface;
-use Iterator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\Pipeline;
-use Sassnowski\Roach\Queue\ArrayRequestQueue;
 use Sassnowski\Roach\Queue\RequestQueue;
 use Sassnowski\Roach\Spider\ParseResult;
-use Sassnowski\Roach\Testing\FakeLogger;
 use Throwable;
 
 final class Engine
 {
     public function __construct(
-        private array $startRequests,
         private RequestQueue $requestQueue,
-        private MiddlewareStack $middlewareStack,
-        private Pipeline $itemPipeline,
-        private Client $client,
+        private ClientInterface $client,
         private LoggerInterface $logger,
     ) {
     }
 
-    public static function create(
+    public function start(
         array $startRequests,
-        ?RequestQueue $requestQueue = null,
-        array $middleware = [],
-        array $itemProcessors = [],
-        ?Client $client = null,
-        ?LoggerInterface $logger = null,
-    ): self {
-        return new self(
-            $startRequests,
-            $requestQueue ?: new ArrayRequestQueue(),
-            MiddlewareStack::create(...$middleware),
-            new Pipeline($itemProcessors),
-            $client ?: new Client(),
-            $logger ?: new FakeLogger(),
-        );
-    }
+        ?MiddlewareStack $middlewareStack = null,
+        ?Pipeline $itemPipeline = null,
+    ): void {
+        $middlewareStack ??= MiddlewareStack::create();
+        $itemPipeline ??= new Pipeline([]);
 
-    public function start(): void
-    {
-        foreach ($this->startRequests as $request) {
+        foreach ($startRequests as $request) {
             $this->scheduleRequest($request);
         }
 
-        $this->work();
+        $this->work($middlewareStack, $itemPipeline);
     }
 
-    private function work(): void
+    private function work(MiddlewareStack $middlewareStack, Pipeline $pipeline): void
     {
         while (!$this->requestQueue->empty()) {
-            $requests = function () {
+            $requests = function () use ($middlewareStack, $pipeline) {
                 foreach ($this->requestQueue->all() as $request) {
-                    yield function () use ($request) {
-                        return $this->sendRequest($request);
-                    };
+                    yield fn () => $this->sendRequest($request, $middlewareStack, $pipeline);
                 }
             };
 
-            $this->sendRequestsConcurrently($requests());
+            $this->client->pool($requests())->wait();
         }
     }
 
-    private function onFulfilled(Http\Response $response, Request $request): void
+    private function onFulfilled(Response $response, Pipeline $itemPipeline): void
     {
         /** @var ParseResult[] $parseResults */
-        $parseResults = ($request->callback)($response);
+        $parseResults = $response->getRequest()->callback($response);
 
         foreach ($parseResults as $result) {
             $result->apply(
                 fn (Request $request) => $this->scheduleRequest($request),
-                fn (mixed $item) => $this->itemPipeline->sendThroughPipeline($item),
+                static fn (mixed $item) => $itemPipeline->sendThroughPipeline($item),
             );
         }
     }
 
-    private function sendRequest(Request $request): ?PromiseInterface
-    {
-        $promise = $this->middlewareStack->dispatchRequest(
+    private function sendRequest(
+        Request $request,
+        MiddlewareStack $middlewareStack,
+        Pipeline $itemPipeline,
+    ): ?PromiseInterface {
+        $promise = $middlewareStack->dispatchRequest(
             $request,
-            fn (Request $req) => $this->client->sendAsync($req)->then(
+            fn (Request $req) => $this->client->dispatch($req)->then(
                 static fn (ResponseInterface $response) => new Http\Response($response, $req),
             ),
         );
 
         return $promise
-            ?->then(function (Response $response) use ($request): void {
-                $this->onFulfilled($response, $request);
+            ?->then(function (Response $response) use ($itemPipeline): void {
+                $this->onFulfilled($response, $itemPipeline);
             }, function (Throwable $e) use ($request): void {
                 $this->logger->error('[Engine] Error while dispatching request', [
-                    'uri' => (string) $request->getUri(),
+                    'uri' => $request->getUri(),
                     'exception' => $e,
                 ]);
             })
             ->otherwise(function (Throwable $e) use ($request): void {
                 $this->logger->error('[Engine] Error while processing response', [
-                    'uri' => (string) $request->getUri(),
+                    'uri' => $request->getUri(),
                     'exception' => $e,
                 ]);
             });
@@ -125,16 +107,5 @@ final class Engine
     private function scheduleRequest(Request $request): void
     {
         $this->requestQueue->queue($request);
-    }
-
-    private function sendRequestsConcurrently(array | Iterator $requests): void
-    {
-        $pool = new Pool($this->client, $requests, [
-            'concurrency' => 2,
-        ]);
-
-        $promise = $pool->promise();
-
-        $promise->wait();
     }
 }

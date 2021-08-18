@@ -21,6 +21,7 @@ use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
  * @internal
+ * @group http
  * @group middleware
  */
 final class LoggerMiddlewareTest extends TestCase

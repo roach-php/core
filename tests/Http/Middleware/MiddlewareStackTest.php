@@ -17,6 +17,7 @@ use Closure;
 use Exception;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Middleware\DropRequestException;
@@ -27,6 +28,7 @@ use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
+ * @group http
  * @group middleware
  *
  * @internal
@@ -39,9 +41,11 @@ final class MiddlewareStackTest extends TestCase
     {
         $stack = MiddlewareStack::create();
         $request = $this->createRequest();
-        $finally = $this->finallyCallback(
-            static fn (Request $request) => $request->withUri(new Uri('::other-url::')),
-        );
+        $finally = $this->finallyCallback(static function (Request $request) {
+            return $request->withGuzzleRequest(static function (GuzzleRequest $guzzleRequest) {
+                return $guzzleRequest->withUri(new Uri('::other-url::'));
+            });
+        });
 
         $result = $stack->dispatchRequest($request, $finally)->wait();
 
@@ -53,13 +57,17 @@ final class MiddlewareStackTest extends TestCase
         $middlewareA = new class() extends RequestMiddleware {
             public function handle(Request $request, HandlerInterface $next): PromiseInterface
             {
-                return $next($request->withUri(new Uri($request->getUri() . 'A')));
+                return $next($request->withGuzzleRequest(static function (GuzzleRequest $guzzleRequest) {
+                    return $guzzleRequest->withUri(new Uri($guzzleRequest->getUri() . 'A'));
+                }));
             }
         };
         $middlewareB = new class() extends RequestMiddleware {
             public function handle(Request $request, HandlerInterface $next): PromiseInterface
             {
-                return $next($request->withUri(new Uri($request->getUri() . 'B')));
+                return $next($request->withGuzzleRequest(static function (GuzzleRequest $guzzleRequest) {
+                    return $guzzleRequest->withUri(new Uri($guzzleRequest->getUri() . 'B'));
+                }));
             }
         };
         $stack = MiddlewareStack::create($middlewareA, $middlewareB);

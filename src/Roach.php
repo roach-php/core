@@ -13,13 +13,14 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach;
 
-use GuzzleHttp\Client;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Sassnowski\Roach\Http\Client;
+use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Middleware\RequestMiddlewareInterface;
 use Sassnowski\Roach\ItemPipeline\Pipeline;
@@ -44,19 +45,11 @@ final class Roach
         $spider = $container->get($spiderClass);
         $middleware = self::buildMiddleware($spider, $container);
         $itemPipeline = self::buildItemPipeline($spider, $container);
-        $queue = $container->get(RequestQueue::class);
-        $logger = $container->get(LoggerInterface::class);
 
-        $engine = new Engine(
-            $spider->startRequests(),
-            $queue,
-            $middleware,
-            $itemPipeline,
-            new Client(),
-            $logger,
-        );
+        /** @var Engine $engine */
+        $engine = $container->get(Engine::class);
 
-        $engine->start();
+        $engine->start($spider->startRequests(), $middleware, $itemPipeline);
     }
 
     private static function buildMiddleware(
@@ -101,6 +94,7 @@ final class Roach
             static fn () => (new Logger('roach'))->pushHandler(new StreamHandler('php://stdout')),
         );
         $container->add(RequestQueue::class, ArrayRequestQueue::class);
+        $container->add(ClientInterface::class, Client::class);
 
         return $container;
     }

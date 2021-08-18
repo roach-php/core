@@ -17,7 +17,6 @@ use Sassnowski\Roach\Http\Middleware\UserAgentMiddleware;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\Roach;
 use Sassnowski\Roach\Spider\AbstractSpider;
-use Symfony\Component\DomCrawler\Crawler;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -35,18 +34,9 @@ final class test extends AbstractSpider
 
     public function parse(Response $response): Generator
     {
-        $items = $response
-            ->filter('div:nth-child(2) a')
-            ->each(static function (Crawler $node) {
-                return [
-                    'title' => $node->filter('h2')->text(),
-                    'uri' => $node->link()->getUri(),
-                ];
-            });
+        yield $this->request('https://kai-sassnowski.com/projects');
 
-        foreach ($items as $item) {
-            yield $this->item($item);
-        }
+        yield $this->request('https://kai-sassnowski.com/open-source');
     }
 
     public function parsePost(Response $response): Generator
