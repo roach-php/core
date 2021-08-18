@@ -18,5 +18,8 @@ use Sassnowski\Roach\Http\Request;
 
 interface RequestMiddlewareInterface
 {
+    /**
+     * @throws DropRequestException thrown if the request should not be processed further
+     */
     public function handle(Request $request, Handler $next): PromiseInterface;
 }
