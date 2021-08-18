@@ -17,7 +17,7 @@ use Closure;
 use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Http\Request;
 
-final class Handler
+final class Handler implements HandlerInterface
 {
     public function __construct(private Closure $callback)
     {

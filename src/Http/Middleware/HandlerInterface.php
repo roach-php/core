@@ -16,10 +16,7 @@ namespace Sassnowski\Roach\Http\Middleware;
 use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Http\Request;
 
-interface RequestMiddlewareInterface
+interface HandlerInterface
 {
-    /**
-     * @throws DropRequestException thrown if the request should not be processed further
-     */
-    public function handle(Request $request, HandlerInterface $next): PromiseInterface;
+    public function __invoke(Request $request): PromiseInterface;
 }

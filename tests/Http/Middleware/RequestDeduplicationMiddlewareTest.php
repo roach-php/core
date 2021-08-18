@@ -13,13 +13,11 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Tests\Http\Middleware;
 
-use Closure;
-use GuzzleHttp\Promise\Promise;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Middleware\DropRequestException;
-use Sassnowski\Roach\Http\Middleware\Handler;
 use Sassnowski\Roach\Http\Middleware\RequestDeduplicationMiddleware;
-use Sassnowski\Roach\Logging\FakeLogger;
+use Sassnowski\Roach\Testing\FakeLogger;
+use Sassnowski\Roach\Testing\FakeHandler;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
@@ -33,56 +31,55 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     private RequestDeduplicationMiddleware $middleware;
 
+    private FakeHandler $handler;
+
     protected function setUp(): void
     {
         $this->middleware = new RequestDeduplicationMiddleware();
+        $this->handler = new FakeHandler();
     }
 
     public function testDropsRequestIfItWasAlreadySeenBefore(): void
     {
         $request = $this->createRequest();
-        $handler = $this->makeHandler();
 
-        $this->middleware->handle($request, $handler);
+        $this->middleware->handle($request, $this->handler);
 
         $this->expectException(DropRequestException::class);
-        $this->middleware->handle($request, $handler);
+        $this->middleware->handle($request, $this->handler);
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function testDoesNothingIfUrlWasNotSeenBefore(): void
+    public function testPassesRequestAlongIfItHasntBeenSeenBefore(): void
     {
         $requestA = $this->createRequest('::url-a::');
         $requestB = $this->createRequest('::url-b::');
-        $handler = $this->makeHandler();
 
-        $this->middleware->handle($requestA, $handler);
-        $this->middleware->handle($requestB, $handler);
+        $this->middleware->handle($requestA, $this->handler);
+        $this->middleware->handle($requestB, $this->handler);
+
+        $this->handler->assertWasCalledWith($requestA);
+        $this->handler->assertWasCalledWith($requestB);
     }
 
-    public function testLogDroppedRequests(): void
+    public function testLogDroppedRequestsIfLoggerWasProvided(): void
     {
         $logger = new FakeLogger();
         $middleware = new RequestDeduplicationMiddleware($logger);
         $request = $this->createRequest();
-        $handler = $this->makeHandler();
 
-        $middleware->handle($request, $handler);
+        $middleware->handle($request, $this->handler);
 
-        $this->expectException(DropRequestException::class);
-        $middleware->handle($request, $handler);
+        try {
+            $middleware->handle($request, $this->handler);
+        } catch (DropRequestException) {
+        }
 
         self::assertTrue(
-            $logger->messageWasLogged('info', 'Dropping duplicate request', ['uri' => '::url::']),
+            $logger->messageWasLogged(
+                'info',
+                '[RequestDeduplicationMiddleware] Dropping duplicate request',
+                ['uri' => '::url::'],
+            ),
         );
-    }
-
-    private function makeHandler(?Closure $callback = null): Handler
-    {
-        return new Handler($callback ?: static function () {
-            return new Promise();
-        });
     }
 }

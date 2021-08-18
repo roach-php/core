@@ -37,7 +37,7 @@ final class ParseResult
 
     public function apply(Closure $ifRequest, Closure $ifItem): void
     {
-        $this->request !== null
+        null !== $this->request
             ? $ifRequest($this->request)
             : $ifItem($this->item);
     }

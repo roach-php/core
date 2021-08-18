@@ -28,12 +28,16 @@ final class RequestDeduplicationMiddleware extends RequestMiddleware
     {
     }
 
-    public function handle(Request $request, Handler $next): PromiseInterface
+    public function handle(Request $request, HandlerInterface $next): PromiseInterface
     {
         $uri = (string) $request->getUri();
 
         if (\in_array($uri, $this->seenUris, true)) {
-            $this->logger?->info('Dropping duplicate request', ['uri' => $uri]);
+            $this->logger?->info(
+                '[RequestDeduplicationMiddleware] Dropping duplicate request',
+                ['uri' => $uri],
+            );
+
             $this->dropRequest($request);
         }
 

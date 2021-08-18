@@ -15,7 +15,7 @@ namespace Sassnowski\Roach\Tests;
 
 use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Engine;
-use Sassnowski\Roach\Http\Middleware\Handler;
+use Sassnowski\Roach\Http\Middleware\HandlerInterface;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
@@ -69,7 +69,7 @@ final class EngineTest extends IntegrationTest
     public function testDontDispatchRequestsDroppedByMiddleware(): void
     {
         $middleware = new class() extends RequestMiddleware {
-            public function handle(Request $request, Handler $next): PromiseInterface
+            public function handle(Request $request, HandlerInterface $next): PromiseInterface
             {
                 if ($request->getUri()->getPath() === '/test2') {
                     $this->dropRequest($request);

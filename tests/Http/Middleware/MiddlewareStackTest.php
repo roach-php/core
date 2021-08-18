@@ -18,7 +18,7 @@ use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Http\Middleware\Handler;
+use Sassnowski\Roach\Http\Middleware\HandlerInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
 use Sassnowski\Roach\Http\Middleware\RequestMiddlewareInterface;
@@ -37,7 +37,7 @@ final class MiddlewareStackTest extends TestCase
     public function testCanBeCreatedFromEmptyArray(): void
     {
         $stack = MiddlewareStack::create();
-        $request = $this->createRequest('::url::');
+        $request = $this->createRequest();
         $finally = $this->wrapInPromise(
             static fn (Request $request) => $request->withUri(new Uri('::other-url::')),
         );
@@ -49,7 +49,7 @@ final class MiddlewareStackTest extends TestCase
 
     public function testCallMiddlewareInCorrectOrder(): void
     {
-        $request = $this->createRequest('::url::');
+        $request = $this->createRequest();
         $stack = MiddlewareStack::create(new MiddlewareA(), new MiddlewareB());
         $finally = $this->wrapInPromise(static fn (Request $request) => $request);
 
@@ -60,7 +60,7 @@ final class MiddlewareStackTest extends TestCase
 
     public function testReturnNullWhenRequestWasDropped(): void
     {
-        $request = $this->createRequest('::url::');
+        $request = $this->createRequest();
         $stack = MiddlewareStack::create(new DropRequestMiddleware());
         $finally = $this->wrapInPromise(static fn (Request $request) => $request);
 
@@ -83,7 +83,7 @@ final class MiddlewareStackTest extends TestCase
 
 final class MiddlewareA implements RequestMiddlewareInterface
 {
-    public function handle(Request $request, Handler $next): PromiseInterface
+    public function handle(Request $request, HandlerInterface $next): PromiseInterface
     {
         return $next($request->withUri(new Uri($request->getUri() . 'A')));
     }
@@ -91,7 +91,7 @@ final class MiddlewareA implements RequestMiddlewareInterface
 
 final class MiddlewareB implements RequestMiddlewareInterface
 {
-    public function handle(Request $request, Handler $next): PromiseInterface
+    public function handle(Request $request, HandlerInterface $next): PromiseInterface
     {
         return $next($request->withUri(new Uri($request->getUri() . 'B')));
     }
@@ -99,7 +99,7 @@ final class MiddlewareB implements RequestMiddlewareInterface
 
 final class DropRequestMiddleware extends RequestMiddleware
 {
-    public function handle(Request $request, Handler $next): PromiseInterface
+    public function handle(Request $request, HandlerInterface $next): PromiseInterface
     {
         $this->dropRequest($request);
     }
