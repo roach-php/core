@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Shell;
 
-use Sassnowski\Roach\Spider\Response;
+use Sassnowski\Roach\Http\Response;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\VarDumper\Caster\Caster;
