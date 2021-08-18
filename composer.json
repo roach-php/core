@@ -50,7 +50,7 @@
             "mkdir -p .build/php-cs-fixer",
             "php-cs-fixer fix --diff --verbose"
         ],
-        "test-server":  [
+        "test-server": [
             "php -S localhost:8000 -t ./tests/Server"
         ],
         "test-watch": [
