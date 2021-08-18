@@ -11,14 +11,14 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Testing;
+namespace Sassnowski\Roach\Tests\Logging;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Testing\FakeLogger;
+use Sassnowski\Roach\Logging\FakeLogger;
 
 /**
- * @covers \Sassnowski\Roach\Testing\FakeLogger
+ * @covers \Sassnowski\Roach\Logging\FakeLogger
  * @group testing
  *
  * @internal

@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Middleware\DropRequestException;
 use Sassnowski\Roach\Http\Middleware\Handler;
 use Sassnowski\Roach\Http\Middleware\RequestDeduplicationMiddleware;
-use Sassnowski\Roach\Testing\FakeLogger;
+use Sassnowski\Roach\Logging\FakeLogger;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
