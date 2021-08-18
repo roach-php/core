@@ -24,7 +24,7 @@ final class RequestDeduplicationMiddleware extends RequestMiddleware
      */
     private array $seenUris = [];
 
-    public function __construct(private ?LoggerInterface $logger = null)
+    public function __construct(private LoggerInterface $logger)
     {
         parent::__construct();
     }

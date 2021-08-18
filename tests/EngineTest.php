@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Tests;
 
+use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Engine;
 use Sassnowski\Roach\Http\Middleware\HandlerInterface;
@@ -20,6 +21,7 @@ use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\Spider\ParseResult;
+use Sassnowski\Roach\Testing\FakeLogger;
 
 /**
  * @internal
@@ -158,5 +160,46 @@ final class EngineTest extends IntegrationTest
         self::assertSame(['title' => '::title::'], $processor->item);
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
+    }
+
+    public function testLogErrorIfExceptionOccursWhenParsingResponse(): void
+    {
+        $logger = new FakeLogger();
+        $startRequests = [
+            $this->createRequest(
+                'http://localhost:8000/test1',
+                static fn () => throw new Exception('boom'),
+            ),
+        ];
+
+        Engine::create($startRequests, logger: $logger)->start();
+
+        self::assertTrue(
+            $logger->messageWasLogged('error', '[Engine] Error while processing response'),
+        );
+    }
+
+    public function testLogErrorIfAnErrorOccursInsideRequestMiddleware(): void
+    {
+        $logger = new FakeLogger();
+        $exceptionMiddleware = new class() extends RequestMiddleware {
+            public function handle(Request $request, HandlerInterface $next): PromiseInterface
+            {
+                throw new Exception('boom');
+            }
+        };
+        $startRequests = [
+            $this->createRequest('http://localhost:8000/test1'),
+        ];
+
+        Engine::create(
+            $startRequests,
+            middleware: [$exceptionMiddleware],
+            logger: $logger,
+        )->start();
+
+        self::assertTrue(
+            $logger->messageWasLogged('error', '[Engine] Error while dispatching request'),
+        );
     }
 }

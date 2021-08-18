@@ -40,13 +40,14 @@ abstract class AbstractSpider
     }
 
     /**
-     * @return Generator|Request[]
+     * @return Request[]
      */
-    final public function startRequests(): Generator
+    final public function startRequests(): array
     {
-        foreach ($this->getStartUrls() as $url) {
-            yield new Request($url, [$this, 'parse']);
-        }
+        return \array_map(
+            fn (string $url) => new Request($url, [$this, 'parse']),
+            $this->getStartUrls(),
+        );
     }
 
     protected function getStartUrls(): array

@@ -31,11 +31,14 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     private RequestDeduplicationMiddleware $middleware;
 
+    private FakeLogger $logger;
+
     private FakeHandler $handler;
 
     protected function setUp(): void
     {
-        $this->middleware = new RequestDeduplicationMiddleware();
+        $this->logger = new FakeLogger();
+        $this->middleware = new RequestDeduplicationMiddleware($this->logger);
         $this->handler = new FakeHandler();
     }
 
@@ -63,19 +66,17 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testLogDroppedRequestsIfLoggerWasProvided(): void
     {
-        $logger = new FakeLogger();
-        $middleware = new RequestDeduplicationMiddleware($logger);
         $request = $this->createRequest();
 
-        $middleware->handle($request, $this->handler);
+        $this->middleware->handle($request, $this->handler);
 
         try {
-            $middleware->handle($request, $this->handler);
+            $this->middleware->handle($request, $this->handler);
         } catch (DropRequestException) {
         }
 
         self::assertTrue(
-            $logger->messageWasLogged(
+            $this->logger->messageWasLogged(
                 'info',
                 '[RequestDeduplicationMiddleware] Dropping duplicate request',
                 ['uri' => '::url::'],

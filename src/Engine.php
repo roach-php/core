@@ -18,6 +18,7 @@ use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\PromiseInterface;
 use Iterator;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
@@ -25,6 +26,8 @@ use Sassnowski\Roach\ItemPipeline\Pipeline;
 use Sassnowski\Roach\Queue\ArrayRequestQueue;
 use Sassnowski\Roach\Queue\RequestQueue;
 use Sassnowski\Roach\Spider\ParseResult;
+use Sassnowski\Roach\Testing\FakeLogger;
+use Throwable;
 
 final class Engine
 {
@@ -34,6 +37,7 @@ final class Engine
         private MiddlewareStack $middlewareStack,
         private Pipeline $itemPipeline,
         private Client $client,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -43,6 +47,7 @@ final class Engine
         array $middleware = [],
         array $itemProcessors = [],
         ?Client $client = null,
+        ?LoggerInterface $logger = null,
     ): self {
         return new self(
             $startRequests,
@@ -50,6 +55,7 @@ final class Engine
             MiddlewareStack::create(...$middleware),
             new Pipeline($itemProcessors),
             $client ?: new Client(),
+            $logger ?: new FakeLogger(),
         );
     }
 
@@ -92,14 +98,28 @@ final class Engine
 
     private function sendRequest(Request $request): ?PromiseInterface
     {
-        return $this->middlewareStack->dispatchRequest(
+        $promise = $this->middlewareStack->dispatchRequest(
             $request,
             fn (Request $req) => $this->client->sendAsync($req)->then(
                 static fn (ResponseInterface $response) => new Http\Response($response, $req),
             ),
-        )?->then(function (Response $response) use ($request): void {
-            $this->onFulfilled($response, $request);
-        });
+        );
+
+        return $promise
+            ?->then(function (Response $response) use ($request): void {
+                $this->onFulfilled($response, $request);
+            }, function (Throwable $e) use ($request): void {
+                $this->logger->error('[Engine] Error while dispatching request', [
+                    'uri' => (string) $request->getUri(),
+                    'exception' => $e,
+                ]);
+            })
+            ->otherwise(function (Throwable $e) use ($request): void {
+                $this->logger->error('[Engine] Error while processing response', [
+                    'uri' => (string) $request->getUri(),
+                    'exception' => $e,
+                ]);
+            });
     }
 
     private function scheduleRequest(Request $request): void

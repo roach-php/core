@@ -14,8 +14,10 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Http\Middleware;
 
 use Closure;
+use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Http\Request;
+use Throwable;
 
 final class MiddlewareStack
 {
@@ -39,6 +41,8 @@ final class MiddlewareStack
             return $handler($request);
         } catch (DropRequestException) {
             return null;
+        } catch (Throwable $e) {
+            return $this->rejectPromise($e);
         }
     }
 
@@ -53,5 +57,14 @@ final class MiddlewareStack
             },
             new Handler(Closure::fromCallable($callback)),
         );
+    }
+
+    private function rejectPromise(Throwable $e): PromiseInterface
+    {
+        $promise = new Promise(static function () use (&$promise, $e): void {
+            $promise->reject($e);
+        });
+
+        return $promise;
     }
 }
