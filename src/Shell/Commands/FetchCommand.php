@@ -37,7 +37,7 @@ final class FetchCommand extends Command
         $request = new Request($url, static fn () => null);
         $response = new Response(
             $client->send($request->getGuzzleRequest()),
-            $request
+            $request,
         );
 
         $output->writeln(
