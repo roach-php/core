@@ -23,7 +23,8 @@
         "ergebnis/php-cs-fixer-config": "^3.0",
         "http-interop/http-factory-guzzle": "^1.2",
         "phpunit/phpunit": "^9.5",
-        "slim/slim": "4.*"
+        "slim/slim": "4.*",
+        "spatie/phpunit-watcher": "^1.23"
     },
     "autoload": {
         "psr-4": {
@@ -48,6 +49,12 @@
         "coding-standards": [
             "mkdir -p .build/php-cs-fixer",
             "php-cs-fixer fix --diff --verbose"
+        ],
+        "test-server":  [
+            "php -S localhost:8000 -t ./tests/Server"
+        ],
+        "test-watch": [
+            "vendor/bin/phpunit-watcher watch"
         ]
     }
 }
