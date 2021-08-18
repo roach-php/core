@@ -17,14 +17,19 @@ use Sassnowski\Roach\Http\Request;
 
 final class ArrayRequestQueue implements RequestQueue
 {
-    private array $requests = [];
+    private array $requests;
 
-    public function enqueue(Request $request): void
+    public function __construct(Request ...$requests)
+    {
+        $this->requests = $requests;
+    }
+
+    public function queue(Request $request): void
     {
         $this->requests[] = $request;
     }
 
-    public function dequeue(): array
+    public function all(): array
     {
         $result = $this->requests;
 

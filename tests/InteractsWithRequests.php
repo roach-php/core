@@ -19,7 +19,7 @@ use Sassnowski\Roach\Http\Response;
 
 trait InteractsWithRequests
 {
-    private function createRequest(string $url, ?Closure $callback = null): Request
+    private function createRequest(string $url = '::url::', ?Closure $callback = null): Request
     {
         $callback ??= static function (Response $response): void {
         };

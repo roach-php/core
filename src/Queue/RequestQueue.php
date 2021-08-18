@@ -17,9 +17,12 @@ use Sassnowski\Roach\Http\Request;
 
 interface RequestQueue
 {
-    public function enqueue(Request $request): void;
+    public function queue(Request $request): void;
 
-    public function dequeue(): array;
+    /**
+     * @return Request[]
+     */
+    public function all(): array;
 
     public function empty(): bool;
 

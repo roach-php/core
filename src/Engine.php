@@ -66,7 +66,7 @@ final class Engine
     {
         while (!$this->requestQueue->empty()) {
             $requests = function () {
-                foreach ($this->requestQueue->dequeue() as $request) {
+                foreach ($this->requestQueue->all() as $request) {
                     yield function () use ($request) {
                         return $this->sendRequest($request);
                     };
@@ -103,7 +103,7 @@ final class Engine
 
     private function scheduleRequest(Request $request): void
     {
-        $this->requestQueue->enqueue($request);
+        $this->requestQueue->queue($request);
     }
 
     private function sendRequestsConcurrently(array | Iterator $requests): void
