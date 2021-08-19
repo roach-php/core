@@ -15,6 +15,7 @@ namespace Sassnowski\Roach\Tests\Spider;
 
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Request;
+use Sassnowski\Roach\ItemPipeline\ItemInterface;
 use Sassnowski\Roach\Spider\ParseResult;
 
 /**
@@ -34,11 +35,11 @@ final class ParseResultTest extends TestCase
 
     public function testPassesItemToCallbackIfResultIsItem(): void
     {
-        $result = ParseResult::item(['::item::']);
+        $result = ParseResult::item(['::key::' => '::value::']);
 
         $result->apply(
             static fn () => self::fail('Should not have been called'),
-            static fn (mixed $item) => self::assertSame(['::item::'], $item),
+            static fn (ItemInterface $item) => self::assertSame('::value::', $item->get('::key::')),
         );
     }
 }

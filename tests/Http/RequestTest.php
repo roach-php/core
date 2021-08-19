@@ -75,7 +75,7 @@ final class RequestTest extends TestCase
         $request = $this->createRequest(callback: static function (Response $response) use (&$called) {
             $called = true;
 
-            yield ParseResult::item('::item::');
+            yield ParseResult::item(['::item::']);
         });
 
         $request->callback(

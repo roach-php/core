@@ -13,20 +13,17 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\ItemPipeline\Processors;
 
-use const FILE_APPEND;
+use Closure;
+use Sassnowski\Roach\ItemPipeline\ItemInterface;
 
-final class JsonExporter
+final class DropItemCallback
 {
-    public function __construct(private string $filePath)
+    public function __construct(private Closure $callback)
     {
     }
 
-    public function processItem(mixed $item): mixed
+    public function __invoke(ItemInterface $item): ItemInterface
     {
-        \file_put_contents(
-            $this->filePath,
-            \json_encode($item, \JSON_THROW_ON_ERROR) . \PHP_EOL,
-            FILE_APPEND,
-        );
+        return ($this->callback)($item);
     }
 }

@@ -20,7 +20,9 @@ use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\Pipeline;
+use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
+use Sassnowski\Roach\ItemPipeline\ItemInterface;
+use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
 use Sassnowski\Roach\Queue\RequestQueue;
 use Sassnowski\Roach\Spider\ParseResult;
 use Throwable;
@@ -36,12 +38,9 @@ final class Engine
 
     public function start(
         array $startRequests,
-        ?MiddlewareStack $middlewareStack = null,
-        ?Pipeline $itemPipeline = null,
+        MiddlewareStack $middlewareStack,
+        ItemPipelineInterface $itemPipeline,
     ): void {
-        $middlewareStack ??= MiddlewareStack::create();
-        $itemPipeline ??= new Pipeline([]);
-
         foreach ($startRequests as $request) {
             $this->scheduleRequest($request);
         }
@@ -49,7 +48,7 @@ final class Engine
         $this->work($middlewareStack, $itemPipeline);
     }
 
-    private function work(MiddlewareStack $middlewareStack, Pipeline $pipeline): void
+    private function work(MiddlewareStack $middlewareStack, ImmutableItemPipeline $pipeline): void
     {
         while (!$this->requestQueue->empty()) {
             $requests = function () use ($middlewareStack, $pipeline) {
@@ -62,7 +61,7 @@ final class Engine
         }
     }
 
-    private function onFulfilled(Response $response, Pipeline $itemPipeline): void
+    private function onFulfilled(Response $response, ImmutableItemPipeline $itemPipeline): void
     {
         /** @var ParseResult[] $parseResults */
         $parseResults = $response->getRequest()->callback($response);
@@ -70,7 +69,7 @@ final class Engine
         foreach ($parseResults as $result) {
             $result->apply(
                 fn (Request $request) => $this->scheduleRequest($request),
-                static fn (mixed $item) => $itemPipeline->sendThroughPipeline($item),
+                static fn (ItemInterface $item) => $itemPipeline->sendItem($item),
             );
         }
     }
@@ -78,7 +77,7 @@ final class Engine
     private function sendRequest(
         Request $request,
         MiddlewareStack $middlewareStack,
-        Pipeline $itemPipeline,
+        ImmutableItemPipeline $itemPipeline,
     ): ?PromiseInterface {
         $promise = $middlewareStack->dispatchRequest(
             $request,

@@ -24,6 +24,7 @@ use Sassnowski\Roach\Http\Middleware\DropRequestException;
 use Sassnowski\Roach\Http\Middleware\HandlerInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
+use Sassnowski\Roach\Http\Middleware\RequestMiddlewareInterface;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
@@ -54,22 +55,16 @@ final class MiddlewareStackTest extends TestCase
 
     public function testCallMiddlewareInCorrectOrder(): void
     {
-        $middlewareA = new class() extends RequestMiddleware {
-            public function handle(Request $request, HandlerInterface $next): PromiseInterface
-            {
-                return $next($request->withGuzzleRequest(static function (GuzzleRequest $guzzleRequest) {
-                    return $guzzleRequest->withUri(new Uri($guzzleRequest->getUri() . 'A'));
-                }));
-            }
-        };
-        $middlewareB = new class() extends RequestMiddleware {
-            public function handle(Request $request, HandlerInterface $next): PromiseInterface
-            {
-                return $next($request->withGuzzleRequest(static function (GuzzleRequest $guzzleRequest) {
-                    return $guzzleRequest->withUri(new Uri($guzzleRequest->getUri() . 'B'));
-                }));
-            }
-        };
+        $middlewareA = $this->makeMiddleware(static function (Request $request, HandlerInterface $next) {
+            return $next($request->withGuzzleRequest(static function (GuzzleRequest $guzzleRequest) {
+                return $guzzleRequest->withUri(new Uri($guzzleRequest->getUri() . 'A'));
+            }));
+        });
+        $middlewareB = $this->makeMiddleware(static function (Request $request, HandlerInterface $next) {
+            return $next($request->withGuzzleRequest(static function (GuzzleRequest $guzzleRequest) {
+                return $guzzleRequest->withUri(new Uri($guzzleRequest->getUri() . 'B'));
+            }));
+        });
         $stack = MiddlewareStack::create($middlewareA, $middlewareB);
 
         $result = $stack->dispatchRequest(
@@ -82,12 +77,7 @@ final class MiddlewareStackTest extends TestCase
 
     public function testReturnNullWhenRequestWasDropped(): void
     {
-        $dropRequestMiddleware = new class() extends RequestMiddleware {
-            public function handle(Request $request, HandlerInterface $next): PromiseInterface
-            {
-                throw new DropRequestException($request);
-            }
-        };
+        $dropRequestMiddleware = $this->makeMiddleware(static fn ($request) => throw new DropRequestException($request));
         $stack = MiddlewareStack::create($dropRequestMiddleware);
         $result = $stack->dispatchRequest(
             $this->createRequest(),
@@ -100,12 +90,7 @@ final class MiddlewareStackTest extends TestCase
     public function testRejectPromiseIfAnUnexpectedExceptionIsThrown(): void
     {
         $request = $this->createRequest();
-        $exceptionMiddleware = new class() extends RequestMiddleware {
-            public function handle(Request $request, HandlerInterface $next): PromiseInterface
-            {
-                throw new Exception('boom');
-            }
-        };
+        $exceptionMiddleware = $this->makeMiddleware(static fn () => throw new Exception('boom'));
         $stack = MiddlewareStack::create($exceptionMiddleware);
 
         $promise = $stack->dispatchRequest($request, $this->finallyCallback());
@@ -114,7 +99,22 @@ final class MiddlewareStackTest extends TestCase
         self::assertSame(PromiseInterface::REJECTED, $promise->getState());
     }
 
-    private function finallyCallback(?Closure $callback = null)
+    private function makeMiddleware(Closure $handle): RequestMiddlewareInterface
+    {
+        return new class($handle) extends RequestMiddleware {
+            public function __construct(private Closure $callback)
+            {
+                parent::__construct();
+            }
+
+            public function handle(Request $request, HandlerInterface $next): PromiseInterface
+            {
+                return ($this->callback)($request, $next);
+            }
+        };
+    }
+
+    private function finallyCallback(?Closure $callback = null): Closure
     {
         $callback ??= static fn (Request $response) => $response;
 

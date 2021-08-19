@@ -29,6 +29,8 @@ final class Repl extends Command
 {
     protected static $defaultName = 'roach:shell';
 
+    protected static $defaultDescription = 'Launch an interactive roach shell';
+
     protected function configure(): void
     {
         $this

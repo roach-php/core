@@ -13,16 +13,15 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\ItemPipeline;
 
-final class Pipeline
-{
-    public function __construct(private array $processors)
-    {
-    }
+use ArrayAccess;
 
-    public function sendThroughPipeline(mixed $item): void
-    {
-        foreach ($this->processors as $processor) {
-            $item = $processor->processItem($item);
-        }
-    }
+interface ItemInterface extends ArrayAccess
+{
+    public function all(): array;
+
+    public function get(string $key, mixed $default = null): mixed;
+
+    public function set(string $key, mixed $value): self;
+
+    public function has(string $key): bool;
 }

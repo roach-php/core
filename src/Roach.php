@@ -23,7 +23,8 @@ use Sassnowski\Roach\Http\Client;
 use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Middleware\RequestMiddlewareInterface;
-use Sassnowski\Roach\ItemPipeline\Pipeline;
+use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
+use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
 use Sassnowski\Roach\Queue\ArrayRequestQueue;
 use Sassnowski\Roach\Queue\RequestQueue;
 use Sassnowski\Roach\Spider\AbstractSpider;
@@ -76,13 +77,15 @@ final class Roach
     private static function buildItemPipeline(
         AbstractSpider $spider,
         ContainerInterface $container,
-    ): Pipeline {
+    ): ItemPipelineInterface {
+        /** @var ItemPipelineInterface $pipeline */
+        $pipeline = $container->get(ItemPipelineInterface::class);
         $processors = \array_map(
             static fn (string $processor) => $container->get($processor),
             $spider->processors(),
         );
 
-        return new Pipeline($processors);
+        return $pipeline->setProcessors(...$processors);
     }
 
     private static function defaultContainer(): ContainerInterface
@@ -95,6 +98,7 @@ final class Roach
         );
         $container->add(RequestQueue::class, ArrayRequestQueue::class);
         $container->add(ClientInterface::class, Client::class);
+        $container->share(ItemPipelineInterface::class, ImmutableItemPipeline::class);
 
         return $container;
     }

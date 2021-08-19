@@ -15,16 +15,18 @@ namespace Sassnowski\Roach\Spider;
 
 use Closure;
 use Sassnowski\Roach\Http\Request;
+use Sassnowski\Roach\ItemPipeline\Item;
+use Sassnowski\Roach\ItemPipeline\ItemInterface;
 
 final class ParseResult
 {
-    private function __construct(private ?Request $request, private mixed $item)
+    private function __construct(private ?Request $request, private ?ItemInterface $item)
     {
     }
 
-    public static function item($item): self
+    public static function item(array $item): self
     {
-        return new self(null, $item);
+        return new self(null, new Item($item));
     }
 
     public static function request(string $url, callable $parseCallback): self

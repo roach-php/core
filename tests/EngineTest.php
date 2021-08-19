@@ -22,10 +22,12 @@ use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\Pipeline;
+use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
+use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\Queue\ArrayRequestQueue;
 use Sassnowski\Roach\Spider\ParseResult;
 use Sassnowski\Roach\Testing\FakeLogger;
+use Sassnowski\Roach\Testing\FakeProcessor;
 
 /**
  * @internal
@@ -34,16 +36,20 @@ use Sassnowski\Roach\Testing\FakeLogger;
 final class EngineTest extends IntegrationTest
 {
     use InteractsWithRequests;
+    use InteractsWithPipelines;
 
     private FakeLogger $logger;
 
     private Engine $engine;
+
+    private ImmutableItemPipeline $pipeline;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->logger = new FakeLogger();
+        $this->pipeline = new ImmutableItemPipeline($this->logger);
         $this->engine = new Engine(
             new ArrayRequestQueue(),
             new Client(),
@@ -60,7 +66,7 @@ final class EngineTest extends IntegrationTest
             $this->createRequest('http://localhost:8000/test2'),
         ];
 
-        $this->engine->start($startRequests);
+        $this->engine->start($startRequests, MiddlewareStack::create(), $this->pipeline);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
@@ -73,9 +79,10 @@ final class EngineTest extends IntegrationTest
                 yield ParseResult::request($link->getUri(), static fn (Response $response) => yield from []);
             }
         };
+
         $this->engine->start([
             $this->createRequest('http://localhost:8000/test2', $parseFunction),
-        ]);
+        ], MiddlewareStack::create(), $this->pipeline);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test3', 1);
@@ -93,10 +100,11 @@ final class EngineTest extends IntegrationTest
                 return $next($request);
             }
         };
+
         $this->engine->start([
             $this->createRequest('http://localhost:8000/test1'),
             $this->createRequest('http://localhost:8000/test2'),
-        ], MiddlewareStack::create($middleware));
+        ], MiddlewareStack::create($middleware), $this->pipeline);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasNotCrawled('/test2');
@@ -112,23 +120,14 @@ final class EngineTest extends IntegrationTest
 
         $this->engine->start([
             $this->createRequest('http://localhost:8000/test1', $parseCallback),
-        ]);
+        ], MiddlewareStack::create(), $this->pipeline);
 
         self::assertEquals(1, $_SERVER['__parse.called']);
     }
 
     public function testSendItemsThroughItemPipeline(): void
     {
-        $processor = new class() {
-            public mixed $item = null;
-
-            public function processItem(mixed $item)
-            {
-                $this->item = $item;
-
-                return $item;
-            }
-        };
+        $processor = new FakeProcessor();
         $startRequests = [
             $this->createRequest('http://localhost:8000/test1', static function (Response $response) {
                 yield ParseResult::item([
@@ -140,24 +139,15 @@ final class EngineTest extends IntegrationTest
         $this->engine->start(
             $startRequests,
             MiddlewareStack::create(),
-            new Pipeline([$processor]),
+            $this->pipeline->setProcessors($processor),
         );
 
-        self::assertSame(['title' => 'Such headline, wow'], $processor->item);
+        $processor->assertCalledWith(new Item(['title' => 'Such headline, wow']));
     }
 
     public function testHandleBothRequestAndItemEmittedFromSameParseCallback(): void
     {
-        $processor = new class() {
-            public mixed $item = null;
-
-            public function processItem(mixed $item)
-            {
-                $this->item = $item;
-
-                return $item;
-            }
-        };
+        $processor = new FakeProcessor();
         $parseCallback = static function (Response $response) {
             yield ParseResult::item(['title' => '::title::']);
 
@@ -165,11 +155,13 @@ final class EngineTest extends IntegrationTest
             });
         };
 
-        $this->engine->start([
-            $this->createRequest('http://localhost:8000/test1', $parseCallback),
-        ], MiddlewareStack::create(), new Pipeline([$processor]));
+        $this->engine->start(
+            [$this->createRequest('http://localhost:8000/test1', $parseCallback)],
+            MiddlewareStack::create(),
+            $this->pipeline->setProcessors($processor),
+        );
 
-        self::assertSame(['title' => '::title::'], $processor->item);
+        $processor->assertCalledWith(new Item(['title' => '::title::']));
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
     }
@@ -183,7 +175,7 @@ final class EngineTest extends IntegrationTest
             ),
         ];
 
-        $this->engine->start($startRequests);
+        $this->engine->start($startRequests, MiddlewareStack::create(), $this->pipeline);
 
         self::assertTrue(
             $this->logger->messageWasLogged('error', '[Engine] Error while processing response'),
@@ -199,9 +191,11 @@ final class EngineTest extends IntegrationTest
             }
         };
 
-        $this->engine->start([
-            $this->createRequest('http://localhost:8000/test1'),
-        ], MiddlewareStack::create($exceptionMiddleware));
+        $this->engine->start(
+            [$this->createRequest('http://localhost:8000/test1')],
+            MiddlewareStack::create($exceptionMiddleware),
+            $this->pipeline,
+        );
 
         self::assertTrue(
             $this->logger->messageWasLogged('error', '[Engine] Error while dispatching request'),
