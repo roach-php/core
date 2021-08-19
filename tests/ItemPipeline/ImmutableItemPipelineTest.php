@@ -24,7 +24,7 @@ use Sassnowski\Roach\Tests\InteractsWithPipelines;
  *
  * @internal
  */
-final class ItemPipelineTest extends TestCase
+final class ImmutableItemPipelineTest extends TestCase
 {
     use InteractsWithPipelines;
 
@@ -36,6 +36,15 @@ final class ItemPipelineTest extends TestCase
     {
         $this->logger = new FakeLogger();
         $this->pipeline = new ImmutableItemPipeline($this->logger);
+    }
+
+    public function testSettingProcessorsReturnsANewPipelineInstance(): void
+    {
+        $processor = $this->makeProcessor(fn ($item) => $item);
+
+        $pipeline = $this->pipeline->setProcessors($processor);
+
+        self::assertNotSame($this->pipeline, $pipeline);
     }
 
     public function testCallsProcessorsInOrder(): void
