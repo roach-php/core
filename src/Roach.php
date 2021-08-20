@@ -116,7 +116,9 @@ final class Roach
         );
         $container->add(RequestQueue::class, ArrayRequestQueue::class);
         $container->add(ClientInterface::class, Client::class);
-        $container->share(ItemPipelineInterface::class, ImmutableItemPipeline::class);
+        $container->add(ItemPipelineInterface::class, function () use ($container) {
+            return $container->get(ImmutableItemPipeline::class);
+        });
 
         return $container;
     }
