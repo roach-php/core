@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\ItemPipeline;
 
 use Psr\Log\LoggerInterface;
-use Sassnowski\Roach\ItemPipeline\Processors\DropItemCallback;
 use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
 
 final class ImmutableItemPipeline implements ItemPipelineInterface
@@ -38,19 +37,14 @@ final class ImmutableItemPipeline implements ItemPipelineInterface
 
     public function sendItem(ItemInterface $item): ItemInterface
     {
-        $dropped = false;
-
-        $dropItem = new DropItemCallback(static function (ItemInterface $item) use (&$dropped) {
-            $dropped = true;
-
-            return $item;
-        });
-
         foreach ($this->processors as $processor) {
-            $item = $processor->processItem($item, $dropItem);
+            $item = $processor->processItem($item);
 
-            if ($dropped) {
-                $this->logger?->info('[Item pipeline] Item was dropped', ['item' => $item->all()]);
+            if ($item->wasDropped()) {
+                $this->logger?->info('[Item pipeline] Item was dropped', [
+                    'item' => $item->all(),
+                    'reason' => $item->getDropReason(),
+                ]);
 
                 break;
             }

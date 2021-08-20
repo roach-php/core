@@ -102,8 +102,8 @@ final class MiddlewareStackTest extends TestCase
 
     public function testDoesNotPassOnRequestIfDroppedByHandler(): void
     {
-        $dropHandler = $this->makeHandler(handleRequestCallback: static function ($request, $response, $dropRequest) {
-            return $dropRequest();
+        $dropHandler = $this->makeHandler(handleRequestCallback: static function ($request, $response) {
+            return $request->drop('::reason::');
         });
         $handlerB = $this->makeHandler();
         $request = $this->createRequest(

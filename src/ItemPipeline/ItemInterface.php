@@ -14,8 +14,9 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\ItemPipeline;
 
 use ArrayAccess;
+use Sassnowski\Roach\Support\DroppableInterface;
 
-interface ItemInterface extends ArrayAccess
+interface ItemInterface extends ArrayAccess, DroppableInterface
 {
     public function all(): array;
 

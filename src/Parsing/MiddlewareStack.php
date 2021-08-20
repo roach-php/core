@@ -47,17 +47,15 @@ final class MiddlewareStack
             $value = $result->value();
 
             if ($value instanceof Request) {
-                $dropRequest = new DropRequest($value);
-
                 foreach ($this->handlers as $handler) {
-                    $value = $handler->handleRequest($value, $response, $dropRequest);
+                    $value = $handler->handleRequest($value, $response);
 
-                    if ($dropRequest->dropped()) {
+                    if ($value->wasDropped()) {
                         break;
                     }
                 }
 
-                if (!$dropRequest->dropped()) {
+                if (!$value->wasDropped()) {
                     yield ParseResult::fromValue($value);
                 }
             } else {

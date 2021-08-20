@@ -16,7 +16,6 @@ namespace Sassnowski\Roach\Parsing\Handlers;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\Parsing\DropRequest;
 use Sassnowski\Roach\Parsing\ItemHandlerInterface;
 use Sassnowski\Roach\Parsing\MiddlewareInterface;
 use Sassnowski\Roach\Parsing\RequestHandlerInterface;
@@ -38,10 +37,10 @@ final class HandlerAdapter implements MiddlewareInterface
         return $item;
     }
 
-    public function handleRequest(Request $request, Response $response, DropRequest $dropRequest): Request
+    public function handleRequest(Request $request, Response $response): Request
     {
         if ($this->handler instanceof RequestHandlerInterface) {
-            return $this->handler->handleRequest($request, $response, $dropRequest);
+            return $this->handler->handleRequest($request, $response);
         }
 
         return $request;

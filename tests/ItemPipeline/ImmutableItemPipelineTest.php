@@ -40,7 +40,7 @@ final class ImmutableItemPipelineTest extends TestCase
 
     public function testSettingProcessorsReturnsANewPipelineInstance(): void
     {
-        $processor = $this->makeProcessor(fn ($item) => $item);
+        $processor = $this->makeProcessor(static fn ($item) => $item);
 
         $pipeline = $this->pipeline->setProcessors($processor);
 
@@ -50,10 +50,10 @@ final class ImmutableItemPipelineTest extends TestCase
     public function testCallsProcessorsInOrder(): void
     {
         $processorA = $this->makeProcessor(
-            static fn ($item, $dropItem) => $item->set('value', $item->get('value') . 'A'),
+            static fn ($item) => $item->set('value', $item->get('value') . 'A'),
         );
         $processorB = $this->makeProcessor(
-            static fn ($item, $dropItem) => $item->set('value', $item->get('value') . 'B'),
+            static fn ($item) => $item->set('value', $item->get('value') . 'B'),
         );
 
         $result = $this->pipeline
@@ -66,11 +66,11 @@ final class ImmutableItemPipelineTest extends TestCase
     public function testDontCallNextProcessorsIfItemWasDropped(): void
     {
         $processorA = $this->makeProcessor(
-            static fn ($item, $dropItem) => $item->set('value', $item->get('value') . 'A'),
+            static fn ($item) => $item->set('value', $item->get('value') . 'A'),
         );
-        $processorB = $this->makeProcessor(static fn ($item, $dropItem) => $dropItem($item));
+        $processorB = $this->makeProcessor(static fn ($item) => $item->drop('::reason::'));
         $processorC = $this->makeProcessor(
-            static fn ($item, $dropItem) => $item->set('value', $item->get('value') . 'C'),
+            static fn ($item) => $item->set('value', $item->get('value') . 'C'),
         );
 
         $result = $this->pipeline
@@ -82,7 +82,7 @@ final class ImmutableItemPipelineTest extends TestCase
 
     public function testLogIfItemGotDropped(): void
     {
-        $processor = $this->makeProcessor(static fn ($item, $dropItem) => $dropItem($item));
+        $processor = $this->makeProcessor(static fn ($item) => $item->drop('::reason::'));
         $item = new Item(['foo' => 'bar']);
 
         $this->pipeline
@@ -92,6 +92,7 @@ final class ImmutableItemPipelineTest extends TestCase
         self::assertTrue(
             $this->logger->messageWasLogged('info', '[Item pipeline] Item was dropped', [
                 'item' => $item->all(),
+                'reason' => '::reason::',
             ]),
         );
     }

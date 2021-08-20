@@ -18,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\Parsing\DropRequest;
 use Sassnowski\Roach\Parsing\Handlers\FakeHandler;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 use Sassnowski\Roach\Tests\InteractsWithResponses;
@@ -58,7 +57,7 @@ final class FakeHandlerTest extends TestCase
         $request = $this->createRequest();
         $response = $this->makeResponse($this->createRequest());
 
-        $actual = $handler->handleRequest($request, $response, new DropRequest($request));
+        $actual = $handler->handleRequest($request, $response);
 
         self::assertEquals($request, $actual);
     }
@@ -99,7 +98,7 @@ final class FakeHandlerTest extends TestCase
         $request = $this->createRequest();
         $response = $this->makeResponse($this->createRequest());
 
-        $actual = $handler->handleRequest($request, $response, new DropRequest($request));
+        $actual = $handler->handleRequest($request, $response);
 
         self::assertSame('::value::', $actual->getMeta('::key::'));
     }
@@ -232,7 +231,7 @@ final class FakeHandlerTest extends TestCase
         $request = $this->createRequest();
         $response = $this->makeResponse($this->createRequest());
 
-        $handler->handleRequest($request, $response, new DropRequest($request));
+        $handler->handleRequest($request, $response);
 
         $handler->assertRequestHandled($request);
     }
@@ -253,7 +252,7 @@ final class FakeHandlerTest extends TestCase
         $otherRequest = $this->createRequest('::url-b::');
         $response = $this->makeResponse($this->createRequest());
 
-        $handler->handleRequest($otherRequest, $response, new DropRequest($request));
+        $handler->handleRequest($otherRequest, $response);
 
         $this->expectException(AssertionFailedError::class);
         $handler->assertRequestHandled($request);
@@ -268,10 +267,10 @@ final class FakeHandlerTest extends TestCase
 
         $handler->assertRequestNotHandled($request);
 
-        $handler->handleRequest($otherRequest, $response, new DropRequest($otherRequest));
+        $handler->handleRequest($otherRequest, $response);
         $handler->assertRequestNotHandled($request);
 
-        $handler->handleRequest($request, $response, new DropRequest($request));
+        $handler->handleRequest($request, $response);
         $this->expectException(AssertionFailedError::class);
         $handler->assertRequestNotHandled($request);
     }
@@ -284,7 +283,7 @@ final class FakeHandlerTest extends TestCase
 
         $handler->assertNoRequestHandled();
 
-        $handler->handleRequest($request, $response, new DropRequest($request));
+        $handler->handleRequest($request, $response);
         $this->expectException(AssertionFailedError::class);
         $handler->assertNoRequestHandled();
     }

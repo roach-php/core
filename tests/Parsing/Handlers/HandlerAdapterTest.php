@@ -19,7 +19,6 @@ use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\Parsing\DropRequest;
 use Sassnowski\Roach\Parsing\Handlers\HandlerAdapter;
 use Sassnowski\Roach\Parsing\ItemHandlerInterface;
 use Sassnowski\Roach\Parsing\RequestHandlerInterface;
@@ -57,7 +56,7 @@ final class HandlerAdapterTest extends TestCase
             $response = $this->makeResponse($this->createRequest('::url-a::'));
             $request = $this->createRequest('::url-b::');
 
-            $result = $adapter->handleRequest($request, $response, new DropRequest($request));
+            $result = $adapter->handleRequest($request, $response);
 
             self::assertEquals($request, $result);
         }];
@@ -86,7 +85,7 @@ final class HandlerAdapterTest extends TestCase
     public function testRequestHandlerImplementation(callable $testCase): void
     {
         $handler = new class() implements RequestHandlerInterface {
-            public function handleRequest(Request $request, Response $response, DropRequest $dropRequest): Request
+            public function handleRequest(Request $request, Response $response): Request
             {
                 return $request->withMeta('::key::', '::value::');
             }
@@ -119,7 +118,7 @@ final class HandlerAdapterTest extends TestCase
             $response = $this->makeResponse($this->createRequest('::url-a::'));
             $request = $this->createRequest('::url-b::');
 
-            $result = $adapter->handleRequest($request, $response, new DropRequest($request));
+            $result = $adapter->handleRequest($request, $response);
 
             self::assertSame('::value::', $result->getMeta('::key::'));
         }];
@@ -156,7 +155,7 @@ final class HandlerAdapterTest extends TestCase
             $response = $this->makeResponse($this->createRequest('::url-a::'));
             $request = $this->createRequest('::url-b::');
 
-            $result = $adapter->handleRequest($request, $response, new DropRequest($request));
+            $result = $adapter->handleRequest($request, $response);
 
             self::assertEquals($request, $result);
         }];

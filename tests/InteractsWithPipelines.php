@@ -15,7 +15,6 @@ namespace Sassnowski\Roach\Tests;
 
 use Closure;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ItemPipeline\Processors\DropItemCallback;
 use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
 
 trait InteractsWithPipelines
@@ -27,9 +26,9 @@ trait InteractsWithPipelines
             {
             }
 
-            public function processItem(ItemInterface $item, DropItemCallback $dropItem): ItemInterface
+            public function processItem(ItemInterface $item): ItemInterface
             {
-                return ($this->processItem)($item, $dropItem);
+                return ($this->processItem)($item);
             }
         };
     }

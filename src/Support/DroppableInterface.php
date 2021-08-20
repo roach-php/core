@@ -11,11 +11,13 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ItemPipeline\Processors;
+namespace Sassnowski\Roach\Support;
 
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-
-interface ItemProcessorInterface
+interface DroppableInterface
 {
-    public function processItem(ItemInterface $item): ItemInterface;
+    public function drop(string $reason): self;
+
+    public function wasDropped(): bool;
+
+    public function getDropReason(): string;
 }

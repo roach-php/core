@@ -13,8 +13,12 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\ItemPipeline;
 
+use Sassnowski\Roach\Support\Droppable;
+
 final class Item implements ItemInterface
 {
+    use Droppable;
+
     public function __construct(private array $data)
     {
     }

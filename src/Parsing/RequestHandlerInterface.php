@@ -21,9 +21,5 @@ interface RequestHandlerInterface
     /**
      * Handles a request that got emitted while parsing $response.
      */
-    public function handleRequest(
-        Request $request,
-        Response $response,
-        DropRequest $dropRequest,
-    ): Request;
+    public function handleRequest(Request $request, Response $response): Request;
 }

@@ -15,14 +15,13 @@ namespace Sassnowski\Roach\Testing;
 
 use PHPUnit\Framework\Assert;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ItemPipeline\Processors\DropItemCallback;
 use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
 
 final class FakeProcessor implements ItemProcessorInterface
 {
     private array $calls = [];
 
-    public function processItem(ItemInterface $item, DropItemCallback $dropItem): ItemInterface
+    public function processItem(ItemInterface $item): ItemInterface
     {
         $this->calls[] = $item->all();
 

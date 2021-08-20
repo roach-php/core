@@ -18,7 +18,9 @@ use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\Parsing\ParseResult;
+use Sassnowski\Roach\Support\DroppableInterface;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
+use Sassnowski\Roach\Tests\Support\DroppableTest;
 
 /**
  * @group http
@@ -28,6 +30,7 @@ use Sassnowski\Roach\Tests\InteractsWithRequests;
 final class RequestTest extends TestCase
 {
     use InteractsWithRequests;
+    use DroppableTest;
 
     public function testCanAccessTheRequestUri(): void
     {
@@ -100,5 +103,10 @@ final class RequestTest extends TestCase
         $request = $this->createRequest('::request-uri::');
 
         self::assertSame('::request-uri::', (string) $request->getGuzzleRequest()->getUri());
+    }
+
+    protected function createDroppable(): DroppableInterface
+    {
+        return $this->createRequest();
     }
 }

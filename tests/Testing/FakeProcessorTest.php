@@ -16,7 +16,6 @@ namespace Sassnowski\Roach\Tests\Testing;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\ItemPipeline\Item;
-use Sassnowski\Roach\ItemPipeline\Processors\DropItemCallback;
 use Sassnowski\Roach\Testing\FakeProcessor;
 
 /**
@@ -29,7 +28,7 @@ final class FakeProcessorTest extends TestCase
         $item = new Item(['foo' => 'bar']);
         $processor = new FakeProcessor();
 
-        $item = $processor->processItem($item, new DropItemCallback(static fn () => null));
+        $item = $processor->processItem($item);
 
         self::assertSame(['foo' => 'bar'], $item->all());
     }
@@ -39,7 +38,7 @@ final class FakeProcessorTest extends TestCase
         $item = new Item(['foo' => 'bar']);
         $processor = new FakeProcessor();
 
-        $item = $processor->processItem($item, new DropItemCallback(static fn () => null));
+        $item = $processor->processItem($item);
 
         $processor->assertCalledWith($item);
     }
@@ -59,7 +58,7 @@ final class FakeProcessorTest extends TestCase
         $otherItem = new Item(['::key-1::' => '::value-2::']);
         $processor = new FakeProcessor();
 
-        $processor->processItem($item, new DropItemCallback(static fn () => null));
+        $processor->processItem($item);
 
         $this->expectException(AssertionFailedError::class);
         $processor->assertCalledWith($otherItem);
@@ -72,9 +71,9 @@ final class FakeProcessorTest extends TestCase
         $item3 = new Item(['::key-3::' => '::value-3::']);
         $processor = new FakeProcessor();
 
-        $processor->processItem($item1, new DropItemCallback(static fn () => null));
-        $processor->processItem($item2, new DropItemCallback(static fn () => null));
-        $processor->processItem($item3, new DropItemCallback(static fn () => null));
+        $processor->processItem($item1);
+        $processor->processItem($item2);
+        $processor->processItem($item3);
 
         $processor->assertCalledWith($item1);
         $processor->assertCalledWith($item2);
@@ -86,7 +85,7 @@ final class FakeProcessorTest extends TestCase
         $item = new Item(['::key::' => '::value::']);
         $processor = new FakeProcessor();
 
-        $processor->processItem($item, new DropItemCallback(static fn () => null));
+        $processor->processItem($item);
 
         $this->expectException(AssertionFailedError::class);
         $processor->assertNotCalledWith($item);
@@ -106,7 +105,7 @@ final class FakeProcessorTest extends TestCase
         $otherItem = new Item(['::key-2::' => '::value-2::']);
         $processor = new FakeProcessor();
 
-        $processor->processItem($item, new DropItemCallback(static fn () => null));
+        $processor->processItem($item);
 
         $processor->assertNotCalledWith($otherItem);
     }
@@ -117,7 +116,7 @@ final class FakeProcessorTest extends TestCase
         $processor = new FakeProcessor();
 
         $processor->assertNotCalled();
-        $processor->processItem($item, new DropItemCallback(static fn () => null));
+        $processor->processItem($item);
 
         self::expectException(AssertionFailedError::class);
         $processor->assertNotCalled();

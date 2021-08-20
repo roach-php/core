@@ -17,11 +17,14 @@ use Closure;
 use Generator;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use Psr\Http\Message\RequestInterface;
-use Sassnowski\Roach\HasMetaData;
+use Sassnowski\Roach\Support\Droppable;
+use Sassnowski\Roach\Support\DroppableInterface;
+use Sassnowski\Roach\Support\HasMetaData;
 
-final class Request
+final class Request implements DroppableInterface
 {
     use HasMetaData;
+    use Droppable;
 
     private Closure $parseCallback;
 

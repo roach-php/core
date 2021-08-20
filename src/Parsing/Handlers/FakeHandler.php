@@ -18,7 +18,6 @@ use PHPUnit\Framework\Assert;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\Parsing\DropRequest;
 use Sassnowski\Roach\Parsing\MiddlewareInterface;
 
 final class FakeHandler implements MiddlewareInterface
@@ -47,12 +46,12 @@ final class FakeHandler implements MiddlewareInterface
         return $response;
     }
 
-    public function handleRequest(Request $request, Response $response, DropRequest $dropRequest): Request
+    public function handleRequest(Request $request, Response $response): Request
     {
         $this->requestCalls[] = $request;
 
         if (null !== $this->handleRequestCallback) {
-            return ($this->handleRequestCallback)($request, $response, $dropRequest);
+            return ($this->handleRequestCallback)($request, $response);
         }
 
         return $request;
