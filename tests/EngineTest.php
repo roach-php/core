@@ -18,14 +18,15 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Sassnowski\Roach\Engine;
 use Sassnowski\Roach\Http\Client;
 use Sassnowski\Roach\Http\Middleware\HandlerInterface;
-use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
+use Sassnowski\Roach\Http\Middleware\MiddlewareStack as HttpMiddleware;
 use Sassnowski\Roach\Http\Middleware\RequestMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\Item;
+use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
+use Sassnowski\Roach\Parsing\ParseResult;
 use Sassnowski\Roach\Queue\ArrayRequestQueue;
-use Sassnowski\Roach\Spider\ParseResult;
 use Sassnowski\Roach\Testing\FakeLogger;
 use Sassnowski\Roach\Testing\FakeProcessor;
 
@@ -66,7 +67,12 @@ final class EngineTest extends IntegrationTest
             $this->createRequest('http://localhost:8000/test2'),
         ];
 
-        $this->engine->start($startRequests, MiddlewareStack::create(), $this->pipeline);
+        $this->engine->start(
+            $startRequests,
+            HttpMiddleware::create(),
+            $this->pipeline,
+            ResponseMiddleware::create(),
+        );
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
@@ -80,9 +86,12 @@ final class EngineTest extends IntegrationTest
             }
         };
 
-        $this->engine->start([
-            $this->createRequest('http://localhost:8000/test2', $parseFunction),
-        ], MiddlewareStack::create(), $this->pipeline);
+        $this->engine->start(
+            [$this->createRequest('http://localhost:8000/test2', $parseFunction)],
+            HttpMiddleware::create(),
+            $this->pipeline,
+            ResponseMiddleware::create(),
+        );
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test3', 1);
@@ -101,10 +110,15 @@ final class EngineTest extends IntegrationTest
             }
         };
 
-        $this->engine->start([
-            $this->createRequest('http://localhost:8000/test1'),
-            $this->createRequest('http://localhost:8000/test2'),
-        ], MiddlewareStack::create($middleware), $this->pipeline);
+        $this->engine->start(
+            [
+                $this->createRequest('http://localhost:8000/test1'),
+                $this->createRequest('http://localhost:8000/test2'),
+            ],
+            HttpMiddleware::create($middleware),
+            $this->pipeline,
+            ResponseMiddleware::create(),
+        );
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasNotCrawled('/test2');
@@ -118,9 +132,12 @@ final class EngineTest extends IntegrationTest
             });
         };
 
-        $this->engine->start([
-            $this->createRequest('http://localhost:8000/test1', $parseCallback),
-        ], MiddlewareStack::create(), $this->pipeline);
+        $this->engine->start(
+            [$this->createRequest('http://localhost:8000/test1', $parseCallback)],
+            HttpMiddleware::create(),
+            $this->pipeline,
+            ResponseMiddleware::create(),
+        );
 
         self::assertEquals(1, $_SERVER['__parse.called']);
     }
@@ -138,8 +155,9 @@ final class EngineTest extends IntegrationTest
 
         $this->engine->start(
             $startRequests,
-            MiddlewareStack::create(),
+            HttpMiddleware::create(),
             $this->pipeline->setProcessors($processor),
+            ResponseMiddleware::create(),
         );
 
         $processor->assertCalledWith(new Item(['title' => 'Such headline, wow']));
@@ -157,8 +175,9 @@ final class EngineTest extends IntegrationTest
 
         $this->engine->start(
             [$this->createRequest('http://localhost:8000/test1', $parseCallback)],
-            MiddlewareStack::create(),
+            HttpMiddleware::create(),
             $this->pipeline->setProcessors($processor),
+            ResponseMiddleware::create(),
         );
 
         $processor->assertCalledWith(new Item(['title' => '::title::']));
@@ -175,7 +194,12 @@ final class EngineTest extends IntegrationTest
             ),
         ];
 
-        $this->engine->start($startRequests, MiddlewareStack::create(), $this->pipeline);
+        $this->engine->start(
+            $startRequests,
+            HttpMiddleware::create(),
+            $this->pipeline,
+            ResponseMiddleware::create(),
+        );
 
         self::assertTrue(
             $this->logger->messageWasLogged('error', '[Engine] Error while processing response'),
@@ -193,8 +217,9 @@ final class EngineTest extends IntegrationTest
 
         $this->engine->start(
             [$this->createRequest('http://localhost:8000/test1')],
-            MiddlewareStack::create($exceptionMiddleware),
+            HttpMiddleware::create($exceptionMiddleware),
             $this->pipeline,
+            ResponseMiddleware::create(),
         );
 
         self::assertTrue(

@@ -17,7 +17,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Spider\ParseResult;
+use Sassnowski\Roach\Parsing\ParseResult;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 
 /**
@@ -83,6 +83,16 @@ final class RequestTest extends TestCase
         )->next();
 
         self::assertTrue($called);
+    }
+
+    public function testCanAddMetaDataToRequest(): void
+    {
+        $request = $this->createRequest();
+
+        self::assertNull($request->getMeta('::meta-key::'));
+
+        $request = $request->withMeta('::meta-key::', '::meta-value::');
+        self::assertSame('::meta-value::', $request->getMeta('::meta-key::'));
     }
 
     public function testReturnsUnderlyingGuzzleRequest(): void

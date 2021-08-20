@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Spider;
+namespace Sassnowski\Roach\Parsing;
 
 use Closure;
 use Sassnowski\Roach\Http\Request;
@@ -24,9 +24,23 @@ final class ParseResult
     {
     }
 
+    public static function fromValue(Request|ItemInterface $value): self
+    {
+        if ($value instanceof ItemInterface) {
+            return new self(null, $value);
+        }
+
+        return new self($value, null);
+    }
+
     public static function item(array $item): self
     {
         return new self(null, new Item($item));
+    }
+
+    public function value(): Request|ItemInterface
+    {
+        return $this->request ?: $this->item;
     }
 
     public static function request(string $url, callable $parseCallback): self

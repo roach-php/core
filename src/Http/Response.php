@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Http;
 
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Sassnowski\Roach\HasMetaData;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -21,6 +22,8 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 final class Response
 {
+    use HasMetaData;
+
     private Crawler $crawler;
 
     public function __construct(private GuzzleResponse $response, private Request $request)

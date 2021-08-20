@@ -17,9 +17,12 @@ use Closure;
 use Generator;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use Psr\Http\Message\RequestInterface;
+use Sassnowski\Roach\HasMetaData;
 
 final class Request
 {
+    use HasMetaData;
+
     private Closure $parseCallback;
 
     private RequestInterface $guzzleRequest;
