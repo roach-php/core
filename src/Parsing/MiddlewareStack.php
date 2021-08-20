@@ -38,6 +38,10 @@ final class MiddlewareStack
     {
         foreach ($this->handlers as $handler) {
             $response = $handler->handleResponse($response);
+
+            if ($response->wasDropped()) {
+                return;
+            }
         }
 
         /** @var ParseResult[] $results */
@@ -45,24 +49,19 @@ final class MiddlewareStack
 
         foreach ($results as $result) {
             $value = $result->value();
+            $handleMethod = $value instanceof Request
+                ? 'handleRequest'
+                : 'handleItem';
 
-            if ($value instanceof Request) {
-                foreach ($this->handlers as $handler) {
-                    $value = $handler->handleRequest($value, $response);
+            foreach ($this->handlers as $handler) {
+                $value = $handler->{$handleMethod}($value, $response);
 
-                    if ($value->wasDropped()) {
-                        break;
-                    }
+                if ($value->wasDropped()) {
+                    break;
                 }
+            }
 
-                if (!$value->wasDropped()) {
-                    yield ParseResult::fromValue($value);
-                }
-            } else {
-                foreach ($this->handlers as $handler) {
-                    $value = $handler->handleItem($value, $response);
-                }
-
+            if (!$value->wasDropped()) {
                 yield ParseResult::fromValue($value);
             }
         }

@@ -16,11 +16,13 @@ namespace Sassnowski\Roach\Tests\Parsing;
 use Closure;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Response;
+use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\Parsing\Handlers\FakeHandler;
 use Sassnowski\Roach\Parsing\MiddlewareStack;
 use Sassnowski\Roach\Parsing\ParseResult;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 use Sassnowski\Roach\Tests\InteractsWithResponses;
+use function iterator_to_array;
 
 /**
  * @internal
@@ -59,6 +61,19 @@ final class MiddlewareStackTest extends TestCase
         $stack->handle($response)->next();
 
         $handler->assertResponseHandled($response);
+    }
+
+    public function testDoesNotPassOnResponseIfDroppedByHandler(): void
+    {
+        $dropHandler = $this->makeHandler(handleResponse: fn ($response) => $response->drop('::reason::'));
+        $otherHandler = $this->makeHandler();
+        $response = $this->makeResponse($this->createRequest());
+        $stack = new MiddlewareStack([$dropHandler, $otherHandler]);
+
+        $result = iterator_to_array($stack->handle($response));
+
+        self::assertEmpty($result);
+        $otherHandler->assertNoResponseHandled();
     }
 
     public function testCallResponseHandlersInOrder(): void
@@ -134,6 +149,22 @@ final class MiddlewareStackTest extends TestCase
             ->current();
 
         self::assertSame('AB', $result->value()->get('::key::'));
+    }
+
+    public function testDoesNotPassOnItemIfDroppedByHandler(): void
+    {
+        $dropHandler = $this->makeHandler(handleItemCallback: static function ($item, $response) {
+            return $item->drop('::reason::');
+        });
+        $handlerB = $this->makeHandler();
+        $item = new Item([]);
+        $request = $this->createRequest(callback: fn () => yield ParseResult::fromValue($item));
+        $stack = new MiddlewareStack([$dropHandler, $handlerB]);
+
+        $result = \iterator_to_array($stack->handle($this->makeResponse($request)));
+
+        $handlerB->assertNoItemHandled();
+        self::assertEmpty($result);
     }
 
     private function makeHandler(
