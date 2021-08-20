@@ -15,7 +15,7 @@ namespace Sassnowski\Roach\Support;
 
 interface DroppableInterface
 {
-    public function drop(string $reason): self;
+    public function drop(string $reason): static;
 
     public function wasDropped(): bool;
 

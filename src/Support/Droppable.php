@@ -19,7 +19,7 @@ trait Droppable
 
     private bool $dropped = false;
 
-    public function drop(string $reason): DroppableInterface
+    public function drop(string $reason): static
     {
         $clone = clone $this;
         $clone->dropped = true;
