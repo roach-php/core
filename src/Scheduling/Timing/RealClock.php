@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Scheduling\Timing;
 
 use DateTimeImmutable;
+use ErrorException;
 
 final class RealClock implements ClockInterface
 {
@@ -35,6 +36,10 @@ final class RealClock implements ClockInterface
             return;
         }
 
-        \time_sleep_until($date->getTimestamp());
+        try {
+            \time_sleep_until($date->getTimestamp());
+        } catch (ErrorException) {
+            return;
+        }
     }
 }
