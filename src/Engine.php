@@ -24,13 +24,13 @@ use Sassnowski\Roach\ItemPipeline\ItemInterface;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
 use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
 use Sassnowski\Roach\Parsing\ParseResult;
-use Sassnowski\Roach\Queue\RequestQueue;
+use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
 use Throwable;
 
 final class Engine
 {
     public function __construct(
-        private RequestQueue $requestQueue,
+        private RequestSchedulerInterface $scheduler,
         private ClientInterface $client,
         private LoggerInterface $logger,
     ) {
@@ -41,7 +41,12 @@ final class Engine
         HttpMiddleware $middlewareStack,
         ItemPipelineInterface $itemPipeline,
         ResponseMiddleware $responseMiddleware,
+        int $concurrency = 25,
+        int $delay = 0,
     ): void {
+        $this->scheduler->setBatchSize($concurrency);
+        $this->scheduler->setDelay($delay);
+
         foreach ($startRequests as $request) {
             $this->scheduleRequest($request);
         }
@@ -54,9 +59,9 @@ final class Engine
         ItemPipelineInterface $pipeline,
         ResponseMiddleware $responseMiddleware,
     ): void {
-        while (!$this->requestQueue->empty()) {
+        while (!$this->scheduler->empty()) {
             $requests = function () use ($middlewareStack, $pipeline, $responseMiddleware) {
-                foreach ($this->requestQueue->all() as $request) {
+                foreach ($this->scheduler->nextRequests() as $request) {
                     yield fn () => $this->sendRequest($request, $middlewareStack, $pipeline, $responseMiddleware);
                 }
             };
@@ -113,6 +118,6 @@ final class Engine
 
     private function scheduleRequest(Request $request): void
     {
-        $this->requestQueue->queue($request);
+        $this->scheduler->schedule($request);
     }
 }

@@ -11,20 +11,22 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Queue;
+namespace Sassnowski\Roach\Scheduling;
 
 use Sassnowski\Roach\Http\Request;
 
-interface RequestQueue
+interface RequestSchedulerInterface
 {
-    public function queue(Request $request): void;
+    public function schedule(Request $request): void;
 
     /**
      * @return Request[]
      */
-    public function all(): array;
+    public function nextRequests(): array;
 
     public function empty(): bool;
 
-    public function count(): int;
+    public function setBatchSize(int $batchSize): self;
+
+    public function setDelay(int $delay): self;
 }

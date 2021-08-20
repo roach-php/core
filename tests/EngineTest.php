@@ -26,7 +26,8 @@ use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
 use Sassnowski\Roach\Parsing\ParseResult;
-use Sassnowski\Roach\Queue\ArrayRequestQueue;
+use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
+use Sassnowski\Roach\Scheduling\Timing\FakeClock;
 use Sassnowski\Roach\Testing\FakeLogger;
 use Sassnowski\Roach\Testing\FakeProcessor;
 
@@ -52,7 +53,7 @@ final class EngineTest extends IntegrationTest
         $this->logger = new FakeLogger();
         $this->pipeline = new ImmutableItemPipeline($this->logger);
         $this->engine = new Engine(
-            new ArrayRequestQueue(),
+            new ArrayRequestScheduler(new FakeClock()),
             new Client(),
             $this->logger,
         );

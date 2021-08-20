@@ -32,9 +32,9 @@ final class Client implements ClientInterface
         return $this->client->sendAsync($request->getGuzzleRequest());
     }
 
-    public function pool(Generator $requests, int $concurrency = 5): PromiseInterface
+    public function pool(Generator $requests): PromiseInterface
     {
-        $pool = new Pool($this->client, $requests, ['concurrency' => $concurrency]);
+        $pool = new Pool($this->client, $requests, ['concurrency' => 0]);
 
         return $pool->promise();
     }

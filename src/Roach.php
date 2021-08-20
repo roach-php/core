@@ -27,8 +27,10 @@ use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
 use Sassnowski\Roach\Parsing\Handlers\HandlerAdapter;
 use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
-use Sassnowski\Roach\Queue\ArrayRequestQueue;
-use Sassnowski\Roach\Queue\RequestQueue;
+use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
+use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
+use Sassnowski\Roach\Scheduling\Timing\ClockInterface;
+use Sassnowski\Roach\Scheduling\Timing\RealClock;
 use Sassnowski\Roach\Spider\AbstractSpider;
 
 final class Roach
@@ -59,6 +61,8 @@ final class Roach
             $httpMiddleware,
             $itemPipeline,
             $spiderMiddleware,
+            $spider::$concurrency,
+            $spider::$requestDelay,
         );
     }
 
@@ -114,11 +118,16 @@ final class Roach
             LoggerInterface::class,
             static fn () => (new Logger('roach'))->pushHandler(new StreamHandler('php://stdout')),
         );
-        $container->add(RequestQueue::class, ArrayRequestQueue::class);
+        $container->add(ClockInterface::class, RealClock::class);
+        $container->add(
+            RequestSchedulerInterface::class,
+            static fn () => $container->get(ArrayRequestScheduler::class),
+        );
         $container->add(ClientInterface::class, Client::class);
-        $container->add(ItemPipelineInterface::class, static function () use ($container) {
-            return $container->get(ImmutableItemPipeline::class);
-        });
+        $container->add(
+            ItemPipelineInterface::class,
+            static fn () => $container->get(ImmutableItemPipeline::class),
+        );
 
         return $container;
     }

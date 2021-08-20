@@ -11,14 +11,15 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Http;
+namespace Sassnowski\Roach\Scheduling\Timing;
 
-use Generator;
-use GuzzleHttp\Promise\PromiseInterface;
+use DateTimeImmutable;
 
-interface ClientInterface
+interface ClockInterface
 {
-    public function dispatch(Request $request): PromiseInterface;
+    public function now(): DateTimeImmutable;
 
-    public function pool(Generator $requests): PromiseInterface;
+    public function sleep(int $seconds): void;
+
+    public function sleepUntil(DateTimeImmutable $date): void;
 }

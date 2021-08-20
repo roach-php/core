@@ -22,6 +22,10 @@ abstract class AbstractSpider
 {
     public static string $name = 'spider_name';
 
+    public static int $concurrency = 25;
+
+    public static int $requestDelay = 0;
+
     protected array $startUrls = [];
 
     protected array $httpMiddleware = [];

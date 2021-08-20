@@ -22,7 +22,6 @@ use Sassnowski\Roach\Parsing\MiddlewareStack;
 use Sassnowski\Roach\Parsing\ParseResult;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 use Sassnowski\Roach\Tests\InteractsWithResponses;
-use function iterator_to_array;
 
 /**
  * @internal
@@ -65,12 +64,12 @@ final class MiddlewareStackTest extends TestCase
 
     public function testDoesNotPassOnResponseIfDroppedByHandler(): void
     {
-        $dropHandler = $this->makeHandler(handleResponse: fn ($response) => $response->drop('::reason::'));
+        $dropHandler = $this->makeHandler(handleResponse: static fn ($response) => $response->drop('::reason::'));
         $otherHandler = $this->makeHandler();
         $response = $this->makeResponse($this->createRequest());
         $stack = new MiddlewareStack([$dropHandler, $otherHandler]);
 
-        $result = iterator_to_array($stack->handle($response));
+        $result = \iterator_to_array($stack->handle($response));
 
         self::assertEmpty($result);
         $otherHandler->assertNoResponseHandled();
@@ -158,7 +157,7 @@ final class MiddlewareStackTest extends TestCase
         });
         $handlerB = $this->makeHandler();
         $item = new Item([]);
-        $request = $this->createRequest(callback: fn () => yield ParseResult::fromValue($item));
+        $request = $this->createRequest(callback: static fn () => yield ParseResult::fromValue($item));
         $stack = new MiddlewareStack([$dropHandler, $handlerB]);
 
         $result = \iterator_to_array($stack->handle($this->makeResponse($request)));
