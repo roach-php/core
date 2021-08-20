@@ -16,6 +16,7 @@ namespace Sassnowski\Roach\Spider;
 use Generator;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
+use Sassnowski\Roach\Parsing\ParseResult;
 
 abstract class AbstractSpider
 {
@@ -23,15 +24,22 @@ abstract class AbstractSpider
 
     protected array $startUrls = [];
 
-    protected array $middleware = [];
+    protected array $httpMiddleware = [];
+
+    protected array $spiderMiddleware = [];
 
     protected array $processors = [];
 
     abstract public function parse(Response $response): Generator;
 
-    final public function middleware(): array
+    final public function httpMiddleware(): array
     {
-        return $this->getMiddleware();
+        return $this->getHttpMiddleware();
+    }
+
+    final public function spiderMiddleware(): array
+    {
+        return $this->getSpiderMiddleware();
     }
 
     final public function processors(): array
@@ -65,9 +73,14 @@ abstract class AbstractSpider
         return ParseResult::item($item);
     }
 
-    protected function getMiddleware(): array
+    protected function getHttpMiddleware(): array
     {
-        return $this->middleware;
+        return $this->httpMiddleware;
+    }
+
+    protected function getSpiderMiddleware(): array
+    {
+        return $this->spiderMiddleware;
     }
 
     protected function getProcessors(): array

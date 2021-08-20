@@ -17,14 +17,14 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Sassnowski\Roach\Http\ClientInterface;
-use Sassnowski\Roach\Http\Middleware\MiddlewareStack;
+use Sassnowski\Roach\Http\Middleware\MiddlewareStack as HttpMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
+use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
+use Sassnowski\Roach\Parsing\ParseResult;
 use Sassnowski\Roach\Queue\RequestQueue;
-use Sassnowski\Roach\Spider\ParseResult;
 use Throwable;
 
 final class Engine
@@ -38,22 +38,26 @@ final class Engine
 
     public function start(
         array $startRequests,
-        MiddlewareStack $middlewareStack,
+        HttpMiddleware $middlewareStack,
         ItemPipelineInterface $itemPipeline,
+        ResponseMiddleware $responseMiddleware,
     ): void {
         foreach ($startRequests as $request) {
             $this->scheduleRequest($request);
         }
 
-        $this->work($middlewareStack, $itemPipeline);
+        $this->work($middlewareStack, $itemPipeline, $responseMiddleware);
     }
 
-    private function work(MiddlewareStack $middlewareStack, ImmutableItemPipeline $pipeline): void
-    {
+    private function work(
+        HttpMiddleware $middlewareStack,
+        ItemPipelineInterface $pipeline,
+        ResponseMiddleware $responseMiddleware,
+    ): void {
         while (!$this->requestQueue->empty()) {
-            $requests = function () use ($middlewareStack, $pipeline) {
+            $requests = function () use ($middlewareStack, $pipeline, $responseMiddleware) {
                 foreach ($this->requestQueue->all() as $request) {
-                    yield fn () => $this->sendRequest($request, $middlewareStack, $pipeline);
+                    yield fn () => $this->sendRequest($request, $middlewareStack, $pipeline, $responseMiddleware);
                 }
             };
 
@@ -61,10 +65,13 @@ final class Engine
         }
     }
 
-    private function onFulfilled(Response $response, ImmutableItemPipeline $itemPipeline): void
-    {
+    private function onFulfilled(
+        Response $response,
+        ItemPipelineInterface $itemPipeline,
+        ResponseMiddleware $responseMiddleware,
+    ): void {
         /** @var ParseResult[] $parseResults */
-        $parseResults = $response->getRequest()->callback($response);
+        $parseResults = $responseMiddleware->handle($response);
 
         foreach ($parseResults as $result) {
             $result->apply(
@@ -76,8 +83,9 @@ final class Engine
 
     private function sendRequest(
         Request $request,
-        MiddlewareStack $middlewareStack,
-        ImmutableItemPipeline $itemPipeline,
+        HttpMiddleware $middlewareStack,
+        ItemPipelineInterface $itemPipeline,
+        ResponseMiddleware $responseMiddleware,
     ): ?PromiseInterface {
         $promise = $middlewareStack->dispatchRequest(
             $request,
@@ -87,8 +95,8 @@ final class Engine
         );
 
         return $promise
-            ?->then(function (Response $response) use ($itemPipeline): void {
-                $this->onFulfilled($response, $itemPipeline);
+            ?->then(function (Response $response) use ($itemPipeline, $responseMiddleware): void {
+                $this->onFulfilled($response, $itemPipeline, $responseMiddleware);
             }, function (Throwable $e) use ($request): void {
                 $this->logger->error('[Engine] Error while dispatching request', [
                     'uri' => $request->getUri(),
