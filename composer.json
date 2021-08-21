@@ -1,8 +1,8 @@
 {
     "name": "roach-php/roach",
     "type": "library",
-    "license": "MIT",
     "description": "A complete web scraping toolkit for PHP",
+    "license": "MIT",
     "authors": [
         {
             "name": "Kai Sassnowski",
@@ -27,6 +27,7 @@
         "http-interop/http-factory-guzzle": "^1.2",
         "phpstan/phpstan": "^0.12.95",
         "phpunit/phpunit": "^9.5",
+        "roave/security-advisories": "dev-latest",
         "slim/slim": "4.*",
         "spatie/phpunit-watcher": "^1.23"
     },
