@@ -25,12 +25,12 @@ use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\Item;
+use Sassnowski\Roach\ItemPipeline\Processors\FakeProcessor;
 use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
 use Sassnowski\Roach\Parsing\ParseResult;
 use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
 use Sassnowski\Roach\Scheduling\Timing\FakeClock;
 use Sassnowski\Roach\Testing\FakeLogger;
-use Sassnowski\Roach\ItemPipeline\Processors\FakeProcessor;
 
 /**
  * @internal

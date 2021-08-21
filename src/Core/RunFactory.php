@@ -40,7 +40,7 @@ final class RunFactory
 
     private function buildHttpMiddleware(array $handlers): HttpMiddleware
     {
-        $handlers = array_map([$this, 'buildConfigurable'], $handlers);
+        $handlers = \array_map([$this, 'buildConfigurable'], $handlers);
 
         return HttpMiddleware::create(...$handlers);
     }
@@ -50,7 +50,7 @@ final class RunFactory
         /** @var ItemPipelineInterface $pipeline */
         $pipeline = $this->container->get(ItemPipelineInterface::class);
 
-        $processors = array_map([$this, 'buildConfigurable'], $processors);
+        $processors = \array_map([$this, 'buildConfigurable'], $processors);
 
         return $pipeline->setProcessors(...$processors);
     }

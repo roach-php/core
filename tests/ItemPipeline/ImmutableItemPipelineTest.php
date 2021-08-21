@@ -21,7 +21,6 @@ use Sassnowski\Roach\ItemPipeline\ItemInterface;
 use Sassnowski\Roach\ItemPipeline\ItemProcessor;
 use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
 use Sassnowski\Roach\Testing\FakeLogger;
-use Sassnowski\Roach\Tests\InteractsWithPipelines;
 
 /**
  * @group items
