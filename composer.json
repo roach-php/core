@@ -2,6 +2,7 @@
     "name": "roach-php/roach",
     "type": "library",
     "license": "MIT",
+    "description": "A complete web scraping toolkit for PHP",
     "authors": [
         {
             "name": "Kai Sassnowski",
