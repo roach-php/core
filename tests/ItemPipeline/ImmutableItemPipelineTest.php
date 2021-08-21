@@ -13,9 +13,13 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Tests\ItemPipeline;
 
+use Closure;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\Item;
+use Sassnowski\Roach\ItemPipeline\ItemInterface;
+use Sassnowski\Roach\ItemPipeline\ItemProcessor;
+use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
 use Sassnowski\Roach\Testing\FakeLogger;
 use Sassnowski\Roach\Tests\InteractsWithPipelines;
 
@@ -26,8 +30,6 @@ use Sassnowski\Roach\Tests\InteractsWithPipelines;
  */
 final class ImmutableItemPipelineTest extends TestCase
 {
-    use InteractsWithPipelines;
-
     private ImmutableItemPipeline $pipeline;
 
     private FakeLogger $logger;
@@ -95,5 +97,20 @@ final class ImmutableItemPipelineTest extends TestCase
                 'reason' => '::reason::',
             ]),
         );
+    }
+
+    private function makeProcessor(Closure $processItem): ItemProcessorInterface
+    {
+        return new class($processItem) extends ItemProcessor {
+            public function __construct(private Closure $processItem)
+            {
+                parent::__construct();
+            }
+
+            public function processItem(ItemInterface $item): ItemInterface
+            {
+                return ($this->processItem)($item);
+            }
+        };
     }
 }

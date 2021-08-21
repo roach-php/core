@@ -15,8 +15,9 @@ namespace Sassnowski\Roach\Parsing;
 
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
+use Sassnowski\Roach\Support\ConfigurableInterface;
 
-interface ItemHandlerInterface
+interface ItemHandlerInterface extends ConfigurableInterface
 {
     /**
      * Handles an item that got emitted while parsing $response.

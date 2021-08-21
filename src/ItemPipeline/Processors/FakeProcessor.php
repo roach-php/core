@@ -11,13 +11,13 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Testing;
+namespace Sassnowski\Roach\ItemPipeline\Processors;
 
 use PHPUnit\Framework\Assert;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
+use Sassnowski\Roach\ItemPipeline\ItemProcessor;
 
-final class FakeProcessor implements ItemProcessorInterface
+final class FakeProcessor extends ItemProcessor
 {
     private array $calls = [];
 

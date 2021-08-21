@@ -19,6 +19,7 @@ use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
+use Sassnowski\Roach\Parsing\Handlers\Handler;
 use Sassnowski\Roach\Parsing\Handlers\HandlerAdapter;
 use Sassnowski\Roach\Parsing\ItemHandlerInterface;
 use Sassnowski\Roach\Parsing\RequestHandlerInterface;
@@ -39,7 +40,7 @@ final class HandlerAdapterTest extends TestCase
      */
     public function testItemHandlerImplementation(callable $testCase): void
     {
-        $handler = new class() implements ItemHandlerInterface {
+        $handler = new class() extends Handler implements ItemHandlerInterface {
             public function handleItem(ItemInterface $item, Response $response, ): ItemInterface
             {
                 return $item->set('::key::', '::value::');
@@ -84,7 +85,7 @@ final class HandlerAdapterTest extends TestCase
      */
     public function testRequestHandlerImplementation(callable $testCase): void
     {
-        $handler = new class() implements RequestHandlerInterface {
+        $handler = new class() extends Handler implements RequestHandlerInterface {
             public function handleRequest(Request $request, Response $response): Request
             {
                 return $request->withMeta('::key::', '::value::');
@@ -129,7 +130,7 @@ final class HandlerAdapterTest extends TestCase
      */
     public function testResponseHandlerImplementation(callable $testCase): void
     {
-        $handler = new class() implements ResponseHandlerInterface {
+        $handler = new class() extends Handler implements ResponseHandlerInterface {
             public function handleResponse(Response $response): Response
             {
                 return $response->withMeta('::key::', '::value::');

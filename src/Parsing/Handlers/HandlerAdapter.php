@@ -54,4 +54,9 @@ final class HandlerAdapter implements MiddlewareInterface
 
         return $response;
     }
+
+    public function configure(array $options): void
+    {
+        $this->handler->configure($options);
+    }
 }

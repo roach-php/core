@@ -14,8 +14,9 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\ItemPipeline\Processors;
 
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
+use Sassnowski\Roach\Support\ConfigurableInterface;
 
-interface ItemProcessorInterface
+interface ItemProcessorInterface extends ConfigurableInterface
 {
     public function processItem(ItemInterface $item): ItemInterface;
 }

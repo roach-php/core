@@ -20,7 +20,7 @@ use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
 use Sassnowski\Roach\Parsing\MiddlewareInterface;
 
-final class FakeHandler implements MiddlewareInterface
+final class FakeHandler extends Handler implements MiddlewareInterface
 {
     private array $responseCalls = [];
 
@@ -33,6 +33,7 @@ final class FakeHandler implements MiddlewareInterface
         private ?Closure $handleItemCallback = null,
         private ?Closure $handleRequestCallback = null,
     ) {
+        parent::__construct();
     }
 
     public function handleResponse(Response $response): Response

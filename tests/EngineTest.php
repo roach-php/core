@@ -30,7 +30,7 @@ use Sassnowski\Roach\Parsing\ParseResult;
 use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
 use Sassnowski\Roach\Scheduling\Timing\FakeClock;
 use Sassnowski\Roach\Testing\FakeLogger;
-use Sassnowski\Roach\Testing\FakeProcessor;
+use Sassnowski\Roach\ItemPipeline\Processors\FakeProcessor;
 
 /**
  * @internal
@@ -39,7 +39,6 @@ use Sassnowski\Roach\Testing\FakeProcessor;
 final class EngineTest extends IntegrationTest
 {
     use InteractsWithRequests;
-    use InteractsWithPipelines;
 
     private FakeLogger $logger;
 

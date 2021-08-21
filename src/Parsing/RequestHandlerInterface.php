@@ -15,8 +15,9 @@ namespace Sassnowski\Roach\Parsing;
 
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
+use Sassnowski\Roach\Support\ConfigurableInterface;
 
-interface RequestHandlerInterface
+interface RequestHandlerInterface extends ConfigurableInterface
 {
     /**
      * Handles a request that got emitted while parsing $response.

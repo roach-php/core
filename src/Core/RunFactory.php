@@ -15,7 +15,6 @@ namespace Sassnowski\Roach\Core;
 
 use Psr\Container\ContainerInterface;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack as HttpMiddleware;
-use Sassnowski\Roach\Http\Middleware\RequestMiddlewareInterface;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
 use Sassnowski\Roach\Parsing\Handlers\HandlerAdapter;
 use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
@@ -41,19 +40,7 @@ final class RunFactory
 
     private function buildHttpMiddleware(array $handlers): HttpMiddleware
     {
-        $handlers = \array_map(function (string|array $middleware) {
-            if (!\is_array($middleware)) {
-                $middleware = [$middleware, []];
-            }
-
-            [$class, $options] = $middleware;
-
-            /** @var RequestMiddlewareInterface $instance */
-            $instance = $this->container->get($class);
-            $instance->configure($options);
-
-            return $instance;
-        }, $handlers);
+        $handlers = array_map([$this, 'buildConfigurable'], $handlers);
 
         return HttpMiddleware::create(...$handlers);
     }
@@ -63,10 +50,7 @@ final class RunFactory
         /** @var ItemPipelineInterface $pipeline */
         $pipeline = $this->container->get(ItemPipelineInterface::class);
 
-        $processors = \array_map(
-            fn (string $processor) => $this->container->get($processor),
-            $processors,
-        );
+        $processors = array_map([$this, 'buildConfigurable'], $processors);
 
         return $pipeline->setProcessors(...$processors);
     }
@@ -74,9 +58,23 @@ final class RunFactory
     private function buildResponseMiddleware(array $handlers): ResponseMiddleware
     {
         $handlers = \array_map(function (string $handler) {
-            return new HandlerAdapter($this->container->get($handler));
+            return new HandlerAdapter($this->buildConfigurable($handler));
         }, $handlers);
 
         return ResponseMiddleware::create(...$handlers);
+    }
+
+    private function buildConfigurable(string|array $configurable): mixed
+    {
+        if (!\is_array($configurable)) {
+            $configurable = [$configurable, []];
+        }
+
+        [$class, $options] = $configurable;
+
+        $instance = $this->container->get($class);
+        $instance->configure($options);
+
+        return $instance;
     }
 }

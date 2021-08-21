@@ -14,8 +14,9 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Parsing;
 
 use Sassnowski\Roach\Http\Response;
+use Sassnowski\Roach\Support\ConfigurableInterface;
 
-interface ResponseHandlerInterface
+interface ResponseHandlerInterface extends ConfigurableInterface
 {
     /**
      * Handles a response before the parse callback gets
