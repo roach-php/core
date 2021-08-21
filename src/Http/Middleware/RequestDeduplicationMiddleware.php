@@ -46,6 +46,7 @@ final class RequestDeduplicationMiddleware extends RequestMiddleware
             $replaceFlags |= HTTP_URL_STRIP_FRAGMENT;
         }
 
+        /** @phpstan-ignore-next-line */
         if ($this->options['ignore_trailing_slashes'] && isset($parts['path'])) {
             $parts['path'] = \rtrim($parts['path'], '/');
         }
@@ -54,6 +55,7 @@ final class RequestDeduplicationMiddleware extends RequestMiddleware
             $replaceFlags |= HTTP_URL_STRIP_QUERY;
         }
 
+        /** @phpstan-ignore-next-line */
         $uri = http_build_url($uri, $parts, $replaceFlags);
 
         if (\in_array($uri, $this->seenUris, true)) {

@@ -41,7 +41,7 @@ final class ImmutableItemPipeline implements ItemPipelineInterface
             $item = $processor->processItem($item);
 
             if ($item->wasDropped()) {
-                $this->logger?->info('[Item pipeline] Item was dropped', [
+                $this->logger->info('[Item pipeline] Item was dropped', [
                     'item' => $item->all(),
                     'reason' => $item->getDropReason(),
                 ]);

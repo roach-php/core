@@ -16,7 +16,6 @@ namespace Sassnowski\Roach\Http;
 use Closure;
 use Generator;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
-use Psr\Http\Message\RequestInterface;
 use Sassnowski\Roach\Support\Droppable;
 use Sassnowski\Roach\Support\DroppableInterface;
 use Sassnowski\Roach\Support\HasMetaData;
@@ -28,7 +27,7 @@ final class Request implements DroppableInterface
 
     private Closure $parseCallback;
 
-    private RequestInterface $guzzleRequest;
+    private GuzzleRequest $guzzleRequest;
 
     public function __construct(string $uri, callable $parseMethod, string $method = 'GET')
     {

@@ -29,7 +29,7 @@ final class MiddlewareStack
         $this->handlers = $handlers;
     }
 
-    public static function create(MiddlewareInterface ...$handlers)
+    public static function create(MiddlewareInterface ...$handlers): MiddlewareStack
     {
         return new self($handlers);
     }

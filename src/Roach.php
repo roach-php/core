@@ -19,14 +19,12 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Sassnowski\Roach\Core\Engine;
+use Sassnowski\Roach\Core\RunFactory;
 use Sassnowski\Roach\Http\Client;
 use Sassnowski\Roach\Http\ClientInterface;
-use Sassnowski\Roach\Http\Middleware\MiddlewareStack as HttpMiddleware;
-use Sassnowski\Roach\Http\Middleware\RequestMiddlewareInterface;
 use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
-use Sassnowski\Roach\Parsing\Handlers\HandlerAdapter;
-use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
 use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
 use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
 use Sassnowski\Roach\Scheduling\Timing\ClockInterface;
@@ -48,66 +46,13 @@ final class Roach
 
         /** @var AbstractSpider $spider */
         $spider = $container->get($spiderClass);
-
-        $httpMiddleware = self::buildMiddleware($spider, $container);
-        $itemPipeline = self::buildItemPipeline($spider, $container);
-        $spiderMiddleware = self::buildSpiderMiddleware($spider, $container);
+        $runFactory = new RunFactory($container);
 
         /** @var Engine $engine */
         $engine = $container->get(Engine::class);
+        $run = $runFactory->fromSpider($spider);
 
-        $engine->start(
-            $spider->startRequests(),
-            $httpMiddleware,
-            $itemPipeline,
-            $spiderMiddleware,
-            $spider::$concurrency,
-            $spider::$requestDelay,
-        );
-    }
-
-    private static function buildMiddleware(
-        AbstractSpider $spider,
-        ContainerInterface $container,
-    ): HttpMiddleware {
-        $handlers = \array_map(static function (string|array $middleware) use ($container) {
-            if (!\is_array($middleware)) {
-                $middleware = [$middleware, []];
-            }
-
-            [$class, $options] = $middleware;
-
-            /** @var RequestMiddlewareInterface $instance */
-            $instance = $container->get($class);
-            $instance->configure($options);
-
-            return $instance;
-        }, $spider->httpMiddleware());
-
-        return HttpMiddleware::create(...$handlers);
-    }
-
-    private static function buildItemPipeline(
-        AbstractSpider $spider,
-        ContainerInterface $container,
-    ): ItemPipelineInterface {
-        /** @var ItemPipelineInterface $pipeline */
-        $pipeline = $container->get(ItemPipelineInterface::class);
-        $processors = \array_map(
-            static fn (string $processor) => $container->get($processor),
-            $spider->processors(),
-        );
-
-        return $pipeline->setProcessors(...$processors);
-    }
-
-    private static function buildSpiderMiddleware(AbstractSpider $spider, ContainerInterface $container): ResponseMiddleware
-    {
-        $handlers = \array_map(static function (string $handler) use ($container) {
-            return new HandlerAdapter($container->get($handler));
-        }, $spider->spiderMiddleware());
-
-        return ResponseMiddleware::create(...$handlers);
+        $engine->start($run);
     }
 
     private static function defaultContainer(): ContainerInterface

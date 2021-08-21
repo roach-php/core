@@ -58,8 +58,14 @@ abstract class IntegrationTest extends TestCase
 
     private function getCrawledRoutes(): array
     {
+        $response = \file_get_contents("{$this->serverUrl}/crawled-routes");
+
+        if (!$response) {
+            return [];
+        }
+
         return \json_decode(
-            \file_get_contents("{$this->serverUrl}/crawled-routes"),
+            $response,
             true,
             512,
             JSON_THROW_ON_ERROR,

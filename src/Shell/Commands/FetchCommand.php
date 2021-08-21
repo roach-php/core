@@ -15,6 +15,7 @@ namespace Sassnowski\Roach\Shell\Commands;
 
 use GuzzleHttp\Client;
 use Psy\Command\Command;
+use Psy\Shell;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Symfony\Component\Console\Input\InputArgument;
@@ -52,12 +53,12 @@ Commands:
 TEXT
         );
 
-        $this
-            ->getApplication()
-            ->setScopeVariables([
-                'response' => $response,
-                'html' => $response->getBody(),
-            ]);
+        /** @var Shell $app */
+        $app = $this->getApplication();
+        $app->setScopeVariables([
+            'response' => $response,
+            'html' => $response->getBody(),
+        ]);
 
         return 0;
     }

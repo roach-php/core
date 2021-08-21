@@ -22,13 +22,17 @@ trait InteractsWithPipelines
     protected function makeProcessor(callable $processItem): ItemProcessorInterface
     {
         return new class($processItem) implements ItemProcessorInterface {
-            public function __construct(private Closure $processItem)
+            /** @var callable */
+            private $callback;
+
+            public function __construct(callable $processItem)
             {
+                $this->callback = $processItem;
             }
 
             public function processItem(ItemInterface $item): ItemInterface
             {
-                return ($this->processItem)($item);
+                return ($this->callback)($item);
             }
         };
     }

@@ -11,18 +11,16 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach;
+namespace Sassnowski\Roach\Core;
 
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Sassnowski\Roach\Http;
 use Sassnowski\Roach\Http\ClientInterface;
-use Sassnowski\Roach\Http\Middleware\MiddlewareStack as HttpMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
-use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
 use Sassnowski\Roach\Parsing\ParseResult;
 use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
 use Throwable;
@@ -36,33 +34,24 @@ final class Engine
     ) {
     }
 
-    public function start(
-        array $startRequests,
-        HttpMiddleware $middlewareStack,
-        ItemPipelineInterface $itemPipeline,
-        ResponseMiddleware $responseMiddleware,
-        int $concurrency = 25,
-        int $delay = 0,
-    ): void {
-        $this->scheduler->setBatchSize($concurrency);
-        $this->scheduler->setDelay($delay);
+    public function start(Run $run): void
+    {
+        $this->scheduler->setBatchSize($run->concurrency());
+        $this->scheduler->setDelay($run->requestDelay());
 
-        foreach ($startRequests as $request) {
+        foreach ($run->startRequests() as $request) {
             $this->scheduleRequest($request);
         }
 
-        $this->work($middlewareStack, $itemPipeline, $responseMiddleware);
+        $this->work($run);
     }
 
-    private function work(
-        HttpMiddleware $middlewareStack,
-        ItemPipelineInterface $pipeline,
-        ResponseMiddleware $responseMiddleware,
-    ): void {
+    private function work(Run $run): void
+    {
         while (!$this->scheduler->empty()) {
-            $requests = function () use ($middlewareStack, $pipeline, $responseMiddleware) {
+            $requests = function () use ($run) {
                 foreach ($this->scheduler->nextRequests() as $request) {
-                    yield fn () => $this->sendRequest($request, $middlewareStack, $pipeline, $responseMiddleware);
+                    yield fn () => $this->sendRequest($request, $run);
                 }
             };
 
@@ -70,29 +59,22 @@ final class Engine
         }
     }
 
-    private function onFulfilled(
-        Response $response,
-        ItemPipelineInterface $itemPipeline,
-        ResponseMiddleware $responseMiddleware,
-    ): void {
+    private function onFulfilled(Response $response, Run $run): void
+    {
         /** @var ParseResult[] $parseResults */
-        $parseResults = $responseMiddleware->handle($response);
+        $parseResults = $run->responseMiddleware()->handle($response);
 
         foreach ($parseResults as $result) {
             $result->apply(
                 fn (Request $request) => $this->scheduleRequest($request),
-                static fn (ItemInterface $item) => $itemPipeline->sendItem($item),
+                static fn (ItemInterface $item) => $run->itemPipeline()->sendItem($item),
             );
         }
     }
 
-    private function sendRequest(
-        Request $request,
-        HttpMiddleware $middlewareStack,
-        ItemPipelineInterface $itemPipeline,
-        ResponseMiddleware $responseMiddleware,
-    ): ?PromiseInterface {
-        $promise = $middlewareStack->dispatchRequest(
+    private function sendRequest(Request $request, Run $run): ?PromiseInterface
+    {
+        $promise = $run->httpMiddleware()->dispatchRequest(
             $request,
             fn (Request $req) => $this->client->dispatch($req)->then(
                 static fn (ResponseInterface $response) => new Http\Response($response, $req),
@@ -100,8 +82,8 @@ final class Engine
         );
 
         return $promise
-            ?->then(function (Response $response) use ($itemPipeline, $responseMiddleware): void {
-                $this->onFulfilled($response, $itemPipeline, $responseMiddleware);
+            ?->then(function (Response $response) use ($run): void {
+                $this->onFulfilled($response, $run);
             }, function (Throwable $e) use ($request): void {
                 $this->logger->error('[Engine] Error while dispatching request', [
                     'uri' => $request->getUri(),

@@ -24,6 +24,7 @@
         "ergebnis/composer-normalize": "^2.15",
         "ergebnis/php-cs-fixer-config": "^3.0",
         "http-interop/http-factory-guzzle": "^1.2",
+        "phpstan/phpstan": "^0.12.95",
         "phpunit/phpunit": "^9.5",
         "slim/slim": "4.*",
         "spatie/phpunit-watcher": "^1.23"

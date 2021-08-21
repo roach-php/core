@@ -69,6 +69,7 @@ abstract class AbstractSpider
 
     protected function request(string $url, string $parseMethod = 'parse'): ParseResult
     {
+        /** @phpstan-ignore-next-line */
         return ParseResult::request($url, [$this, $parseMethod]);
     }
 
