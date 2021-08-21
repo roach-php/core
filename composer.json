@@ -14,7 +14,7 @@
         "jakeasmith/http_build_url": "^1.0.1",
         "league/container": "^3.0",
         "monolog/monolog": "^2.3",
-        "psy/psysh": "@stable",
+        "psy/psysh": "^0.10.8",
         "symfony/console": "^5.3",
         "symfony/css-selector": "^5.3",
         "symfony/dom-crawler": "^5.3",

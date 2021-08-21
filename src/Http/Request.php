@@ -60,7 +60,10 @@ final class Request implements DroppableInterface
      */
     public function addHeader(string $name, mixed $value): self
     {
-        $this->guzzleRequest = $this->guzzleRequest->withHeader($name, $value);
+        /** @var GuzzleRequest $request */
+        $request = $this->guzzleRequest->withHeader($name, $value);
+
+        $this->guzzleRequest = $request;
 
         return $this;
     }

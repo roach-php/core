@@ -34,6 +34,7 @@ final class FetchCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $client = new Client();
+        /** @var string $url */
         $url = $input->getArgument('url');
         $request = new Request($url, static fn () => null);
         $response = new Response(
