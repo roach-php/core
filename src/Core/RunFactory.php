@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Core;
 
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use Sassnowski\Roach\Downloader\LoggerMiddleware;
 use Sassnowski\Roach\Http\Middleware\MiddlewareStack as HttpMiddleware;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
 use Sassnowski\Roach\Parsing\Handlers\HandlerAdapter;
@@ -30,7 +32,7 @@ final class RunFactory
     {
         return new Run(
             $spider->startRequests(),
-            $this->buildHttpMiddleware($spider->httpMiddleware()),
+            [$this->container->get(LoggerMiddleware::class)],
             $this->buildItemPipeline($spider->processors()),
             $this->buildResponseMiddleware($spider->spiderMiddleware()),
             $spider::$concurrency,
@@ -38,7 +40,7 @@ final class RunFactory
         );
     }
 
-    private function buildHttpMiddleware(array $handlers): HttpMiddleware
+    private function buildDownloader(array $handlers): HttpMiddleware
     {
         $handlers = \array_map([$this, 'buildConfigurable'], $handlers);
 
@@ -57,7 +59,7 @@ final class RunFactory
 
     private function buildResponseMiddleware(array $handlers): ResponseMiddleware
     {
-        $handlers = \array_map(function (string $handler) {
+        $handlers = \array_map(function (string|array $handler) {
             return new HandlerAdapter($this->buildConfigurable($handler));
         }, $handlers);
 

@@ -37,7 +37,7 @@ final class RealClock implements ClockInterface
         }
 
         try {
-            \time_sleep_until($date->getTimestamp());
+            @\time_sleep_until($date->getTimestamp());
         } catch (ErrorException) {
             return;
         }

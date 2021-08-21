@@ -13,16 +13,20 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Core;
 
-use Sassnowski\Roach\Http\Middleware\MiddlewareStack as HttpMiddleware;
+use Sassnowski\Roach\Downloader\DownloaderMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
 use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
 
 final class Run
 {
+    /**
+     * @param Request[] $startRequests
+     * @param DownloaderMiddleware[] $downloaderMiddleware
+     */
     public function __construct(
         private array $startRequests,
-        private HttpMiddleware $middlewareStack,
+        private array $downloaderMiddleware,
         private ItemPipelineInterface $itemPipeline,
         private ResponseMiddleware $responseMiddleware,
         private int $concurrency = 25,
@@ -38,9 +42,12 @@ final class Run
         return $this->startRequests;
     }
 
-    public function httpMiddleware(): HttpMiddleware
+    /**
+     * @return DownloaderMiddleware[]
+     */
+    public function downloaderMiddleware(): array
     {
-        return $this->middlewareStack;
+        return $this->downloaderMiddleware;
     }
 
     public function itemPipeline(): ItemPipelineInterface

@@ -18,7 +18,5 @@ use GuzzleHttp\Promise\PromiseInterface;
 
 interface ClientInterface
 {
-    public function dispatch(Request $request): PromiseInterface;
-
-    public function pool(Generator $requests): PromiseInterface;
+    public function pool(array $requests, callable $onFulfilled): void;
 }

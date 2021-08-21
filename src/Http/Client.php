@@ -17,6 +17,7 @@ use Generator;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Promise\PromiseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 final class Client implements ClientInterface
 {
@@ -27,15 +28,23 @@ final class Client implements ClientInterface
         $this->client = $client ?? new GuzzleClient();
     }
 
-    public function dispatch(Request $request): PromiseInterface
+    public function pool(array $requests, callable $onFulfilled): void
     {
-        return $this->client->sendAsync($request->getGuzzleRequest());
-    }
+        $makeRequests = function () use ($requests) {
+            foreach ($requests as $request) {
+                yield function () use ($request) {
+                    return $this->client
+                        ->sendAsync($request->getGuzzleRequest())
+                        ->then(fn (ResponseInterface $response) => new Response($response, $request));
+                };
+            }
+        };
 
-    public function pool(Generator $requests): PromiseInterface
-    {
-        $pool = new Pool($this->client, $requests, ['concurrency' => 0]);
+        $pool = new Pool($this->client, $makeRequests(), [
+            'concurrency' => 0,
+            'fulfilled' => $onFulfilled,
+        ]);
 
-        return $pool->promise();
+        $pool->promise()->wait();
     }
 }

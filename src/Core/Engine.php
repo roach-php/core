@@ -16,6 +16,7 @@ namespace Sassnowski\Roach\Core;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Sassnowski\Roach\Downloader\Downloader;
 use Sassnowski\Roach\Http;
 use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\Http\Request;
@@ -29,15 +30,13 @@ final class Engine
 {
     public function __construct(
         private RequestSchedulerInterface $scheduler,
-        private ClientInterface $client,
-        private LoggerInterface $logger,
+        private Downloader $downloader
     ) {
     }
 
     public function start(Run $run): void
     {
-        $this->scheduler->setBatchSize($run->concurrency());
-        $this->scheduler->setDelay($run->requestDelay());
+        $this->configure($run);
 
         foreach ($run->startRequests() as $request) {
             $this->scheduleRequest($request);
@@ -49,13 +48,13 @@ final class Engine
     private function work(Run $run): void
     {
         while (!$this->scheduler->empty()) {
-            $requests = function () use ($run) {
-                foreach ($this->scheduler->nextRequests() as $request) {
-                    yield fn () => $this->sendRequest($request, $run);
-                }
-            };
+            foreach ($this->scheduler->nextRequests() as $request) {
+                $this->downloader->download($request);
+            }
 
-            $this->client->pool($requests())->wait();
+            $this->downloader->flush(
+                fn (Response $response) => $this->onFulfilled($response, $run)
+            );
         }
     }
 
@@ -72,34 +71,15 @@ final class Engine
         }
     }
 
-    private function sendRequest(Request $request, Run $run): ?PromiseInterface
-    {
-        $promise = $run->httpMiddleware()->dispatchRequest(
-            $request,
-            fn (Request $req) => $this->client->dispatch($req)->then(
-                static fn (ResponseInterface $response) => new Http\Response($response, $req),
-            ),
-        );
-
-        return $promise
-            ?->then(function (Response $response) use ($run): void {
-                $this->onFulfilled($response, $run);
-            }, function (Throwable $e) use ($request): void {
-                $this->logger->error('[Engine] Error while dispatching request', [
-                    'uri' => $request->getUri(),
-                    'exception' => $e,
-                ]);
-            })
-            ->otherwise(function (Throwable $e) use ($request): void {
-                $this->logger->error('[Engine] Error while processing response', [
-                    'uri' => $request->getUri(),
-                    'exception' => $e,
-                ]);
-            });
-    }
-
     private function scheduleRequest(Request $request): void
     {
         $this->scheduler->schedule($request);
+    }
+
+    private function configure(Run $run): void
+    {
+        $this->scheduler->setBatchSize($run->concurrency());
+        $this->scheduler->setDelay($run->requestDelay());
+        $this->downloader->withMiddleware(...$run->downloaderMiddleware());
     }
 }

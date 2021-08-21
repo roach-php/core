@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Tests;
 
 use Closure;
+use Generator;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 
@@ -21,7 +22,8 @@ trait InteractsWithRequests
 {
     private function createRequest(string $url = '::url::', ?Closure $callback = null): Request
     {
-        $callback ??= static function (Response $response): void {
+        $callback ??= static function (): Generator {
+            yield from [];
         };
 
         return new Request($url, $callback);
