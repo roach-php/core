@@ -15,8 +15,7 @@ namespace Sassnowski\Roach\Tests\Http;
 
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Support\DroppableInterface;
-use Sassnowski\Roach\Tests\InteractsWithRequests;
-use Sassnowski\Roach\Tests\InteractsWithResponses;
+use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 use Sassnowski\Roach\Tests\Support\DroppableTest;
 
 /**
@@ -25,13 +24,12 @@ use Sassnowski\Roach\Tests\Support\DroppableTest;
 final class ResponseTest extends TestCase
 {
     use DroppableTest;
-    use InteractsWithResponses;
-    use InteractsWithRequests;
+    use InteractsWithRequestsAndResponses;
 
     protected function createDroppable(): DroppableInterface
     {
         return $this->makeResponse(
-            $this->createRequest(),
+            $this->makeRequest(),
         );
     }
 }

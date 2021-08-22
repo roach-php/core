@@ -33,7 +33,7 @@ use Sassnowski\Roach\Testing\FakeLogger;
  */
 final class EngineTest extends IntegrationTest
 {
-    use InteractsWithRequests;
+    use InteractsWithRequestsAndResponses;
 
     private FakeLogger $logger;
 
@@ -58,8 +58,8 @@ final class EngineTest extends IntegrationTest
     public function testCrawlsStartUrls(): void
     {
         $startRequests = [
-            $this->createRequest('http://localhost:8000/test1'),
-            $this->createRequest('http://localhost:8000/test2'),
+            $this->makeRequest('http://localhost:8000/test1'),
+            $this->makeRequest('http://localhost:8000/test2'),
         ];
         $run = new Run(
             $startRequests,
@@ -82,7 +82,7 @@ final class EngineTest extends IntegrationTest
             }
         };
         $run = new Run(
-            [$this->createRequest('http://localhost:8000/test2', $parseFunction)],
+            [$this->makeRequest('http://localhost:8000/test2', $parseFunction)],
             [],
             $this->pipeline,
             ResponseMiddleware::create(),
@@ -104,7 +104,7 @@ final class EngineTest extends IntegrationTest
             });
         };
         $run = new Run(
-            [$this->createRequest('http://localhost:8000/test1', $parseCallback)],
+            [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
             [],
             $this->pipeline,
             ResponseMiddleware::create(),
@@ -119,7 +119,7 @@ final class EngineTest extends IntegrationTest
     {
         $processor = new FakeProcessor();
         $startRequests = [
-            $this->createRequest('http://localhost:8000/test1', static function (Response $response) {
+            $this->makeRequest('http://localhost:8000/test1', static function (Response $response) {
                 yield ParseResult::item([
                     'title' => $response->filter('h1#headline')->text(),
                 ]);
@@ -143,10 +143,10 @@ final class EngineTest extends IntegrationTest
         $parseCallback = function () {
             yield ParseResult::item(['title' => '::title::']);
 
-            yield ParseResult::fromValue($this->createRequest('http://localhost:8000/test2'));
+            yield ParseResult::fromValue($this->makeRequest('http://localhost:8000/test2'));
         };
         $run = new Run(
-            [$this->createRequest('http://localhost:8000/test1', $parseCallback)],
+            [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
             [],
             $this->pipeline->setProcessors($processor),
             ResponseMiddleware::create(),

@@ -16,15 +16,24 @@ namespace Sassnowski\Roach\Tests;
 use Closure;
 use Generator;
 use Sassnowski\Roach\Http\Request;
+use Sassnowski\Roach\Http\Response;
 
-trait InteractsWithRequests
+trait InteractsWithRequestsAndResponses
 {
-    private function createRequest(string $url = '::url::', ?Closure $callback = null): Request
+    private function makeRequest(string $url = '::url::', ?Closure $callback = null): Request
     {
         $callback ??= static function (): Generator {
             yield from [];
         };
 
         return new Request($url, $callback);
+    }
+
+    private function makeResponse(?Request $request = null): Response
+    {
+        return new Response(
+            new \GuzzleHttp\Psr7\Response(),
+            $request ?: $this->makeRequest()
+        );
     }
 }

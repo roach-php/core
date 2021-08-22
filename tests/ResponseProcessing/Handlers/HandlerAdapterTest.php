@@ -24,16 +24,14 @@ use Sassnowski\Roach\ResponseProcessing\Handlers\HandlerAdapter;
 use Sassnowski\Roach\ResponseProcessing\ItemHandlerInterface;
 use Sassnowski\Roach\ResponseProcessing\RequestHandlerInterface;
 use Sassnowski\Roach\ResponseProcessing\ResponseHandlerInterface;
-use Sassnowski\Roach\Tests\InteractsWithRequests;
-use Sassnowski\Roach\Tests\InteractsWithResponses;
+use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal
  */
 final class HandlerAdapterTest extends TestCase
 {
-    use InteractsWithResponses;
-    use InteractsWithRequests;
+    use InteractsWithRequestsAndResponses;
 
     /**
      * @dataProvider itemHandlerProvider
@@ -54,8 +52,8 @@ final class HandlerAdapterTest extends TestCase
     public function itemHandlerProvider(): Generator
     {
         yield 'return request unchanged' => [function (HandlerAdapter $adapter): void {
-            $response = $this->makeResponse($this->createRequest('::url-a::'));
-            $request = $this->createRequest('::url-b::');
+            $response = $this->makeResponse($this->makeRequest('::url-a::'));
+            $request = $this->makeRequest('::url-b::');
 
             $result = $adapter->handleRequest($request, $response);
 
@@ -63,7 +61,7 @@ final class HandlerAdapterTest extends TestCase
         }];
 
         yield 'return response unchanged' => [function (HandlerAdapter $adapter): void {
-            $response = $this->makeResponse($this->createRequest('::url-a::'));
+            $response = $this->makeResponse($this->makeRequest('::url-a::'));
 
             $result = $adapter->handleResponse($response);
 
@@ -71,7 +69,7 @@ final class HandlerAdapterTest extends TestCase
         }];
 
         yield 'call handler function for items' => [function (HandlerAdapter $adapter): void {
-            $response = $this->makeResponse($this->createRequest());
+            $response = $this->makeResponse($this->makeRequest());
             $item = new Item([]);
 
             $result = $adapter->handleItem($item, $response);
@@ -99,7 +97,7 @@ final class HandlerAdapterTest extends TestCase
     public function requestHandlerProvider(): Generator
     {
         yield 'return response unchanged' => [function (HandlerAdapter $adapter): void {
-            $response = $this->makeResponse($this->createRequest());
+            $response = $this->makeResponse($this->makeRequest());
 
             $result = $adapter->handleResponse($response);
 
@@ -108,7 +106,7 @@ final class HandlerAdapterTest extends TestCase
 
         yield 'return item unchanged' => [function (HandlerAdapter $adapter): void {
             $item = new Item(['::key::' => '::value::']);
-            $response = $this->makeResponse($this->createRequest());
+            $response = $this->makeResponse($this->makeRequest());
 
             $result = $adapter->handleItem($item, $response);
 
@@ -116,8 +114,8 @@ final class HandlerAdapterTest extends TestCase
         }];
 
         yield 'call handler function for requests' => [function (HandlerAdapter $adapter): void {
-            $response = $this->makeResponse($this->createRequest('::url-a::'));
-            $request = $this->createRequest('::url-b::');
+            $response = $this->makeResponse($this->makeRequest('::url-a::'));
+            $request = $this->makeRequest('::url-b::');
 
             $result = $adapter->handleRequest($request, $response);
 
@@ -145,7 +143,7 @@ final class HandlerAdapterTest extends TestCase
     {
         yield 'return item unchanged' => [function (HandlerAdapter $adapter): void {
             $item = new Item(['::key::' => '::value::']);
-            $response = $this->makeResponse($this->createRequest());
+            $response = $this->makeResponse($this->makeRequest());
 
             $result = $adapter->handleItem($item, $response);
 
@@ -153,8 +151,8 @@ final class HandlerAdapterTest extends TestCase
         }];
 
         yield 'return request unchanged' => [function (HandlerAdapter $adapter): void {
-            $response = $this->makeResponse($this->createRequest('::url-a::'));
-            $request = $this->createRequest('::url-b::');
+            $response = $this->makeResponse($this->makeRequest('::url-a::'));
+            $request = $this->makeRequest('::url-b::');
 
             $result = $adapter->handleRequest($request, $response);
 
@@ -162,7 +160,7 @@ final class HandlerAdapterTest extends TestCase
         }];
 
         yield 'call handler function for responses' => [function (HandlerAdapter $adapter): void {
-            $response = $this->makeResponse($this->createRequest('::url-a::'));
+            $response = $this->makeResponse($this->makeRequest('::url-a::'));
 
             $result = $adapter->handleResponse($response);
 

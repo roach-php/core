@@ -17,7 +17,7 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
 use Sassnowski\Roach\Scheduling\Timing\FakeClock;
-use Sassnowski\Roach\Tests\InteractsWithRequests;
+use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @group queue
@@ -26,7 +26,7 @@ use Sassnowski\Roach\Tests\InteractsWithRequests;
  */
 final class ArrayRequestSchedulerTest extends TestCase
 {
-    use InteractsWithRequests;
+    use InteractsWithRequestsAndResponses;
 
     private ArrayRequestScheduler $scheduler;
 
@@ -43,7 +43,7 @@ final class ArrayRequestSchedulerTest extends TestCase
     {
         self::assertTrue($this->scheduler->empty());
 
-        $this->scheduler->schedule($this->createRequest());
+        $this->scheduler->schedule($this->makeRequest());
 
         self::assertFalse($this->scheduler->empty());
     }
@@ -56,7 +56,7 @@ final class ArrayRequestSchedulerTest extends TestCase
         $this->scheduler->setBatchSize($batchSize);
 
         for ($i = 0; 10 > $i; ++$i) {
-            $this->scheduler->schedule($this->createRequest());
+            $this->scheduler->schedule($this->makeRequest());
         }
 
         foreach ($expectedBatchSizes as $expectedBatchSize) {
@@ -94,9 +94,9 @@ final class ArrayRequestSchedulerTest extends TestCase
 
     public function testFirstInFirstOut(): void
     {
-        $requestA = $this->createRequest();
-        $requestB = $this->createRequest();
-        $requestC = $this->createRequest();
+        $requestA = $this->makeRequest();
+        $requestB = $this->makeRequest();
+        $requestC = $this->makeRequest();
 
         $this->scheduler->schedule($requestA);
         $this->scheduler->schedule($requestB);
@@ -110,7 +110,7 @@ final class ArrayRequestSchedulerTest extends TestCase
     public function testFirstBatchGetsReturnedImmediately(): void
     {
         $this->scheduler->setDelay(5);
-        $this->scheduler->schedule($this->createRequest());
+        $this->scheduler->schedule($this->makeRequest());
 
         $this->scheduler->nextRequests();
 
@@ -120,8 +120,8 @@ final class ArrayRequestSchedulerTest extends TestCase
     public function testWaitRequiredTimeIfNextBatchIsNotReadyYet(): void
     {
         $this->scheduler->setDelay(5);
-        $this->scheduler->schedule($this->createRequest());
-        $this->scheduler->schedule($this->createRequest());
+        $this->scheduler->schedule($this->makeRequest());
+        $this->scheduler->schedule($this->makeRequest());
 
         $this->scheduler->nextRequests();
         self::assertSame(0, $this->clock->timePassed());
@@ -135,8 +135,8 @@ final class ArrayRequestSchedulerTest extends TestCase
     public function testImmediatelyReturnNextBatchIfMoreTimeThanNecessaryHasPassed(): void
     {
         $this->scheduler->setDelay(5);
-        $this->scheduler->schedule($this->createRequest());
-        $this->scheduler->schedule($this->createRequest());
+        $this->scheduler->schedule($this->makeRequest());
+        $this->scheduler->schedule($this->makeRequest());
 
         $this->scheduler->nextRequests();
 
@@ -150,8 +150,8 @@ final class ArrayRequestSchedulerTest extends TestCase
     public function testNextBatchDelayStartsAfterRequestsWereDispatched(): void
     {
         $this->scheduler->setDelay(5);
-        $this->scheduler->schedule($this->createRequest());
-        $this->scheduler->schedule($this->createRequest());
+        $this->scheduler->schedule($this->makeRequest());
+        $this->scheduler->schedule($this->makeRequest());
 
         // Wait some before grabbing next request...
         $this->clock->sleep(4);

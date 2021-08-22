@@ -16,7 +16,7 @@ namespace Sassnowski\Roach\Tests\Downloader\Middleware;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Downloader\Middleware\RequestDeduplicationMiddleware;
 use Sassnowski\Roach\Testing\FakeLogger;
-use Sassnowski\Roach\Tests\InteractsWithRequests;
+use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @group downloader
@@ -26,7 +26,7 @@ use Sassnowski\Roach\Tests\InteractsWithRequests;
  */
 final class RequestDeduplicationMiddlewareTest extends TestCase
 {
-    use InteractsWithRequests;
+    use InteractsWithRequestsAndResponses;
 
     private RequestDeduplicationMiddleware $middleware;
 
@@ -40,7 +40,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testDropsRequestIfItWasAlreadySeenBefore(): void
     {
-        $request = $this->createRequest('https://example.com');
+        $request = $this->makeRequest('https://example.com');
 
         $request = $this->middleware->handleRequest($request);
         self::assertFalse($request->wasDropped());
@@ -51,8 +51,8 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testPassesRequestAlongIfItHasntBeenSeenBefore(): void
     {
-        $requestA = $this->createRequest('https://example.com/a');
-        $requestB = $this->createRequest('https://example.com/b');
+        $requestA = $this->makeRequest('https://example.com/a');
+        $requestB = $this->makeRequest('https://example.com/b');
 
         $requestA = $this->middleware->handleRequest($requestA);
         $requestB = $this->middleware->handleRequest($requestB);
@@ -63,7 +63,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testLogDroppedRequestsIfLoggerWasProvided(): void
     {
-        $request = $this->createRequest('https://example.com');
+        $request = $this->makeRequest('https://example.com');
 
         $this->middleware->handleRequest($request);
         $this->middleware->handleRequest($request);
@@ -79,8 +79,8 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testIgnoresTrailingSlashesByDefaultWhenComparingUrls(): void
     {
-        $requestA = $this->createRequest('https://example.com');
-        $requestB = $this->createRequest('https://example.com/');
+        $requestA = $this->makeRequest('https://example.com');
+        $requestB = $this->makeRequest('https://example.com/');
 
         $this->middleware->handleRequest($requestA);
 
@@ -90,8 +90,8 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testCanBeConfiguredToIncludeTrailingSlashesWhenComparingUrls(): void
     {
-        $requestA = $this->createRequest('https://example.com');
-        $requestB = $this->createRequest('https://example.com/');
+        $requestA = $this->makeRequest('https://example.com');
+        $requestB = $this->makeRequest('https://example.com/');
         $this->middleware->configure(['ignore_trailing_slashes' => false]);
 
         $requestA = $this->middleware->handleRequest($requestA);
@@ -103,8 +103,8 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testHandlesTrailingSlashesCorrectlyWhenUrlHasFragments(): void
     {
-        $requestA = $this->createRequest('https://example.com#fragment');
-        $requestB = $this->createRequest('https://example.com/#fragment');
+        $requestA = $this->makeRequest('https://example.com#fragment');
+        $requestB = $this->makeRequest('https://example.com/#fragment');
         $this->middleware->configure([
             'ignore_trailing_slashes' => true,
             'ignore_url_fragments' => false,
@@ -118,8 +118,8 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testIncludesUrlFragmentsByDefaultWhenComparingUrls(): void
     {
-        $requestA = $this->createRequest('https://example.com');
-        $requestB = $this->createRequest('https://example.com#fragment');
+        $requestA = $this->makeRequest('https://example.com');
+        $requestB = $this->makeRequest('https://example.com#fragment');
 
         $requestA = $this->middleware->handleRequest($requestA);
         $requestB = $this->middleware->handleRequest($requestB);
@@ -130,8 +130,8 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testCanBeConfiguredToIgnoreUrlFragments(): void
     {
-        $requestA = $this->createRequest('https://example.com');
-        $requestB = $this->createRequest('https://example.com#fragment');
+        $requestA = $this->makeRequest('https://example.com');
+        $requestB = $this->makeRequest('https://example.com#fragment');
         $this->middleware->configure(['ignore_url_fragments' => true]);
 
         $this->middleware->handleRequest($requestA);
@@ -142,8 +142,8 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testIncludesQueryStringByDefaultWhenComparingUrls(): void
     {
-        $requestA = $this->createRequest('https://example.com');
-        $requestB = $this->createRequest('https://example.com?foo=bar');
+        $requestA = $this->makeRequest('https://example.com');
+        $requestB = $this->makeRequest('https://example.com?foo=bar');
 
         $requestA = $this->middleware->handleRequest($requestA);
         $requestB = $this->middleware->handleRequest($requestB);
@@ -154,8 +154,8 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
 
     public function testCanBeConfiguredToIgnoreQueryStringsWhenComparingUrls(): void
     {
-        $requestA = $this->createRequest('https://example.com');
-        $requestB = $this->createRequest('https://example.com?foo=bar');
+        $requestA = $this->makeRequest('https://example.com');
+        $requestB = $this->makeRequest('https://example.com?foo=bar');
         $this->middleware->configure(['ignore_query_string' => true]);
 
         $this->middleware->handleRequest($requestA);

@@ -16,7 +16,7 @@ namespace Sassnowski\Roach\Tests\Downloader\Middleware;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Downloader\Middleware\LoggerMiddleware;
 use Sassnowski\Roach\Testing\FakeLogger;
-use Sassnowski\Roach\Tests\InteractsWithRequests;
+use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal
@@ -24,7 +24,7 @@ use Sassnowski\Roach\Tests\InteractsWithRequests;
  */
 final class LoggerMiddlewareTest extends TestCase
 {
-    use InteractsWithRequests;
+    use InteractsWithRequestsAndResponses;
 
     private FakeLogger $logger;
 
@@ -38,7 +38,7 @@ final class LoggerMiddlewareTest extends TestCase
 
     public function testLogScheduledRequest(): void
     {
-        $request = $this->createRequest('::uri::');
+        $request = $this->makeRequest('::uri::');
 
         $this->middleware->handleRequest($request);
 

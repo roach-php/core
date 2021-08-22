@@ -20,16 +20,14 @@ use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\ResponseProcessing\Handlers\FakeHandler;
 use Sassnowski\Roach\ResponseProcessing\MiddlewareStack;
 use Sassnowski\Roach\ResponseProcessing\ParseResult;
-use Sassnowski\Roach\Tests\InteractsWithRequests;
-use Sassnowski\Roach\Tests\InteractsWithResponses;
+use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal
  */
 final class MiddlewareStackTest extends TestCase
 {
-    use InteractsWithRequests;
-    use InteractsWithResponses;
+    use InteractsWithRequestsAndResponses;
 
     private MiddlewareStack $middlewareStack;
 
@@ -42,7 +40,7 @@ final class MiddlewareStackTest extends TestCase
     {
         $parseCallback = static fn () => null;
         $expectedRequest = ParseResult::request('::new-url::', $parseCallback);
-        $request = $this->createRequest(callback: static fn () => yield $expectedRequest);
+        $request = $this->makeRequest(callback: static fn () => yield $expectedRequest);
         $response = $this->makeResponse($request);
 
         $result = \iterator_to_array($this->middlewareStack->handle($response));
@@ -53,7 +51,7 @@ final class MiddlewareStackTest extends TestCase
     public function testCallsHandlersForIncomingResponses(): void
     {
         $handler = $this->makeHandler();
-        $request = $this->createRequest(callback: static fn () => yield ParseResult::item([]));
+        $request = $this->makeRequest(callback: static fn () => yield ParseResult::item([]));
         $response = $this->makeResponse($request);
         $stack = new MiddlewareStack([$handler]);
 
@@ -66,7 +64,7 @@ final class MiddlewareStackTest extends TestCase
     {
         $dropHandler = $this->makeHandler(handleResponse: static fn ($response) => $response->drop('::reason::'));
         $otherHandler = $this->makeHandler();
-        $response = $this->makeResponse($this->createRequest());
+        $response = $this->makeResponse($this->makeRequest());
         $stack = new MiddlewareStack([$dropHandler, $otherHandler]);
 
         $result = \iterator_to_array($stack->handle($response));
@@ -83,7 +81,7 @@ final class MiddlewareStackTest extends TestCase
         $handlerB = $this->makeHandler(static function (Response $response) {
             return $response->withMeta('foo', $response->getMeta('foo') . 'B');
         });
-        $request = $this->createRequest(callback: static function (Response $response) {
+        $request = $this->makeRequest(callback: static function (Response $response) {
             self::assertEquals('AB', $response->getMeta('foo'));
 
             yield ParseResult::item([]);
@@ -105,7 +103,7 @@ final class MiddlewareStackTest extends TestCase
             ParseResult::request('::url::', static fn () => null),
             ParseResult::request('::url::', static fn () => null),
         ];
-        $request = $this->createRequest(callback: static fn () => yield from $results);
+        $request = $this->makeRequest(callback: static fn () => yield from $results);
         $stack = MiddlewareStack::create($handlerA, $handlerB);
 
         $actual = \iterator_to_array($stack->handle($this->makeResponse($request)));
@@ -120,8 +118,8 @@ final class MiddlewareStackTest extends TestCase
             return $request->drop('::reason::');
         });
         $handlerB = $this->makeHandler();
-        $request = $this->createRequest(
-            callback: fn () => yield ParseResult::fromValue($this->createRequest()),
+        $request = $this->makeRequest(
+            callback: fn () => yield ParseResult::fromValue($this->makeRequest()),
         );
         $stack = new MiddlewareStack([$dropHandler, $handlerB]);
 
@@ -139,7 +137,7 @@ final class MiddlewareStackTest extends TestCase
         $handlerB = $this->makeHandler(
             handleItemCallback: static fn ($item) => $item->set('::key::', $item->get('::key::', '') . 'B'),
         );
-        $request = $this->createRequest(callback: static function (Response $response) {
+        $request = $this->makeRequest(callback: static function (Response $response) {
             yield ParseResult::item([]);
         });
 
@@ -157,7 +155,7 @@ final class MiddlewareStackTest extends TestCase
         });
         $handlerB = $this->makeHandler();
         $item = new Item([]);
-        $request = $this->createRequest(callback: static fn () => yield ParseResult::fromValue($item));
+        $request = $this->makeRequest(callback: static fn () => yield ParseResult::fromValue($item));
         $stack = new MiddlewareStack([$dropHandler, $handlerB]);
 
         $result = \iterator_to_array($stack->handle($this->makeResponse($request)));

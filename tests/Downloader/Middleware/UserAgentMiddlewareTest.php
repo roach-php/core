@@ -15,7 +15,7 @@ namespace Sassnowski\Roach\Tests\Downloader\Middleware;
 
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Downloader\Middleware\UserAgentMiddleware;
-use Sassnowski\Roach\Tests\InteractsWithRequests;
+use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @group downloader
@@ -25,13 +25,13 @@ use Sassnowski\Roach\Tests\InteractsWithRequests;
  */
 final class UserAgentMiddlewareTest extends TestCase
 {
-    use InteractsWithRequests;
+    use InteractsWithRequestsAndResponses;
 
     public function testSetDefaultUserAgentOnRequest(): void
     {
         $middleware = new UserAgentMiddleware();
 
-        $request = $middleware->handleRequest($this->createRequest());
+        $request = $middleware->handleRequest($this->makeRequest());
 
         self::assertTrue($request->hasHeader('User-Agent'));
         self::assertSame('roach-php', $request->getHeader('User-Agent')[0]);
@@ -42,7 +42,7 @@ final class UserAgentMiddlewareTest extends TestCase
         $middleware = new UserAgentMiddleware();
         $middleware->configure(['userAgent' => 'custom']);
 
-        $request = $middleware->handleRequest($this->createRequest());
+        $request = $middleware->handleRequest($this->makeRequest());
 
         self::assertTrue($request->hasHeader('User-Agent'));
         self::assertSame('custom', $request->getHeader('User-Agent')[0]);

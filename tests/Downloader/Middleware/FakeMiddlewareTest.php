@@ -18,21 +18,19 @@ use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Downloader\Middleware\FakeMiddleware;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Tests\InteractsWithRequests;
-use Sassnowski\Roach\Tests\InteractsWithResponses;
+use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal
  */
 final class FakeMiddlewareTest extends TestCase
 {
-    use InteractsWithRequests;
-    use InteractsWithResponses;
+    use InteractsWithRequestsAndResponses;
 
     public function testReturnRequestUnchangedByDefault(): void
     {
         $middleware = new FakeMiddleware();
-        $request = $this->createRequest();
+        $request = $this->makeRequest();
 
         $result = $middleware->handleRequest($request);
 
@@ -42,7 +40,7 @@ final class FakeMiddlewareTest extends TestCase
     public function testCallsRequestHandlerCallbackIfProvided(): void
     {
         $middleware = new FakeMiddleware(static fn (Request $request) => $request->drop('::reason::'));
-        $request = $this->createRequest();
+        $request = $this->makeRequest();
 
         $result = $middleware->handleRequest($request);
 
@@ -52,7 +50,7 @@ final class FakeMiddlewareTest extends TestCase
     public function testAssertRequestHandledPassesWhenMiddlewareWasCalledWithCorrectRequest(): void
     {
         $middleware = new FakeMiddleware();
-        $request = $this->createRequest();
+        $request = $this->makeRequest();
 
         $middleware->handleRequest($request);
 
@@ -62,7 +60,7 @@ final class FakeMiddlewareTest extends TestCase
     public function testAssertRequestHandledFailsIfMiddlewareWasNotCalledAtAll(): void
     {
         $middleware = new FakeMiddleware();
-        $request = $this->createRequest();
+        $request = $this->makeRequest();
 
         $this->expectException(AssertionFailedError::class);
         $middleware->assertRequestHandled($request);
@@ -71,8 +69,8 @@ final class FakeMiddlewareTest extends TestCase
     public function testAssertRequestHandledFailsIfMiddlewareWasNotCalledWithRequest(): void
     {
         $middleware = new FakeMiddleware();
-        $request = $this->createRequest();
-        $otherRequest = $this->createRequest();
+        $request = $this->makeRequest();
+        $otherRequest = $this->makeRequest();
 
         $middleware->handleRequest($otherRequest);
 
@@ -83,8 +81,8 @@ final class FakeMiddlewareTest extends TestCase
     public function testAssertRequestNotHandled(): void
     {
         $middleware = new FakeMiddleware();
-        $request = $this->createRequest();
-        $otherRequest = $this->createRequest();
+        $request = $this->makeRequest();
+        $otherRequest = $this->makeRequest();
 
         $middleware->assertRequestNotHandled($request);
 
@@ -99,7 +97,7 @@ final class FakeMiddlewareTest extends TestCase
     public function testAssertNoRequestsHandled(): void
     {
         $middleware = new FakeMiddleware();
-        $request = $this->createRequest();
+        $request = $this->makeRequest();
 
         $middleware->assertNoRequestsHandled();
 

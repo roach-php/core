@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ResponseProcessing\ParseResult;
 use Sassnowski\Roach\Support\DroppableInterface;
-use Sassnowski\Roach\Tests\InteractsWithRequests;
+use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 use Sassnowski\Roach\Tests\Support\DroppableTest;
 
 /**
@@ -29,26 +29,26 @@ use Sassnowski\Roach\Tests\Support\DroppableTest;
  */
 final class RequestTest extends TestCase
 {
-    use InteractsWithRequests;
+    use InteractsWithRequestsAndResponses;
     use DroppableTest;
 
     public function testCanAccessTheRequestUri(): void
     {
-        $request = $this->createRequest('::request-uri::');
+        $request = $this->makeRequest('::request-uri::');
 
         self::assertSame('::request-uri::', $request->getUri());
     }
 
     public function testCanAccessTheRequestUriPath(): void
     {
-        $request = $this->createRequest('https://::request-uri::/::path::');
+        $request = $this->makeRequest('https://::request-uri::/::path::');
 
         self::assertSame('/::path::', $request->getPath());
     }
 
     public function testCanAddHeader(): void
     {
-        $request = $this->createRequest();
+        $request = $this->makeRequest();
 
         self::assertFalse($request->hasHeader('X-Custom-Header'));
 
@@ -61,7 +61,7 @@ final class RequestTest extends TestCase
 
     public function testCanManipulateUnderlyingGuzzleRequest(): void
     {
-        $request = $this->createRequest();
+        $request = $this->makeRequest();
 
         self::assertFalse($request->hasHeader('X-Custom-Header'));
 
@@ -76,7 +76,7 @@ final class RequestTest extends TestCase
     public function testCanCallParseCallback(): void
     {
         $called = false;
-        $request = $this->createRequest(callback: static function (Response $response) use (&$called) {
+        $request = $this->makeRequest(callback: static function (Response $response) use (&$called) {
             $called = true;
 
             yield ParseResult::item(['::item::']);
@@ -91,7 +91,7 @@ final class RequestTest extends TestCase
 
     public function testCanAddMetaDataToRequest(): void
     {
-        $request = $this->createRequest();
+        $request = $this->makeRequest();
 
         self::assertNull($request->getMeta('::meta-key::'));
 
@@ -101,13 +101,13 @@ final class RequestTest extends TestCase
 
     public function testReturnsUnderlyingGuzzleRequest(): void
     {
-        $request = $this->createRequest('::request-uri::');
+        $request = $this->makeRequest('::request-uri::');
 
         self::assertSame('::request-uri::', (string) $request->getGuzzleRequest()->getUri());
     }
 
     protected function createDroppable(): DroppableInterface
     {
-        return $this->createRequest();
+        return $this->makeRequest();
     }
 }
