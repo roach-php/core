@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Http;
 
-use Generator;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Pool;
-use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 
 final class Client implements ClientInterface
@@ -35,7 +33,7 @@ final class Client implements ClientInterface
                 yield function () use ($request) {
                     return $this->client
                         ->sendAsync($request->getGuzzleRequest())
-                        ->then(fn (ResponseInterface $response) => new Response($response, $request));
+                        ->then(static fn (ResponseInterface $response) => new Response($response, $request));
                 };
             }
         };

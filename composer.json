@@ -60,6 +60,9 @@
         ],
         "test-watch": [
             "vendor/bin/phpunit-watcher watch"
+        ],
+        "analyze": [
+            "vendor/bin/phpstan analyze src/ tests/"
         ]
     }
 }

@@ -16,7 +16,7 @@ namespace Sassnowski\Roach\Spider;
 use Generator;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Parsing\ParseResult;
+use Sassnowski\Roach\ResponseProcessing\ParseResult;
 
 abstract class AbstractSpider
 {

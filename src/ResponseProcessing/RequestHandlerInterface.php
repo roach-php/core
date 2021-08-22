@@ -11,15 +11,16 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests;
+namespace Sassnowski\Roach\ResponseProcessing;
 
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
+use Sassnowski\Roach\Support\ConfigurableInterface;
 
-trait InteractsWithResponses
+interface RequestHandlerInterface extends ConfigurableInterface
 {
-    private function makeResponse(?Request $request = null): Response
-    {
-        return new Response(new \GuzzleHttp\Psr7\Response(), $request ?: new Request('::uri::', static fn () => yield from []));
-    }
+    /**
+     * Handles a request that got emitted while parsing $response.
+     */
+    public function handleRequest(Request $request, Response $response): Request;
 }

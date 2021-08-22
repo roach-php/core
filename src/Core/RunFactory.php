@@ -14,12 +14,9 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Core;
 
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
-use Sassnowski\Roach\Downloader\LoggerMiddleware;
-use Sassnowski\Roach\Http\Middleware\MiddlewareStack as HttpMiddleware;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
-use Sassnowski\Roach\Parsing\Handlers\HandlerAdapter;
-use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
+use Sassnowski\Roach\ResponseProcessing\Handlers\HandlerAdapter;
+use Sassnowski\Roach\ResponseProcessing\MiddlewareStack as ResponseMiddleware;
 use Sassnowski\Roach\Spider\AbstractSpider;
 
 final class RunFactory
@@ -32,19 +29,12 @@ final class RunFactory
     {
         return new Run(
             $spider->startRequests(),
-            [$this->container->get(LoggerMiddleware::class)],
+            [],
             $this->buildItemPipeline($spider->processors()),
             $this->buildResponseMiddleware($spider->spiderMiddleware()),
             $spider::$concurrency,
             $spider::$requestDelay,
         );
-    }
-
-    private function buildDownloader(array $handlers): HttpMiddleware
-    {
-        $handlers = \array_map([$this, 'buildConfigurable'], $handlers);
-
-        return HttpMiddleware::create(...$handlers);
     }
 
     private function buildItemPipeline(array $processors): ItemPipelineInterface

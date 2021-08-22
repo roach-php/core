@@ -1,15 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2021 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/roach-php/roach
+ */
+
 namespace Sassnowski\Roach\Downloader;
 
-use Closure;
 use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 
-class Downloader
+final class Downloader
 {
-    /** @var DownloaderMiddleware[] */
+    /**
+     * @var DownloaderMiddlewareInterface[]
+     */
     private array $middleware = [];
 
     private array $requests = [];
@@ -18,17 +30,17 @@ class Downloader
     {
     }
 
-    public function withMiddleware(DownloaderMiddleware ...$middleware): void
+    public function withMiddleware(DownloaderMiddlewareInterface ...$middleware): void
     {
         $this->middleware = $middleware;
     }
 
-    public function download(Request $request): void
+    public function prepare(Request $request): void
     {
         foreach ($this->middleware as $middleware) {
             $request = $middleware->handleRequest($request);
 
-            if  ($request->wasDropped()) {
+            if ($request->wasDropped()) {
                 return;
             }
         }
@@ -42,12 +54,12 @@ class Downloader
 
         $this->requests = [];
 
-        $this->client->pool($requests, function (Response $response) use ($callback) {
+        $this->client->pool($requests, function (Response $response) use ($callback): void {
             $this->onResponseReceived($response, $callback);
         });
     }
 
-    private function onResponseReceived(Response $response, ?callable $callback)
+    private function onResponseReceived(Response $response, ?callable $callback): void
     {
         foreach ($this->middleware as $middleware) {
             $response = $middleware->handleResponse($response);
@@ -57,7 +69,7 @@ class Downloader
             }
         }
 
-        if ($callback !== null) {
+        if (null !== $callback) {
             $callback($response);
         }
     }

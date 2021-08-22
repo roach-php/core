@@ -16,7 +16,6 @@ namespace Sassnowski\Roach\Tests;
 use Closure;
 use Generator;
 use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
 
 trait InteractsWithRequests
 {

@@ -1,12 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2021 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/roach-php/roach
+ */
+
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\Roach;
 use Sassnowski\Roach\Spider\AbstractSpider;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-class FussballdatenSpider extends AbstractSpider
+final class test extends AbstractSpider
 {
     public static int $concurrency = 1;
 

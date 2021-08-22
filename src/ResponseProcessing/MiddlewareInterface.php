@@ -11,9 +11,8 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Http;
+namespace Sassnowski\Roach\ResponseProcessing;
 
-interface ClientInterface
+interface MiddlewareInterface extends ItemHandlerInterface, RequestHandlerInterface, ResponseHandlerInterface
 {
-    public function pool(array $requests, callable $onFulfilled): void;
 }

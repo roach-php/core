@@ -13,16 +13,16 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Core;
 
-use Sassnowski\Roach\Downloader\DownloaderMiddleware;
+use Sassnowski\Roach\Downloader\DownloaderMiddlewareInterface;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
-use Sassnowski\Roach\Parsing\MiddlewareStack as ResponseMiddleware;
+use Sassnowski\Roach\ResponseProcessing\MiddlewareStack as ResponseMiddleware;
 
 final class Run
 {
     /**
-     * @param Request[] $startRequests
-     * @param DownloaderMiddleware[] $downloaderMiddleware
+     * @param Request[]                       $startRequests
+     * @param DownloaderMiddlewareInterface[] $downloaderMiddleware
      */
     public function __construct(
         private array $startRequests,
@@ -43,7 +43,7 @@ final class Run
     }
 
     /**
-     * @return DownloaderMiddleware[]
+     * @return DownloaderMiddlewareInterface[]
      */
     public function downloaderMiddleware(): array
     {

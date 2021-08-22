@@ -13,24 +13,18 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Core;
 
-use GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Log\LoggerInterface;
 use Sassnowski\Roach\Downloader\Downloader;
-use Sassnowski\Roach\Http;
-use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\Parsing\ParseResult;
+use Sassnowski\Roach\ResponseProcessing\ParseResult;
 use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
-use Throwable;
 
 final class Engine
 {
     public function __construct(
         private RequestSchedulerInterface $scheduler,
-        private Downloader $downloader
+        private Downloader $downloader,
     ) {
     }
 
@@ -49,11 +43,11 @@ final class Engine
     {
         while (!$this->scheduler->empty()) {
             foreach ($this->scheduler->nextRequests() as $request) {
-                $this->downloader->download($request);
+                $this->downloader->prepare($request);
             }
 
             $this->downloader->flush(
-                fn (Response $response) => $this->onFulfilled($response, $run)
+                fn (Response $response) => $this->onFulfilled($response, $run),
             );
         }
     }

@@ -63,9 +63,10 @@ final class Request implements DroppableInterface
         /** @var GuzzleRequest $request */
         $request = $this->guzzleRequest->withHeader($name, $value);
 
-        $this->guzzleRequest = $request;
+        $clone = clone $this;
+        $clone->guzzleRequest = $request;
 
-        return $this;
+        return $clone;
     }
 
     public function withGuzzleRequest(callable $callback): self

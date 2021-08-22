@@ -17,7 +17,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Parsing\ParseResult;
+use Sassnowski\Roach\ResponseProcessing\ParseResult;
 use Sassnowski\Roach\Support\DroppableInterface;
 use Sassnowski\Roach\Tests\InteractsWithRequests;
 use Sassnowski\Roach\Tests\Support\DroppableTest;
@@ -52,10 +52,11 @@ final class RequestTest extends TestCase
 
         self::assertFalse($request->hasHeader('X-Custom-Header'));
 
-        $request->addHeader('X-Custom-Header', '::value::');
+        $newRequest = $request->addHeader('X-Custom-Header', '::value::');
 
-        self::assertTrue($request->hasHeader('X-Custom-Header'));
-        self::assertSame(['::value::'], $request->getHeader('X-Custom-Header'));
+        self::assertFalse($request->hasHeader('X-Custom-Header'));
+        self::assertTrue($newRequest->hasHeader('X-Custom-Header'));
+        self::assertSame(['::value::'], $newRequest->getHeader('X-Custom-Header'));
     }
 
     public function testCanManipulateUnderlyingGuzzleRequest(): void
