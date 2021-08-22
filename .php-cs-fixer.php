@@ -14,6 +14,9 @@ EOF;
 
 $config = Config\Factory::fromRuleSet(new Config\RuleSet\Php80($header), [
     'php_unit_test_class_requires_covers' => false,
+    'error_suppression' => [
+        'noise_remaining_usages' => false,
+    ],
 ]);
 
 $config->getFinder()->in(__DIR__);

@@ -17,54 +17,35 @@ use Generator;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ResponseProcessing\ParseResult;
+use Sassnowski\Roach\Spider\Configuration\Configuration;
 
-abstract class AbstractSpider
+abstract class AbstractSpider implements SpiderInterface
 {
-    public static string $name = 'spider_name';
+    protected Configuration $configuration;
 
-    public static int $concurrency = 25;
+    public function __construct(ConfigurationLoaderStrategy $loaderStrategy)
+    {
+        $this->configuration = $loaderStrategy->load();
+    }
 
-    public static int $requestDelay = 0;
-
-    protected array $startUrls = [];
-
-    protected array $httpMiddleware = [];
-
-    protected array $spiderMiddleware = [];
-
-    protected array $processors = [];
-
+    /**
+     * @psalm-return Generator<ParseResult>
+     */
     abstract public function parse(Response $response): Generator;
-
-    final public function httpMiddleware(): array
-    {
-        return $this->getHttpMiddleware();
-    }
-
-    final public function spiderMiddleware(): array
-    {
-        return $this->getSpiderMiddleware();
-    }
-
-    final public function processors(): array
-    {
-        return $this->getProcessors();
-    }
 
     /**
      * @return Request[]
      */
-    final public function startRequests(): array
+    final public function getInitialRequests(): array
     {
-        return \array_map(
-            fn (string $url) => new Request($url, [$this, 'parse']),
-            $this->getStartUrls(),
-        );
+        return \array_map(function (string $url) {
+            return new Request($url, [$this, 'parse']);
+        }, $this->getConfiguration()->startUrls);
     }
 
-    protected function getStartUrls(): array
+    final public function loadConfiguration(): Configuration
     {
-        return $this->startUrls;
+        return $this->configuration;
     }
 
     protected function request(string $url, string $parseMethod = 'parse'): ParseResult
@@ -76,20 +57,5 @@ abstract class AbstractSpider
     protected function item(mixed $item): ParseResult
     {
         return ParseResult::item($item);
-    }
-
-    protected function getHttpMiddleware(): array
-    {
-        return $this->httpMiddleware;
-    }
-
-    protected function getSpiderMiddleware(): array
-    {
-        return $this->spiderMiddleware;
-    }
-
-    protected function getProcessors(): array
-    {
-        return $this->processors;
     }
 }

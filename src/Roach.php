@@ -29,7 +29,7 @@ use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
 use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
 use Sassnowski\Roach\Scheduling\Timing\ClockInterface;
 use Sassnowski\Roach\Scheduling\Timing\RealClock;
-use Sassnowski\Roach\Spider\AbstractSpider;
+use Sassnowski\Roach\Spider\SpiderInterface;
 
 final class Roach
 {
@@ -44,7 +44,7 @@ final class Roach
     {
         $container = self::$container ?: self::defaultContainer();
 
-        /** @var AbstractSpider $spider */
+        /** @var SpiderInterface $spider */
         $spider = $container->get($spiderClass);
         $runFactory = new RunFactory($container);
 

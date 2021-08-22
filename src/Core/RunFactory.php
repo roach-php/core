@@ -14,10 +14,12 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Core;
 
 use Psr\Container\ContainerInterface;
+use Sassnowski\Roach\Downloader\DownloaderMiddlewareInterface;
+use Sassnowski\Roach\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
 use Sassnowski\Roach\ResponseProcessing\Handlers\HandlerAdapter;
 use Sassnowski\Roach\ResponseProcessing\MiddlewareStack as ResponseMiddleware;
-use Sassnowski\Roach\Spider\AbstractSpider;
+use Sassnowski\Roach\Spider\SpiderInterface;
 
 final class RunFactory
 {
@@ -25,16 +27,30 @@ final class RunFactory
     {
     }
 
-    public function fromSpider(AbstractSpider $spider): Run
+    public function fromSpider(SpiderInterface $spider): Run
     {
+        $configuration = $spider->loadConfiguration();
+
         return new Run(
-            $spider->startRequests(),
-            [],
-            $this->buildItemPipeline($spider->processors()),
-            $this->buildResponseMiddleware($spider->spiderMiddleware()),
-            $spider::$concurrency,
-            $spider::$requestDelay,
+            $spider->getInitialRequests(),
+            $this->buildDownloaderMiddleware($configuration->downloaderMiddleware),
+            $this->buildItemPipeline($configuration->itemProcessors),
+            $this->buildResponseMiddleware($configuration->spiderMiddleware),
+            $configuration->concurrency,
+            $configuration->requestDelay,
         );
+    }
+
+    /**
+     * @psalm-param Array<class-string<DownloaderMiddlewareInterface>>
+     *
+     * @return DownloaderMiddlewareInterface[]
+     */
+    private function buildDownloaderMiddleware(array $downloaderMiddleware): array
+    {
+        return \array_map(function (string|array $middleware) {
+            return new DownloaderMiddlewareAdapter($this->buildConfigurable($middleware));
+        }, $downloaderMiddleware);
     }
 
     private function buildItemPipeline(array $processors): ItemPipelineInterface
