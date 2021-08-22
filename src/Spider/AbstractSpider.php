@@ -40,7 +40,7 @@ abstract class AbstractSpider implements SpiderInterface
     {
         return \array_map(function (string $url) {
             return new Request($url, [$this, 'parse']);
-        }, $this->getConfiguration()->startUrls);
+        }, $this->configuration->startUrls);
     }
 
     final public function loadConfiguration(): Configuration
