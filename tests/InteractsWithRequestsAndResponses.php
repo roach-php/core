@@ -33,7 +33,7 @@ trait InteractsWithRequestsAndResponses
     {
         return new Response(
             new \GuzzleHttp\Psr7\Response(),
-            $request ?: $this->makeRequest()
+            $request ?: $this->makeRequest(),
         );
     }
 }

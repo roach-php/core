@@ -30,9 +30,11 @@ final class Downloader
     {
     }
 
-    public function withMiddleware(DownloaderMiddlewareInterface ...$middleware): void
+    public function withMiddleware(DownloaderMiddlewareInterface ...$middleware): self
     {
         $this->middleware = $middleware;
+
+        return $this;
     }
 
     public function prepare(Request $request): void

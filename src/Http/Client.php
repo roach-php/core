@@ -26,7 +26,7 @@ final class Client implements ClientInterface
         $this->client = $client ?? new GuzzleClient();
     }
 
-    public function pool(array $requests, callable $onFulfilled): void
+    public function pool(array $requests, ?callable $onFulfilled = null): void
     {
         $makeRequests = function () use ($requests) {
             foreach ($requests as $request) {

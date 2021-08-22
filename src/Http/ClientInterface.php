@@ -15,5 +15,5 @@ namespace Sassnowski\Roach\Http;
 
 interface ClientInterface
 {
-    public function pool(array $requests, callable $onFulfilled): void;
+    public function pool(array $requests, ?callable $onFulfilled = null): void;
 }
