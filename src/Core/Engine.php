@@ -14,22 +14,31 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Core;
 
 use Sassnowski\Roach\Downloader\Downloader;
+use Sassnowski\Roach\Events\RunFinished;
+use Sassnowski\Roach\Events\RunStarting;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
 use Sassnowski\Roach\ResponseProcessing\ParseResult;
 use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Engine
 {
     public function __construct(
         private RequestSchedulerInterface $scheduler,
         private Downloader $downloader,
+        private EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
     public function start(Run $run): void
     {
+        $this->eventDispatcher->dispatch(
+            new RunStarting($run),
+            RunStarting::NAME,
+        );
+
         $this->configure($run);
 
         foreach ($run->startRequests() as $request) {
@@ -50,6 +59,11 @@ final class Engine
                 fn (Response $response) => $this->onFulfilled($response, $run),
             );
         }
+
+        $this->eventDispatcher->dispatch(
+            new RunFinished($run),
+            RunFinished::NAME,
+        );
     }
 
     private function onFulfilled(Response $response, Run $run): void

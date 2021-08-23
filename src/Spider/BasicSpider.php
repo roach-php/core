@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\Spider;
 
 use Sassnowski\Roach\Downloader\Middleware\LoggerMiddleware;
+use Sassnowski\Roach\Downloader\Middleware\RequestDeduplicationMiddleware;
 use Sassnowski\Roach\Spider\Configuration\ArrayLoader;
 
 abstract class BasicSpider extends AbstractSpider
@@ -32,7 +33,7 @@ abstract class BasicSpider extends AbstractSpider
      * @var string[]
      */
     public array $downloaderMiddleware = [
-        LoggerMiddleware::class,
+        RequestDeduplicationMiddleware::class,
     ];
 
     /**

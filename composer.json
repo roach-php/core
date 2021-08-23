@@ -19,6 +19,7 @@
         "symfony/console": "^5.3",
         "symfony/css-selector": "^5.3",
         "symfony/dom-crawler": "^5.3",
+        "symfony/event-dispatcher": "^5.3",
         "symfony/options-resolver": "^5.3"
     },
     "require-dev": {
@@ -51,6 +52,9 @@
         "post-update-cmd": [
             "composer normalize"
         ],
+        "analyze": [
+            "vendor/bin/phpstan analyze src/ tests/"
+        ],
         "coding-standards": [
             "mkdir -p .build/php-cs-fixer",
             "php-cs-fixer fix --diff --verbose"
@@ -60,9 +64,6 @@
         ],
         "test-watch": [
             "vendor/bin/phpunit-watcher watch"
-        ],
-        "analyze": [
-            "vendor/bin/phpstan analyze src/ tests/"
         ]
     }
 }

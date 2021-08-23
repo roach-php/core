@@ -13,9 +13,12 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\Downloader;
 
+use Sassnowski\Roach\Events\RequestDropped;
+use Sassnowski\Roach\Events\RequestSending;
 use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Downloader
 {
@@ -26,8 +29,10 @@ final class Downloader
 
     private array $requests = [];
 
-    public function __construct(private ClientInterface $client)
-    {
+    public function __construct(
+        private ClientInterface $client,
+        private EventDispatcherInterface $eventDispatcher,
+    ) {
     }
 
     public function withMiddleware(DownloaderMiddlewareInterface ...$middleware): self
@@ -43,9 +48,19 @@ final class Downloader
             $request = $middleware->handleRequest($request);
 
             if ($request->wasDropped()) {
+                $this->eventDispatcher->dispatch(
+                    new RequestDropped($request),
+                    RequestDropped::NAME,
+                );
+
                 return;
             }
         }
+
+        $this->eventDispatcher->dispatch(
+            new RequestSending($request),
+            RequestSending::NAME,
+        );
 
         $this->requests[] = $request;
     }

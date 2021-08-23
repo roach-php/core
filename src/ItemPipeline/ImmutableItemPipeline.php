@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace Sassnowski\Roach\ItemPipeline;
 
-use Psr\Log\LoggerInterface;
+use Sassnowski\Roach\Events\ItemDropped;
+use Sassnowski\Roach\Events\ItemScraped;
 use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class ImmutableItemPipeline implements ItemPipelineInterface
 {
@@ -23,7 +25,7 @@ final class ImmutableItemPipeline implements ItemPipelineInterface
      */
     private array $processors = [];
 
-    public function __construct(private LoggerInterface $logger)
+    public function __construct(private EventDispatcherInterface $eventDispatcher)
     {
     }
 
@@ -41,14 +43,19 @@ final class ImmutableItemPipeline implements ItemPipelineInterface
             $item = $processor->processItem($item);
 
             if ($item->wasDropped()) {
-                $this->logger->info('[Item pipeline] Item was dropped', [
-                    'item' => $item->all(),
-                    'reason' => $item->getDropReason(),
-                ]);
+                $this->eventDispatcher->dispatch(
+                    new ItemDropped($item),
+                    ItemDropped::NAME,
+                );
 
                 break;
             }
         }
+
+        $this->eventDispatcher->dispatch(
+            new ItemScraped($item),
+            ItemScraped::NAME,
+        );
 
         return $item;
     }
