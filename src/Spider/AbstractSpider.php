@@ -50,11 +50,10 @@ abstract class AbstractSpider implements SpiderInterface
 
     protected function request(string $url, string $parseMethod = 'parse'): ParseResult
     {
-        /** @phpstan-ignore-next-line */
         return ParseResult::request($url, [$this, $parseMethod]);
     }
 
-    protected function item(mixed $item): ParseResult
+    protected function item(array $item): ParseResult
     {
         return ParseResult::item($item);
     }

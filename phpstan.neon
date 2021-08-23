@@ -1,7 +1,0 @@
-parameters:
-    level: 7
-
-    excludePaths:
-        - tests/Server/*
-
-    checkMissingIterableValueType: false

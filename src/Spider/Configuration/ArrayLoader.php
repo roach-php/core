@@ -13,11 +13,24 @@ declare(strict_types=1);
 
 namespace RoachPHP\Spider\Configuration;
 
+use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
+use RoachPHP\ResponseProcessing\MiddlewareInterface;
 use RoachPHP\Spider\ConfigurationLoaderStrategy;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class ArrayLoader implements ConfigurationLoaderStrategy
 {
+    /**
+     * @var array{
+     *             startUrls: string[],
+     *             downloaderMiddleware: class-string<DownloaderMiddlewareInterface>[],
+     *             spiderMiddleware: class-string<MiddlewareInterface>[],
+     *             itemProcessors: class-string<ItemProcessorInterface>[],
+     *             concurrency: int,
+     *             requestDelay: int
+     * }
+     */
     private array $config;
 
     public function __construct(array $configuration)
@@ -33,6 +46,7 @@ final class ArrayLoader implements ConfigurationLoaderStrategy
             'requestDelay' => 0,
         ]);
 
+        /** @psalm-suppress MixedPropertyTypeCoercion */
         $this->config = $resolver->resolve($configuration);
     }
 

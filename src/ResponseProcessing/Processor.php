@@ -19,6 +19,7 @@ use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\ResponseDropped;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\ItemInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class Processor
@@ -64,6 +65,7 @@ final class Processor
                 : 'handleItem';
 
             foreach ($this->middleware as $handler) {
+                /** @var Request|ItemInterface $value */
                 $value = $handler->{$handleMethod}($value, $response);
 
                 if ($value->wasDropped()) {

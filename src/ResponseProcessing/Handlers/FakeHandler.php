@@ -15,6 +15,7 @@ namespace RoachPHP\ResponseProcessing\Handlers;
 
 use Closure;
 use PHPUnit\Framework\Assert;
+use Psalm\Type\Atomic\TClosure;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
@@ -28,6 +29,11 @@ final class FakeHandler extends Handler implements MiddlewareInterface
 
     private array $requestCalls = [];
 
+    /**
+     * @param ?Closure(Response): Response $handleResponseCallback
+     * @param ?Closure(ItemInterface, Response): ItemInterface $handleItemCallback
+     * @param ?Closure(Request, Response): Request $handleRequestCallback
+     */
     public function __construct(
         private ?Closure $handleResponseCallback = null,
         private ?Closure $handleItemCallback = null,

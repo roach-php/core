@@ -13,10 +13,13 @@ declare(strict_types=1);
 
 namespace RoachPHP\ResponseProcessing;
 
+use Generator;
 use Closure;
+use InvalidArgumentException;
 use RoachPHP\Http\Request;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\Http\Response;
 
 final class ParseResult
 {
@@ -40,9 +43,22 @@ final class ParseResult
 
     public function value(): Request|ItemInterface
     {
-        return $this->request ?: $this->item;
+        if (null !== $this->request) {
+            return $this->request;
+        }
+
+        if (null !== $this->item) {
+            return $this->item;
+        }
+
+        throw new InvalidArgumentException(
+            'Neither item nor request is set. This should never happen',
+        );
     }
 
+    /**
+     * @param callable(Response): Generator<ParseResult> $parseCallback
+     */
     public static function request(string $url, callable $parseCallback): self
     {
         return new self(
@@ -51,10 +67,18 @@ final class ParseResult
         );
     }
 
+    /**
+     * @param Closure(Request): void $ifRequest
+     * @param Closure(ItemInterface): void $ifItem
+     */
     public function apply(Closure $ifRequest, Closure $ifItem): void
     {
-        null !== $this->request
-            ? $ifRequest($this->request)
-            : $ifItem($this->item);
+        if ($this->request !== null) {
+            $ifRequest($this->request);
+        } elseif ($this->item !== null) {
+            $ifItem($this->item);
+        } else {
+            throw new InvalidArgumentException('ParseResult with empty item and result. This should never happen');
+        }
     }
 }

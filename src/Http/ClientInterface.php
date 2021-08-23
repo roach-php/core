@@ -15,5 +15,9 @@ namespace RoachPHP\Http;
 
 interface ClientInterface
 {
+    /**
+     * @param Request[] $requests
+     * @param ?callable(Response): void $onFulfilled
+     */
     public function pool(array $requests, ?callable $onFulfilled = null): void;
 }

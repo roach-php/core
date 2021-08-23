@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace RoachPHP\Extensions;
 
+use Exception;
 use Psr\Container\ContainerInterface;
 use RoachPHP\Core\Run;
 
@@ -36,7 +37,8 @@ final class ExtensionsFactory
     public function buildExtensionsForRun(Run $run): array
     {
         return \array_map(
-            fn (string $extension) => $this->container->get($extension),
+            /** @psalm-suppress MixedReturnStatement,MixedInferredReturnType */
+            fn (string $extension): Extension => $this->container->get($extension),
             $this->coreExtensions,
         );
     }

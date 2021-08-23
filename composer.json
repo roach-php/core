@@ -27,11 +27,11 @@
         "ergebnis/composer-normalize": "^2.15",
         "ergebnis/php-cs-fixer-config": "^3.0",
         "http-interop/http-factory-guzzle": "^1.2",
-        "phpstan/phpstan": "^0.12.95",
         "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-latest",
         "slim/slim": "4.*",
-        "spatie/phpunit-watcher": "^1.23"
+        "spatie/phpunit-watcher": "^1.23",
+        "vimeo/psalm": "^4.9"
     },
     "autoload": {
         "psr-4": {
@@ -54,7 +54,7 @@
             "composer normalize"
         ],
         "analyze": [
-            "vendor/bin/phpstan analyze src/ tests/"
+            "vendor/bin/psalm"
         ],
         "coding-standards": [
             "mkdir -p .build/php-cs-fixer",

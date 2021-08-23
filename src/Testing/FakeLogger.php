@@ -17,6 +17,9 @@ use Psr\Log\LoggerInterface;
 
 final class FakeLogger implements LoggerInterface
 {
+    /**
+     * @var array<string, array<array{message: string, context: array}>>
+     */
     private array $logs = [
         'emergency' => [],
         'alert' => [],
@@ -70,6 +73,8 @@ final class FakeLogger implements LoggerInterface
 
     public function log($level, $message, array $context = []): void
     {
+        $level = (string) $level;
+
         $this->logs[$level][] = [
             'message' => $message,
             'context' => $context,

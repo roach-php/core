@@ -17,8 +17,6 @@ use RoachPHP\Http\Request;
 
 final class UserAgentMiddleware extends DownloaderMiddleware implements RequestMiddlewareInterface
 {
-    protected string $agent;
-
     public function __construct()
     {
         parent::__construct(['userAgent' => 'roach-php']);
@@ -26,6 +24,7 @@ final class UserAgentMiddleware extends DownloaderMiddleware implements RequestM
 
     public function handleRequest(Request $request): Request
     {
+        /** @psalm-suppress MixedArgument */
         return $request->addHeader('User-Agent', $this->options['userAgent']);
     }
 }

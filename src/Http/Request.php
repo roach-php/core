@@ -16,6 +16,7 @@ namespace RoachPHP\Http;
 use Closure;
 use Generator;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
+use RoachPHP\ResponseProcessing\ParseResult;
 use RoachPHP\Support\Droppable;
 use RoachPHP\Support\DroppableInterface;
 use RoachPHP\Support\HasMetaData;
@@ -25,10 +26,16 @@ final class Request implements DroppableInterface
     use HasMetaData;
     use Droppable;
 
+    /**
+     * @var Closure(Response): Generator<ParseResult>
+     */
     private Closure $parseCallback;
 
     private GuzzleRequest $guzzleRequest;
 
+    /**
+     * @param callable(Response): Generator<ParseResult> $parseMethod
+     */
     public function __construct(string $uri, callable $parseMethod, string $method = 'GET')
     {
         $this->guzzleRequest = new GuzzleRequest($method, $uri);
@@ -69,6 +76,9 @@ final class Request implements DroppableInterface
         return $clone;
     }
 
+    /**
+     * @param callable(GuzzleRequest): GuzzleRequest $callback
+     */
     public function withGuzzleRequest(callable $callback): self
     {
         $this->guzzleRequest = $callback($this->guzzleRequest);

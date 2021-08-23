@@ -17,7 +17,7 @@ use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 
 interface ItemPipelineInterface
 {
-    public function setProcessors(ItemProcessorInterface ...$processor): self;
+    public function setProcessors(ItemProcessorInterface ...$processors): self;
 
     public function sendItem(ItemInterface $item): ItemInterface;
 }

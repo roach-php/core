@@ -30,6 +30,8 @@ final class FakeDispatcher implements EventDispatcherInterface
 
     public function dispatch(object $event, ?string $eventName = null): object
     {
+        $eventName ??= \get_class($event);
+
         if (isset($this->listeners[$eventName])) {
             foreach ($this->listeners[$eventName] as $listener) {
                 $listener($event);

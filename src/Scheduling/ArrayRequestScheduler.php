@@ -24,6 +24,9 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
 
     private int $delay = 0;
 
+    /**
+     * @var Request[]
+     */
     private array $requests = [];
 
     private DateTimeImmutable $nextBatchReadyAt;
@@ -43,6 +46,9 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
         return empty($this->requests);
     }
 
+    /**
+     * @return Request[]
+     */
     public function nextRequests(): array
     {
         $this->clock->sleepUntil($this->nextBatchReadyAt);

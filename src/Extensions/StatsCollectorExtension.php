@@ -24,8 +24,17 @@ use RoachPHP\Events\RunStarting;
 
 final class StatsCollectorExtension extends Extension
 {
-    private DateTimeImmutable $startTime;
+    private ?DateTimeImmutable $startTime = null;
 
+    /**
+     * @var array{
+     *     duration: ?string,
+     *     "requests.sent": int,
+     *     "requests.dropped": int,
+     *     "items.scraped": int,
+     *     "items.dropped": int
+     *     }
+     */
     private array $stats = [
         'duration' => null,
         'requests.sent' => 0,
@@ -57,9 +66,10 @@ final class StatsCollectorExtension extends Extension
 
     public function onRunFinished(): void
     {
-        $duration = $this->startTime->diff(new DateTimeImmutable());
-
-        $this->stats['duration'] = $duration->format('%H:%I:%S');
+        if (null !== $this->startTime) {
+            $duration = $this->startTime->diff(new DateTimeImmutable());
+            $this->stats['duration'] = $duration->format('%H:%I:%S');
+        }
 
         $this->logger->info('Run statistics', $this->stats);
     }

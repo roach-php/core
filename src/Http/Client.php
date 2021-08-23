@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace RoachPHP\Http;
 
+use Generator;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Pool;
 use Psr\Http\Message\ResponseInterface;
@@ -28,7 +29,7 @@ final class Client implements ClientInterface
 
     public function pool(array $requests, ?callable $onFulfilled = null): void
     {
-        $makeRequests = function () use ($requests) {
+        $makeRequests = function () use ($requests): Generator {
             foreach ($requests as $request) {
                 yield function () use ($request) {
                     return $this->client
