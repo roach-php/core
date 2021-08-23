@@ -16,7 +16,7 @@ namespace Sassnowski\Roach\ItemPipeline;
 use Sassnowski\Roach\Events\ItemDropped;
 use Sassnowski\Roach\Events\ItemScraped;
 use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class ImmutableItemPipeline implements ItemPipelineInterface
 {
@@ -48,7 +48,7 @@ final class ImmutableItemPipeline implements ItemPipelineInterface
                     ItemDropped::NAME,
                 );
 
-                break;
+                return $item;
             }
         }
 

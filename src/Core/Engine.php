@@ -21,7 +21,7 @@ use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
 use Sassnowski\Roach\ResponseProcessing\ParseResult;
 use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class Engine
 {

@@ -15,6 +15,9 @@ namespace Sassnowski\Roach\Tests\ItemPipeline;
 
 use Closure;
 use PHPUnit\Framework\TestCase;
+use Sassnowski\Roach\Events\FakeDispatcher;
+use Sassnowski\Roach\Events\ItemDropped;
+use Sassnowski\Roach\Events\ItemScraped;
 use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
@@ -31,12 +34,12 @@ final class ImmutableItemPipelineTest extends TestCase
 {
     private ImmutableItemPipeline $pipeline;
 
-    private FakeLogger $logger;
+    private FakeDispatcher $dispatcher;
 
     protected function setUp(): void
     {
-        $this->logger = new FakeLogger();
-        $this->pipeline = new ImmutableItemPipeline($this->logger);
+        $this->dispatcher = new FakeDispatcher();
+        $this->pipeline = new ImmutableItemPipeline($this->dispatcher);
     }
 
     public function testSettingProcessorsReturnsANewPipelineInstance(): void
@@ -81,7 +84,7 @@ final class ImmutableItemPipelineTest extends TestCase
         self::assertSame('A', $result->get('value'));
     }
 
-    public function testLogIfItemGotDropped(): void
+    public function testDispatchesEventIfItemWasDropped(): void
     {
         $processor = $this->makeProcessor(static fn ($item) => $item->drop('::reason::'));
         $item = new Item(['foo' => 'bar']);
@@ -90,12 +93,37 @@ final class ImmutableItemPipelineTest extends TestCase
             ->setProcessors($processor)
             ->sendItem($item);
 
-        self::assertTrue(
-            $this->logger->messageWasLogged('info', '[Item pipeline] Item was dropped', [
-                'item' => $item->all(),
-                'reason' => '::reason::',
-            ]),
+        $this->dispatcher->assertDispatched(
+            ItemDropped::NAME,
+            fn (ItemDropped $event) => $event->item->all() === $item->all()
         );
+    }
+
+    public function testDoesNotDispatchEventIfItemWasNotDropped(): void
+    {
+        $this->pipeline->sendItem(new Item([]));
+
+        $this->dispatcher->assertNotDispatched(ItemDropped::NAME);
+    }
+
+    public function testDispatchesEventIfItemWasScraped(): void
+    {
+        $this->pipeline->sendItem(new Item(['foo' => 'bar']));
+
+        $this->dispatcher->assertDispatched(
+            ItemScraped::NAME,
+            fn (ItemScraped $event) => $event->item->all() === ['foo' => 'bar']
+        );
+    }
+
+    public function testDoesNotDispatchEventIfItemWasNotScraped(): void
+    {
+        $processor = $this->makeProcessor(static fn ($item) => $item->drop('::reason::'));
+        $this->pipeline
+            ->setProcessors($processor)
+            ->sendItem(new Item([]));
+
+        $this->dispatcher->assertNotDispatched(ItemScraped::NAME);
     }
 
     private function makeProcessor(Closure $processItem): ItemProcessorInterface

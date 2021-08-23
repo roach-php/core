@@ -16,6 +16,7 @@ namespace Sassnowski\Roach\Tests;
 use Sassnowski\Roach\Core\Engine;
 use Sassnowski\Roach\Core\Run;
 use Sassnowski\Roach\Downloader\Downloader;
+use Sassnowski\Roach\Events\FakeDispatcher;
 use Sassnowski\Roach\Http\Client;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
@@ -35,9 +36,9 @@ final class EngineTest extends IntegrationTest
 {
     use InteractsWithRequestsAndResponses;
 
-    private FakeLogger $logger;
-
     private Engine $engine;
+
+    private FakeDispatcher $dispatcher;
 
     private ImmutableItemPipeline $pipeline;
 
@@ -45,11 +46,12 @@ final class EngineTest extends IntegrationTest
     {
         parent::setUp();
 
-        $this->logger = new FakeLogger();
-        $this->pipeline = new ImmutableItemPipeline($this->logger);
+        $this->dispatcher = new FakeDispatcher();
+        $this->pipeline = new ImmutableItemPipeline($this->dispatcher);
         $this->engine = new Engine(
             new ArrayRequestScheduler(new FakeClock()),
-            new Downloader(new Client()),
+            new Downloader(new Client(), $this->dispatcher),
+            $this->dispatcher
         );
 
         $_SERVER['__parse.called'] = 0;

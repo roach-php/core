@@ -18,7 +18,7 @@ use Sassnowski\Roach\Events\RequestSending;
 use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class Downloader
 {
@@ -57,12 +57,22 @@ final class Downloader
             }
         }
 
-        $this->eventDispatcher->dispatch(
+        /** @var RequestSending $event */
+        $event = $this->eventDispatcher->dispatch(
             new RequestSending($request),
             RequestSending::NAME,
         );
 
-        $this->requests[] = $request;
+        if ($event->request->wasDropped()) {
+            $this->eventDispatcher->dispatch(
+                new RequestDropped($event->request),
+                RequestDropped::NAME
+            );
+
+            return;
+        }
+
+        $this->requests[] = $event->request;
     }
 
     public function flush(?callable $callback = null): void

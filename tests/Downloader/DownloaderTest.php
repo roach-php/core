@@ -16,10 +16,14 @@ namespace Sassnowski\Roach\Tests\Downloader;
 use PHPUnit\Framework\TestCase;
 use Sassnowski\Roach\Downloader\Downloader;
 use Sassnowski\Roach\Downloader\Middleware\FakeMiddleware;
+use Sassnowski\Roach\Events\FakeDispatcher;
+use Sassnowski\Roach\Events\RequestDropped;
+use Sassnowski\Roach\Events\RequestSending;
 use Sassnowski\Roach\Http\FakeClient;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * @internal
@@ -32,10 +36,13 @@ final class DownloaderTest extends TestCase
 
     private FakeClient $client;
 
+    private FakeDispatcher $dispatcher;
+
     protected function setUp(): void
     {
         $this->client = new FakeClient();
-        $this->downloader = new Downloader($this->client);
+        $this->dispatcher = new FakeDispatcher();
+        $this->downloader = new Downloader($this->client, $this->dispatcher);
     }
 
     public function testSendRequests(): void
@@ -149,5 +156,65 @@ final class DownloaderTest extends TestCase
         });
 
         self::assertFalse($called);
+    }
+
+    public function testDispatchesAnEventIfRequestWasDropped(): void
+    {
+        $request = $this->makeRequest();
+        $dropMiddleware = new FakeMiddleware(static fn (Request $request) => $request->drop('::reason::'));
+        $this->downloader->withMiddleware($dropMiddleware);
+
+        $this->downloader->prepare($request);
+
+        $this->dispatcher->assertDispatched(
+            RequestDropped::NAME,
+            fn (RequestDropped $event) => $event->request->wasDropped() && $event->request->getUri() === $request->getUri()
+        );
+    }
+
+    public function testDoesNotDispatchEventIfRequestWasNotDropped(): void
+    {
+        $this->downloader->prepare($this->makeRequest());
+
+        $this->dispatcher->assertNotDispatched(RequestDropped::NAME);
+    }
+
+    public function testDispatchesAnEventBeforeRequestIsScheduled(): void
+    {
+        $request = $this->makeRequest();
+        $this->downloader->prepare($request);
+
+        $this->dispatcher->assertDispatched(
+            RequestSending::NAME,
+            fn (RequestSending $event) => $event->request === $request
+        );
+    }
+
+    public function testDoesNotScheduleEventIfDroppedByEventListener(): void
+    {
+        $this->dispatcher->listen(RequestSending::NAME, function (RequestSending $event) {
+            $event->request = $event->request->drop('::reason::');
+        });
+        $request = $this->makeRequest();
+
+        $this->downloader->prepare($request);
+        $this->downloader->flush();
+
+        $this->client->assertRequestWasNotSent($request);
+    }
+
+    public function testDispatchesAnEventIfRequestWasDroppedByListener(): void
+    {
+        $this->dispatcher->listen(RequestSending::NAME, function (RequestSending $event) {
+            $event->request = $event->request->drop('::reason::');
+        });
+        $request = $this->makeRequest();
+
+        $this->downloader->prepare($request);
+
+        $this->dispatcher->assertDispatched(
+            RequestDropped::NAME,
+            fn (RequestDropped $event) => $event->request->getUri() === $request->getUri()
+        );
     }
 }
