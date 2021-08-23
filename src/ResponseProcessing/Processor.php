@@ -65,7 +65,7 @@ final class Processor
                 : 'handleItem';
 
             foreach ($this->middleware as $handler) {
-                /** @var Request|ItemInterface $value */
+                /** @var ItemInterface|Request $value */
                 $value = $handler->{$handleMethod}($value, $response);
 
                 if ($value->wasDropped()) {

@@ -35,7 +35,7 @@ final class FakeMiddleware extends DownloaderMiddleware implements DownloaderMid
     private array $responsesHandled = [];
 
     /**
-     * @param ?Closure(Request): Request $requestHandler
+     * @param ?Closure(Request): Request   $requestHandler
      * @param ?Closure(Response): Response $responseHandler
      */
     public function __construct(private ?Closure $requestHandler = null, private ?Closure $responseHandler = null)

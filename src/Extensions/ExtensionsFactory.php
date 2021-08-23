@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Extensions;
 
-use Exception;
 use Psr\Container\ContainerInterface;
 use RoachPHP\Core\Run;
 

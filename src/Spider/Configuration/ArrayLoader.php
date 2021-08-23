@@ -29,7 +29,7 @@ final class ArrayLoader implements ConfigurationLoaderStrategy
      *             itemProcessors: class-string<ItemProcessorInterface>[],
      *             concurrency: int,
      *             requestDelay: int
-     * }
+     *             }
      */
     private array $config;
 

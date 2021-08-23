@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace RoachPHP\ResponseProcessing;
 
-use Generator;
 use Closure;
+use Generator;
 use InvalidArgumentException;
 use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\Http\Response;
 
 final class ParseResult
 {
@@ -68,14 +68,14 @@ final class ParseResult
     }
 
     /**
-     * @param Closure(Request): void $ifRequest
+     * @param Closure(Request): void       $ifRequest
      * @param Closure(ItemInterface): void $ifItem
      */
     public function apply(Closure $ifRequest, Closure $ifItem): void
     {
-        if ($this->request !== null) {
+        if (null !== $this->request) {
             $ifRequest($this->request);
-        } elseif ($this->item !== null) {
+        } elseif (null !== $this->item) {
             $ifItem($this->item);
         } else {
             throw new InvalidArgumentException('ParseResult with empty item and result. This should never happen');

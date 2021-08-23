@@ -28,12 +28,12 @@ final class StatsCollectorExtension extends Extension
 
     /**
      * @var array{
-     *     duration: ?string,
-     *     "requests.sent": int,
-     *     "requests.dropped": int,
-     *     "items.scraped": int,
-     *     "items.dropped": int
-     *     }
+     *             duration: ?string,
+     *             "requests.sent": int,
+     *             "requests.dropped": int,
+     *             "items.scraped": int,
+     *             "items.dropped": int
+     *             }
      */
     private array $stats = [
         'duration' => null,
