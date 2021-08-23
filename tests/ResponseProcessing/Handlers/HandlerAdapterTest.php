@@ -21,9 +21,9 @@ use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\ResponseProcessing\Handlers\Handler;
 use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
-use RoachPHP\ResponseProcessing\ItemHandlerInterface;
-use RoachPHP\ResponseProcessing\RequestHandlerInterface;
-use RoachPHP\ResponseProcessing\ResponseHandlerInterface;
+use RoachPHP\ResponseProcessing\Handlers\ItemHandlerInterface;
+use RoachPHP\ResponseProcessing\Handlers\RequestHandlerInterface;
+use RoachPHP\ResponseProcessing\Handlers\ResponseHandlerInterface;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**

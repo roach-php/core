@@ -11,16 +11,16 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\ResponseProcessing;
+namespace RoachPHP\ResponseProcessing\Handlers;
 
+use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\ConfigurableInterface;
 
-interface ResponseHandlerInterface extends ConfigurableInterface
+interface RequestHandlerInterface extends ConfigurableInterface
 {
     /**
-     * Handles a response before the parse callback gets
-     * invoked.
+     * Handles a request that got emitted while parsing $response.
      */
-    public function handleResponse(Response $response): Response;
+    public function handleRequest(Request $request, Response $response): Request;
 }

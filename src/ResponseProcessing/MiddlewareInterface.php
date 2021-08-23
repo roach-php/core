@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 namespace RoachPHP\ResponseProcessing;
 
+use RoachPHP\ResponseProcessing\Handlers\ItemHandlerInterface;
+use RoachPHP\ResponseProcessing\Handlers\RequestHandlerInterface;
+use RoachPHP\ResponseProcessing\Handlers\ResponseHandlerInterface;
+
 interface MiddlewareInterface extends ItemHandlerInterface, RequestHandlerInterface, ResponseHandlerInterface
 {
 }
