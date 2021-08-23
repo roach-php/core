@@ -18,7 +18,7 @@ use Sassnowski\Roach\Downloader\DownloaderMiddlewareInterface;
 use Sassnowski\Roach\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
 use Sassnowski\Roach\ResponseProcessing\Handlers\HandlerAdapter;
-use Sassnowski\Roach\ResponseProcessing\MiddlewareStack as ResponseMiddleware;
+use Sassnowski\Roach\ResponseProcessing\MiddlewareInterface;
 use Sassnowski\Roach\Spider\SpiderInterface;
 
 final class RunFactory
@@ -42,8 +42,6 @@ final class RunFactory
     }
 
     /**
-     * @psalm-param Array<class-string<DownloaderMiddlewareInterface>>
-     *
      * @return DownloaderMiddlewareInterface[]
      */
     private function buildDownloaderMiddleware(array $downloaderMiddleware): array
@@ -63,13 +61,14 @@ final class RunFactory
         return $pipeline->setProcessors(...$processors);
     }
 
-    private function buildResponseMiddleware(array $handlers): ResponseMiddleware
+    /**
+     * @return MiddlewareInterface[]
+     */
+    private function buildResponseMiddleware(array $handlers): array
     {
-        $handlers = \array_map(function (string|array $handler) {
+        return \array_map(function (string|array $handler) {
             return new HandlerAdapter($this->buildConfigurable($handler));
         }, $handlers);
-
-        return ResponseMiddleware::create(...$handlers);
     }
 
     private function buildConfigurable(string|array $configurable): mixed

@@ -26,6 +26,7 @@ use Sassnowski\Roach\Http\Client;
 use Sassnowski\Roach\Http\ClientInterface;
 use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
+use Sassnowski\Roach\ResponseProcessing\Processor;
 use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
 use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
 use Sassnowski\Roach\Scheduling\Timing\ClockInterface;

@@ -22,11 +22,10 @@ use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
 use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\ItemPipeline\Processors\FakeProcessor;
-use Sassnowski\Roach\ResponseProcessing\MiddlewareStack as ResponseMiddleware;
+use Sassnowski\Roach\ResponseProcessing\Processor;
 use Sassnowski\Roach\ResponseProcessing\ParseResult;
 use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
 use Sassnowski\Roach\Scheduling\Timing\FakeClock;
-use Sassnowski\Roach\Testing\FakeLogger;
 
 /**
  * @internal
@@ -51,6 +50,7 @@ final class EngineTest extends IntegrationTest
         $this->engine = new Engine(
             new ArrayRequestScheduler(new FakeClock()),
             new Downloader(new Client(), $this->dispatcher),
+            new Processor($this->dispatcher),
             $this->dispatcher
         );
 
@@ -67,7 +67,7 @@ final class EngineTest extends IntegrationTest
             $startRequests,
             [],
             $this->pipeline,
-            ResponseMiddleware::create(),
+            [],
         );
 
         $this->engine->start($run);
@@ -87,7 +87,7 @@ final class EngineTest extends IntegrationTest
             [$this->makeRequest('http://localhost:8000/test2', $parseFunction)],
             [],
             $this->pipeline,
-            ResponseMiddleware::create(),
+            [],
         );
 
         $this->engine->start($run);
@@ -109,7 +109,7 @@ final class EngineTest extends IntegrationTest
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
             [],
             $this->pipeline,
-            ResponseMiddleware::create(),
+            [],
         );
 
         $this->engine->start($run);
@@ -131,7 +131,7 @@ final class EngineTest extends IntegrationTest
             $startRequests,
             [],
             $this->pipeline->setProcessors($processor),
-            ResponseMiddleware::create(),
+            [],
         );
 
         $this->engine->start($run);
@@ -151,7 +151,7 @@ final class EngineTest extends IntegrationTest
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
             [],
             $this->pipeline->setProcessors($processor),
-            ResponseMiddleware::create(),
+            [],
         );
 
         $this->engine->start($run);

@@ -15,25 +15,32 @@ namespace Sassnowski\Roach\Tests\ResponseProcessing;
 
 use Closure;
 use PHPUnit\Framework\TestCase;
+use Sassnowski\Roach\Events\FakeDispatcher;
+use Sassnowski\Roach\Events\ItemDropped;
+use Sassnowski\Roach\Events\RequestDropped;
+use Sassnowski\Roach\Events\ResponseDropped;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\Item;
 use Sassnowski\Roach\ResponseProcessing\Handlers\FakeHandler;
-use Sassnowski\Roach\ResponseProcessing\MiddlewareStack;
+use Sassnowski\Roach\ResponseProcessing\Processor;
 use Sassnowski\Roach\ResponseProcessing\ParseResult;
 use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal
  */
-final class MiddlewareStackTest extends TestCase
+final class ProcessorTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
 
-    private MiddlewareStack $middlewareStack;
+    private Processor $processor;
+
+    private FakeDispatcher $dispatcher;
 
     protected function setUp(): void
     {
-        $this->middlewareStack = new MiddlewareStack();
+        $this->dispatcher = new FakeDispatcher();
+        $this->processor = new Processor($this->dispatcher);
     }
 
     public function testCallsCallbackOnRequest(): void
@@ -43,7 +50,7 @@ final class MiddlewareStackTest extends TestCase
         $request = $this->makeRequest(callback: static fn () => yield $expectedRequest);
         $response = $this->makeResponse($request);
 
-        $result = \iterator_to_array($this->middlewareStack->handle($response));
+        $result = \iterator_to_array($this->processor->handle($response));
 
         self::assertEquals([$expectedRequest], $result);
     }
@@ -53,9 +60,11 @@ final class MiddlewareStackTest extends TestCase
         $handler = $this->makeHandler();
         $request = $this->makeRequest(callback: static fn () => yield ParseResult::item([]));
         $response = $this->makeResponse($request);
-        $stack = new MiddlewareStack([$handler]);
 
-        $stack->handle($response)->next();
+        $this->processor
+            ->withMiddleware($handler)
+            ->handle($response)
+            ->next();
 
         $handler->assertResponseHandled($response);
     }
@@ -65,7 +74,7 @@ final class MiddlewareStackTest extends TestCase
         $dropHandler = $this->makeHandler(handleResponse: static fn ($response) => $response->drop('::reason::'));
         $otherHandler = $this->makeHandler();
         $response = $this->makeResponse($this->makeRequest());
-        $stack = new MiddlewareStack([$dropHandler, $otherHandler]);
+        $stack = $this->processor->withMiddleware($dropHandler, $otherHandler);
 
         $result = \iterator_to_array($stack->handle($response));
 
@@ -86,9 +95,11 @@ final class MiddlewareStackTest extends TestCase
 
             yield ParseResult::item([]);
         });
-        $stack = new MiddlewareStack([$handlerA, $handlerB]);
 
-        $stack->handle($this->makeResponse($request))->next();
+        $this->processor
+            ->withMiddleware($handlerA, $handlerB)
+            ->handle($this->makeResponse($request))
+            ->next();
     }
 
     public function testPassesEachNewRequestToHandlersInOrder(): void
@@ -104,7 +115,7 @@ final class MiddlewareStackTest extends TestCase
             ParseResult::request('::url::', static fn () => null),
         ];
         $request = $this->makeRequest(callback: static fn () => yield from $results);
-        $stack = MiddlewareStack::create($handlerA, $handlerB);
+        $stack = $this->processor->withMiddleware($handlerA, $handlerB);
 
         $actual = \iterator_to_array($stack->handle($this->makeResponse($request)));
 
@@ -121,7 +132,7 @@ final class MiddlewareStackTest extends TestCase
         $request = $this->makeRequest(
             callback: fn () => yield ParseResult::fromValue($this->makeRequest()),
         );
-        $stack = new MiddlewareStack([$dropHandler, $handlerB]);
+        $stack = $this->processor->withMiddleware($dropHandler, $handlerB);
 
         $result = \iterator_to_array($stack->handle($this->makeResponse($request)));
 
@@ -141,7 +152,8 @@ final class MiddlewareStackTest extends TestCase
             yield ParseResult::item([]);
         });
 
-        $result = MiddlewareStack::create($handlerA, $handlerB)
+        $result = $this->processor
+            ->withMiddleware($handlerA, $handlerB)
             ->handle($this->makeResponse($request))
             ->current();
 
@@ -156,12 +168,93 @@ final class MiddlewareStackTest extends TestCase
         $handlerB = $this->makeHandler();
         $item = new Item([]);
         $request = $this->makeRequest(callback: static fn () => yield ParseResult::fromValue($item));
-        $stack = new MiddlewareStack([$dropHandler, $handlerB]);
+        $stack = $this->processor->withMiddleware($dropHandler, $handlerB);
 
         $result = \iterator_to_array($stack->handle($this->makeResponse($request)));
 
         $handlerB->assertNoItemHandled();
         self::assertEmpty($result);
+    }
+
+    public function testDispatchesEventIfResponseWasDropped(): void
+    {
+        $dropHandler = $this->makeHandler(handleResponse: static fn ($response) => $response->drop('::reason::'));
+        $otherHandler = $this->makeHandler();
+        $response = $this->makeResponse($this->makeRequest());
+        $stack = $this->processor->withMiddleware($dropHandler, $otherHandler);
+
+        \iterator_to_array($stack->handle($response));
+
+        $this->dispatcher->assertDispatched(ResponseDropped::NAME);
+    }
+
+    public function testDoesNotDispatchEventIfResponseWasNotDropped(): void
+    {
+        $this->processor->handle($this->makeResponse())->next();
+
+        $this->dispatcher->assertNotDispatched(ResponseDropped::NAME);
+    }
+
+    public function testDispatchEventIfRequestWasDropped(): void
+    {
+        $dropHandler = $this->makeHandler(handleRequestCallback: static function ($request, $response) {
+            return $request->drop('::reason::');
+        });
+        $request = $this->makeRequest(
+            callback: fn () => yield ParseResult::fromValue($this->makeRequest()),
+        );
+
+        $this->processor
+            ->withMiddleware($dropHandler)
+            ->handle($this->makeResponse($request))
+            ->next();
+
+        $this->dispatcher->assertDispatched(
+            RequestDropped::NAME,
+            fn (RequestDropped $event) => $event->request->getDropReason() === '::reason::'
+        );
+    }
+
+    public function testDontDispatchEventIfRequestWasNotDropped(): void
+    {
+        $request = $this->makeRequest(
+            callback: fn () => yield ParseResult::fromValue($this->makeRequest()),
+        );
+
+        $this->processor
+            ->handle($this->makeResponse($request))
+            ->next();
+
+        $this->dispatcher->assertNotDispatched(RequestDropped::NAME);
+    }
+
+    public function testDispatchEventIfItemWasDropped(): void
+    {
+        $dropHandler = $this->makeHandler(handleItemCallback: static function ($item) {
+            return $item->drop('::reason::');
+        });
+        $request = $this->makeRequest(callback: static fn () => yield ParseResult::item(['foo' => 'bar']));
+
+        $this->processor
+            ->withMiddleware($dropHandler)
+            ->handle($this->makeResponse($request))
+            ->next();
+
+        $this->dispatcher->assertDispatched(
+            ItemDropped::NAME,
+            fn (ItemDropped $event) => $event->item->all() === ['foo' => 'bar']
+        );
+    }
+
+    public function testDontDispatchEventIfItemWasNotDropped(): void
+    {
+        $request = $this->makeRequest(callback: static fn () => yield ParseResult::item(['foo' => 'bar']));
+
+        $this->processor
+            ->handle($this->makeResponse($request))
+            ->next();
+
+        $this->dispatcher->assertNotDispatched(ItemDropped::NAME);
     }
 
     private function makeHandler(

@@ -20,6 +20,7 @@ use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Sassnowski\Roach\ItemPipeline\ItemInterface;
 use Sassnowski\Roach\ResponseProcessing\ParseResult;
+use Sassnowski\Roach\ResponseProcessing\Processor;
 use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -28,6 +29,7 @@ final class Engine
     public function __construct(
         private RequestSchedulerInterface $scheduler,
         private Downloader $downloader,
+        private Processor $responseProcessor,
         private EventDispatcherInterface $eventDispatcher,
     ) {
     }
@@ -69,7 +71,7 @@ final class Engine
     private function onFulfilled(Response $response, Run $run): void
     {
         /** @var ParseResult[] $parseResults */
-        $parseResults = $run->responseMiddleware()->handle($response);
+        $parseResults = $this->responseProcessor->handle($response);
 
         foreach ($parseResults as $result) {
             $result->apply(
@@ -89,5 +91,6 @@ final class Engine
         $this->scheduler->setBatchSize($run->concurrency());
         $this->scheduler->setDelay($run->requestDelay());
         $this->downloader->withMiddleware(...$run->downloaderMiddleware());
+        $this->responseProcessor->withMiddleware(...$run->responseMiddleware());
     }
 }

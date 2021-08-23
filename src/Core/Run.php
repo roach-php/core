@@ -16,19 +16,20 @@ namespace Sassnowski\Roach\Core;
 use Sassnowski\Roach\Downloader\DownloaderMiddlewareInterface;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
-use Sassnowski\Roach\ResponseProcessing\MiddlewareStack as ResponseMiddleware;
+use Sassnowski\Roach\ResponseProcessing\MiddlewareInterface;
 
 final class Run
 {
     /**
      * @param Request[]                       $startRequests
      * @param DownloaderMiddlewareInterface[] $downloaderMiddleware
+     * @param MiddlewareInterface[] $responseMiddleware
      */
     public function __construct(
         private array $startRequests,
         private array $downloaderMiddleware,
         private ItemPipelineInterface $itemPipeline,
-        private ResponseMiddleware $responseMiddleware,
+        private array $responseMiddleware,
         private int $concurrency = 25,
         private int $delay = 0,
     ) {
@@ -55,7 +56,10 @@ final class Run
         return $this->itemPipeline;
     }
 
-    public function responseMiddleware(): ResponseMiddleware
+    /**
+     * @return MiddlewareInterface[]
+     */
+    public function responseMiddleware(): array
     {
         return $this->responseMiddleware;
     }

@@ -14,32 +14,42 @@ declare(strict_types=1);
 namespace Sassnowski\Roach\ResponseProcessing;
 
 use Generator;
+use Sassnowski\Roach\Events\ItemDropped;
+use Sassnowski\Roach\Events\RequestDropped;
+use Sassnowski\Roach\Events\ResponseDropped;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class MiddlewareStack
+final class Processor
 {
     /**
      * @var MiddlewareInterface[]
      */
-    private array $handlers;
+    private array $middleware = [];
 
-    public function __construct(array $handlers = [])
+    public function __construct(private EventDispatcherInterface $eventDispatcher)
     {
-        $this->handlers = $handlers;
     }
 
-    public static function create(MiddlewareInterface ...$handlers): self
+    public function withMiddleware(MiddlewareInterface ...$middleware): Processor
     {
-        return new self($handlers);
+        $this->middleware = $middleware;
+
+        return $this;
     }
 
     public function handle(Response $response): Generator
     {
-        foreach ($this->handlers as $handler) {
+        foreach ($this->middleware as $handler) {
             $response = $handler->handleResponse($response);
 
             if ($response->wasDropped()) {
+                $this->eventDispatcher->dispatch(
+                    new ResponseDropped($response),
+                    ResponseDropped::NAME
+                );
+
                 return;
             }
         }
@@ -53,10 +63,22 @@ final class MiddlewareStack
                 ? 'handleRequest'
                 : 'handleItem';
 
-            foreach ($this->handlers as $handler) {
+            foreach ($this->middleware as $handler) {
                 $value = $handler->{$handleMethod}($value, $response);
 
                 if ($value->wasDropped()) {
+                    if ($value instanceof Request) {
+                        $this->eventDispatcher->dispatch(
+                            new RequestDropped($value),
+                            RequestDropped::NAME,
+                        );
+                    } else {
+                        $this->eventDispatcher->dispatch(
+                            new ItemDropped($value),
+                            ItemDropped::NAME,
+                        );
+                    }
+
                     break;
                 }
             }
