@@ -21,9 +21,9 @@ final class Configuration
 {
     /**
      * @param string[] $startUrls
-     * @psalm-param Array<class-string<DownloaderMiddlewareInterface>> $downloaderMiddleware
-     * @psalm-param Array<class-string<ItemProcessorInterface[]>> $itemProcessors
-     * @psalm-param Array<class-string<MiddlewareInterface[]>> $spiderMiddleware
+     * @psalm-param Array<int, class-string<DownloaderMiddlewareInterface[]>> $downloaderMiddleware
+     * @psalm-param Array<int, class-string<ItemProcessorInterface[]>> $itemProcessors
+     * @psalm-param Array<int, class-string<MiddlewareInterface[]>> $spiderMiddleware
      */
     public function __construct(
         public array $startUrls,
