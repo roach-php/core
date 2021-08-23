@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Testing;
+namespace RoachPHP\Testing;
 
 use Psr\Log\LoggerInterface;
 

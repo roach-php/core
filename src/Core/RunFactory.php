@@ -11,15 +11,15 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Core;
+namespace RoachPHP\Core;
 
 use Psr\Container\ContainerInterface;
-use Sassnowski\Roach\Downloader\DownloaderMiddlewareInterface;
-use Sassnowski\Roach\Downloader\Middleware\DownloaderMiddlewareAdapter;
-use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
-use Sassnowski\Roach\ResponseProcessing\Handlers\HandlerAdapter;
-use Sassnowski\Roach\ResponseProcessing\MiddlewareInterface;
-use Sassnowski\Roach\Spider\SpiderInterface;
+use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
+use RoachPHP\ItemPipeline\ItemPipelineInterface;
+use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
+use RoachPHP\ResponseProcessing\MiddlewareInterface;
+use RoachPHP\Spider\SpiderInterface;
 
 final class RunFactory
 {

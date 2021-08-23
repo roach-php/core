@@ -11,13 +11,13 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Http;
+namespace RoachPHP\Tests\Http;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Http\FakeClient;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Http\FakeClient;
+use RoachPHP\Http\Response;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

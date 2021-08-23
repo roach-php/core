@@ -11,15 +11,15 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ResponseProcessing\Handlers;
+namespace RoachPHP\ResponseProcessing\Handlers;
 
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ResponseProcessing\ItemHandlerInterface;
-use Sassnowski\Roach\ResponseProcessing\MiddlewareInterface;
-use Sassnowski\Roach\ResponseProcessing\RequestHandlerInterface;
-use Sassnowski\Roach\ResponseProcessing\ResponseHandlerInterface;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ResponseProcessing\ItemHandlerInterface;
+use RoachPHP\ResponseProcessing\MiddlewareInterface;
+use RoachPHP\ResponseProcessing\RequestHandlerInterface;
+use RoachPHP\ResponseProcessing\ResponseHandlerInterface;
 
 final class HandlerAdapter implements MiddlewareInterface
 {

@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Downloader\Middleware;
+namespace RoachPHP\Downloader\Middleware;
 
-use Sassnowski\Roach\Http\Request;
+use RoachPHP\Http\Request;
 
 final class UserAgentMiddleware extends DownloaderMiddleware implements RequestMiddlewareInterface
 {

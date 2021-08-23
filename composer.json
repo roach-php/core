@@ -35,12 +35,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Sassnowski\\Roach\\": "src/"
+            "RoachPHP\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Sassnowski\\Roach\\Tests\\": "tests/"
+            "RoachPHP\\Tests\\": "tests/"
         }
     },
     "bin": [

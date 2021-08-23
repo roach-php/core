@@ -11,11 +11,10 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Spider;
+namespace RoachPHP\Spider;
 
-use Sassnowski\Roach\Downloader\Middleware\LoggerMiddleware;
-use Sassnowski\Roach\Downloader\Middleware\RequestDeduplicationMiddleware;
-use Sassnowski\Roach\Spider\Configuration\ArrayLoader;
+use RoachPHP\Downloader\Middleware\RequestDeduplicationMiddleware;
+use RoachPHP\Spider\Configuration\ArrayLoader;
 
 abstract class BasicSpider extends AbstractSpider
 {

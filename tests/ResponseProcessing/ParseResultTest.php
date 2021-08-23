@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\ResponseProcessing;
+namespace RoachPHP\Tests\ResponseProcessing;
 
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ResponseProcessing\ParseResult;
+use RoachPHP\Http\Request;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ResponseProcessing\ParseResult;
 
 /**
  * @internal

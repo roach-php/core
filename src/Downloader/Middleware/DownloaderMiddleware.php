@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Downloader\Middleware;
+namespace RoachPHP\Downloader\Middleware;
 
-use Sassnowski\Roach\Support\ConfigurableInterface;
+use RoachPHP\Support\ConfigurableInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class DownloaderMiddleware implements ConfigurableInterface

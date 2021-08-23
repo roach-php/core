@@ -1,12 +1,26 @@
 <?php
 
-namespace Sassnowski\Roach\Tests\Events;
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2021 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/roach-php/roach
+ */
+
+namespace RoachPHP\Tests\Events;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Events\FakeDispatcher;
+use RoachPHP\Events\FakeDispatcher;
 
-class FakeDispatcherTest extends TestCase
+/**
+ * @internal
+ */
+final class FakeDispatcherTest extends TestCase
 {
     private FakeDispatcher $dispatcher;
 
@@ -34,14 +48,14 @@ class FakeDispatcherTest extends TestCase
         $this->dispatcher->dispatch(new FakeEvent(), 'event.name');
 
         $this->expectException(AssertionFailedError::class);
-        $this->dispatcher->assertDispatched('event.name', fn (FakeEvent $event) => false);
+        $this->dispatcher->assertDispatched('event.name', static fn (FakeEvent $event) => false);
     }
 
     public function testAssertDispatchedPassesIfCallbackReturnsTrue(): void
     {
         $this->dispatcher->dispatch(new FakeEvent(), 'event.name');
 
-        $this->dispatcher->assertDispatched('event.name', fn (FakeEvent $event) => true);
+        $this->dispatcher->assertDispatched('event.name', static fn (FakeEvent $event) => true);
     }
 
     public function testAssertNotDispatched(): void
@@ -58,7 +72,7 @@ class FakeDispatcherTest extends TestCase
     public function testRunEventListeners(): void
     {
         $called = false;
-        $this->dispatcher->listen('event.name', function () use (&$called) {
+        $this->dispatcher->listen('event.name', static function () use (&$called): void {
             $called = true;
         });
 
@@ -68,7 +82,7 @@ class FakeDispatcherTest extends TestCase
     }
 }
 
-class FakeEvent
+final class FakeEvent
 {
     public function __construct(public array $data = [])
     {

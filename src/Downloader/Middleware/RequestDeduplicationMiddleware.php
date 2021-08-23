@@ -11,10 +11,10 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Downloader\Middleware;
+namespace RoachPHP\Downloader\Middleware;
 
 use Psr\Log\LoggerInterface;
-use Sassnowski\Roach\Http\Request;
+use RoachPHP\Http\Request;
 use const HTTP_URL_REPLACE;
 use const HTTP_URL_STRIP_FRAGMENT;
 use const HTTP_URL_STRIP_QUERY;

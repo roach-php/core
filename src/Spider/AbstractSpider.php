@@ -11,13 +11,13 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Spider;
+namespace RoachPHP\Spider;
 
 use Generator;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ResponseProcessing\ParseResult;
-use Sassnowski\Roach\Spider\Configuration\Configuration;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
+use RoachPHP\ResponseProcessing\ParseResult;
+use RoachPHP\Spider\Configuration\Configuration;
 
 abstract class AbstractSpider implements SpiderInterface
 {

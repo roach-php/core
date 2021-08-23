@@ -11,11 +11,11 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Downloader\Middleware;
+namespace RoachPHP\Downloader\Middleware;
 
-use Sassnowski\Roach\Downloader\DownloaderMiddlewareInterface;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
+use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
 
 /**
  * @internal

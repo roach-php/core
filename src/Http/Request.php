@@ -11,14 +11,14 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Http;
+namespace RoachPHP\Http;
 
 use Closure;
 use Generator;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
-use Sassnowski\Roach\Support\Droppable;
-use Sassnowski\Roach\Support\DroppableInterface;
-use Sassnowski\Roach\Support\HasMetaData;
+use RoachPHP\Support\Droppable;
+use RoachPHP\Support\DroppableInterface;
+use RoachPHP\Support\HasMetaData;
 
 final class Request implements DroppableInterface
 {

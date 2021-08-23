@@ -11,11 +11,11 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ItemPipeline\Processors;
+namespace RoachPHP\ItemPipeline\Processors;
 
 use PHPUnit\Framework\Assert;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ItemPipeline\ItemProcessor;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ItemPipeline\ItemProcessor;
 
 final class FakeProcessor extends ItemProcessor
 {

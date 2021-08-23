@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Scheduling;
+namespace RoachPHP\Scheduling;
 
 use DateInterval;
 use DateTimeImmutable;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Scheduling\Timing\ClockInterface;
+use RoachPHP\Http\Request;
+use RoachPHP\Scheduling\Timing\ClockInterface;
 
 final class ArrayRequestScheduler implements RequestSchedulerInterface
 {

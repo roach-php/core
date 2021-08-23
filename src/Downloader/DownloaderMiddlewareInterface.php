@@ -11,10 +11,10 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Downloader;
+namespace RoachPHP\Downloader;
 
-use Sassnowski\Roach\Downloader\Middleware\RequestMiddlewareInterface;
-use Sassnowski\Roach\Downloader\Middleware\ResponseMiddlewareInterface;
+use RoachPHP\Downloader\Middleware\RequestMiddlewareInterface;
+use RoachPHP\Downloader\Middleware\ResponseMiddlewareInterface;
 
 interface DownloaderMiddlewareInterface extends RequestMiddlewareInterface, ResponseMiddlewareInterface
 {

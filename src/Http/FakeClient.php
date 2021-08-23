@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Http;
+namespace RoachPHP\Http;
 
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use PHPUnit\Framework\Assert;

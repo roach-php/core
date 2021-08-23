@@ -11,14 +11,14 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ResponseProcessing\Handlers;
+namespace RoachPHP\ResponseProcessing\Handlers;
 
 use Closure;
 use PHPUnit\Framework\Assert;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ResponseProcessing\MiddlewareInterface;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ResponseProcessing\MiddlewareInterface;
 
 final class FakeHandler extends Handler implements MiddlewareInterface
 {

@@ -11,19 +11,18 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Downloader;
+namespace RoachPHP\Tests\Downloader;
 
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Downloader\Downloader;
-use Sassnowski\Roach\Downloader\Middleware\FakeMiddleware;
-use Sassnowski\Roach\Events\FakeDispatcher;
-use Sassnowski\Roach\Events\RequestDropped;
-use Sassnowski\Roach\Events\RequestSending;
-use Sassnowski\Roach\Http\FakeClient;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use RoachPHP\Downloader\Downloader;
+use RoachPHP\Downloader\Middleware\FakeMiddleware;
+use RoachPHP\Events\FakeDispatcher;
+use RoachPHP\Events\RequestDropped;
+use RoachPHP\Events\RequestSending;
+use RoachPHP\Http\FakeClient;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal
@@ -168,7 +167,7 @@ final class DownloaderTest extends TestCase
 
         $this->dispatcher->assertDispatched(
             RequestDropped::NAME,
-            fn (RequestDropped $event) => $event->request->wasDropped() && $event->request->getUri() === $request->getUri()
+            static fn (RequestDropped $event) => $event->request->wasDropped() && $event->request->getUri() === $request->getUri(),
         );
     }
 
@@ -186,13 +185,13 @@ final class DownloaderTest extends TestCase
 
         $this->dispatcher->assertDispatched(
             RequestSending::NAME,
-            fn (RequestSending $event) => $event->request === $request
+            static fn (RequestSending $event) => $event->request === $request,
         );
     }
 
     public function testDoesNotScheduleEventIfDroppedByEventListener(): void
     {
-        $this->dispatcher->listen(RequestSending::NAME, function (RequestSending $event) {
+        $this->dispatcher->listen(RequestSending::NAME, static function (RequestSending $event): void {
             $event->request = $event->request->drop('::reason::');
         });
         $request = $this->makeRequest();
@@ -205,7 +204,7 @@ final class DownloaderTest extends TestCase
 
     public function testDispatchesAnEventIfRequestWasDroppedByListener(): void
     {
-        $this->dispatcher->listen(RequestSending::NAME, function (RequestSending $event) {
+        $this->dispatcher->listen(RequestSending::NAME, static function (RequestSending $event): void {
             $event->request = $event->request->drop('::reason::');
         });
         $request = $this->makeRequest();
@@ -214,7 +213,7 @@ final class DownloaderTest extends TestCase
 
         $this->dispatcher->assertDispatched(
             RequestDropped::NAME,
-            fn (RequestDropped $event) => $event->request->getUri() === $request->getUri()
+            static fn (RequestDropped $event) => $event->request->getUri() === $request->getUri(),
         );
     }
 }

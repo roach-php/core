@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Extensions;
+namespace RoachPHP\Extensions;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

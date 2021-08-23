@@ -11,10 +11,10 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Extensions;
+namespace RoachPHP\Extensions;
 
 use Psr\Container\ContainerInterface;
-use Sassnowski\Roach\Core\Run;
+use RoachPHP\Core\Run;
 
 /**
  * @internal

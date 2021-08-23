@@ -11,10 +11,10 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ItemPipeline\Processors;
+namespace RoachPHP\ItemPipeline\Processors;
 
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\Support\ConfigurableInterface;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\Support\ConfigurableInterface;
 
 interface ItemProcessorInterface extends ConfigurableInterface
 {

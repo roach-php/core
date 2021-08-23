@@ -11,20 +11,20 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\ResponseProcessing\Handlers;
+namespace RoachPHP\Tests\ResponseProcessing\Handlers;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\Item;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ResponseProcessing\Handlers\Handler;
-use Sassnowski\Roach\ResponseProcessing\Handlers\HandlerAdapter;
-use Sassnowski\Roach\ResponseProcessing\ItemHandlerInterface;
-use Sassnowski\Roach\ResponseProcessing\RequestHandlerInterface;
-use Sassnowski\Roach\ResponseProcessing\ResponseHandlerInterface;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\Item;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ResponseProcessing\Handlers\Handler;
+use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
+use RoachPHP\ResponseProcessing\ItemHandlerInterface;
+use RoachPHP\ResponseProcessing\RequestHandlerInterface;
+use RoachPHP\ResponseProcessing\ResponseHandlerInterface;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

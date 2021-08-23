@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ItemPipeline;
+namespace RoachPHP\ItemPipeline;
 
-use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
+use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 
 interface ItemPipelineInterface
 {

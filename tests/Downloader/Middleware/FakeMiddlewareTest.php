@@ -11,14 +11,14 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Downloader\Middleware;
+namespace RoachPHP\Tests\Downloader\Middleware;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Downloader\Middleware\FakeMiddleware;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Downloader\Middleware\FakeMiddleware;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

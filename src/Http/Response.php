@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Http;
+namespace RoachPHP\Http;
 
 use Psr\Http\Message\ResponseInterface;
-use Sassnowski\Roach\Support\Droppable;
-use Sassnowski\Roach\Support\DroppableInterface;
-use Sassnowski\Roach\Support\HasMetaData;
+use RoachPHP\Support\Droppable;
+use RoachPHP\Support\DroppableInterface;
+use RoachPHP\Support\HasMetaData;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**

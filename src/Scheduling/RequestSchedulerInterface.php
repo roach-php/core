@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Scheduling;
+namespace RoachPHP\Scheduling;
 
-use Sassnowski\Roach\Http\Request;
+use RoachPHP\Http\Request;
 
 interface RequestSchedulerInterface
 {

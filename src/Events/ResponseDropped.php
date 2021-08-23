@@ -1,11 +1,22 @@
 <?php
 
-namespace Sassnowski\Roach\Events;
+declare(strict_types=1);
 
-use Sassnowski\Roach\Http\Response;
+/**
+ * Copyright (c) 2021 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/roach-php/roach
+ */
+
+namespace RoachPHP\Events;
+
+use RoachPHP\Http\Response;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class ResponseDropped extends Event
+final class ResponseDropped extends Event
 {
     public const NAME = 'response.dropped';
 

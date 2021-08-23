@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach;
+namespace RoachPHP;
 
 use League\Container\Container;
 use League\Container\ReflectionContainer;
@@ -19,19 +19,18 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use Sassnowski\Roach\Core\Engine;
-use Sassnowski\Roach\Core\RunFactory;
-use Sassnowski\Roach\Extensions\ExtensionsFactory;
-use Sassnowski\Roach\Http\Client;
-use Sassnowski\Roach\Http\ClientInterface;
-use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
-use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
-use Sassnowski\Roach\ResponseProcessing\Processor;
-use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
-use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
-use Sassnowski\Roach\Scheduling\Timing\ClockInterface;
-use Sassnowski\Roach\Scheduling\Timing\RealClock;
-use Sassnowski\Roach\Spider\SpiderInterface;
+use RoachPHP\Core\Engine;
+use RoachPHP\Core\RunFactory;
+use RoachPHP\Extensions\ExtensionsFactory;
+use RoachPHP\Http\Client;
+use RoachPHP\Http\ClientInterface;
+use RoachPHP\ItemPipeline\ImmutableItemPipeline;
+use RoachPHP\ItemPipeline\ItemPipelineInterface;
+use RoachPHP\Scheduling\ArrayRequestScheduler;
+use RoachPHP\Scheduling\RequestSchedulerInterface;
+use RoachPHP\Scheduling\Timing\ClockInterface;
+use RoachPHP\Scheduling\Timing\RealClock;
+use RoachPHP\Spider\SpiderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

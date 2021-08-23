@@ -11,19 +11,18 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\ItemPipeline;
+namespace RoachPHP\Tests\ItemPipeline;
 
 use Closure;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Events\FakeDispatcher;
-use Sassnowski\Roach\Events\ItemDropped;
-use Sassnowski\Roach\Events\ItemScraped;
-use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
-use Sassnowski\Roach\ItemPipeline\Item;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ItemPipeline\ItemProcessor;
-use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
-use Sassnowski\Roach\Testing\FakeLogger;
+use RoachPHP\Events\FakeDispatcher;
+use RoachPHP\Events\ItemDropped;
+use RoachPHP\Events\ItemScraped;
+use RoachPHP\ItemPipeline\ImmutableItemPipeline;
+use RoachPHP\ItemPipeline\Item;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ItemPipeline\ItemProcessor;
+use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 
 /**
  * @group items
@@ -95,7 +94,7 @@ final class ImmutableItemPipelineTest extends TestCase
 
         $this->dispatcher->assertDispatched(
             ItemDropped::NAME,
-            fn (ItemDropped $event) => $event->item->all() === $item->all()
+            static fn (ItemDropped $event) => $event->item->all() === $item->all(),
         );
     }
 
@@ -112,7 +111,7 @@ final class ImmutableItemPipelineTest extends TestCase
 
         $this->dispatcher->assertDispatched(
             ItemScraped::NAME,
-            fn (ItemScraped $event) => $event->item->all() === ['foo' => 'bar']
+            static fn (ItemScraped $event) => $event->item->all() === ['foo' => 'bar'],
         );
     }
 

@@ -11,10 +11,10 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Downloader\Middleware;
+namespace RoachPHP\Downloader\Middleware;
 
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Support\ConfigurableInterface;
+use RoachPHP\Http\Request;
+use RoachPHP\Support\ConfigurableInterface;
 
 interface RequestMiddlewareInterface extends ConfigurableInterface
 {

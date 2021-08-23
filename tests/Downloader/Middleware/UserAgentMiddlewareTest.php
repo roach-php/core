@@ -11,11 +11,11 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Downloader\Middleware;
+namespace RoachPHP\Tests\Downloader\Middleware;
 
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Downloader\Middleware\UserAgentMiddleware;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Downloader\Middleware\UserAgentMiddleware;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @group downloader

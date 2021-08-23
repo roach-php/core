@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Http;
+namespace RoachPHP\Tests\Http;
 
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Support\DroppableInterface;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
-use Sassnowski\Roach\Tests\Support\DroppableTest;
+use RoachPHP\Support\DroppableInterface;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Tests\Support\DroppableTest;
 
 /**
  * @internal

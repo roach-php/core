@@ -11,11 +11,11 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ItemPipeline;
+namespace RoachPHP\ItemPipeline;
 
-use Sassnowski\Roach\Events\ItemDropped;
-use Sassnowski\Roach\Events\ItemScraped;
-use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
+use RoachPHP\Events\ItemDropped;
+use RoachPHP\Events\ItemScraped;
+use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class ImmutableItemPipeline implements ItemPipelineInterface

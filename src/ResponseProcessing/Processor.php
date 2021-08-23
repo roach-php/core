@@ -11,16 +11,15 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ResponseProcessing;
+namespace RoachPHP\ResponseProcessing;
 
 use Generator;
-use Sassnowski\Roach\Events\ItemDropped;
-use Sassnowski\Roach\Events\RequestDropped;
-use Sassnowski\Roach\Events\ResponseDropped;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
+use RoachPHP\Events\ItemDropped;
+use RoachPHP\Events\RequestDropped;
+use RoachPHP\Events\ResponseDropped;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Throwable;
 
 final class Processor
 {
@@ -33,7 +32,7 @@ final class Processor
     {
     }
 
-    public function withMiddleware(MiddlewareInterface ...$middleware): Processor
+    public function withMiddleware(MiddlewareInterface ...$middleware): self
     {
         $this->middleware = $middleware;
 
@@ -48,7 +47,7 @@ final class Processor
             if ($response->wasDropped()) {
                 $this->eventDispatcher->dispatch(
                     new ResponseDropped($response),
-                    ResponseDropped::NAME
+                    ResponseDropped::NAME,
                 );
 
                 return;

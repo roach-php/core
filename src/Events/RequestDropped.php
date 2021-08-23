@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Events;
+namespace RoachPHP\Events;
 
-use Sassnowski\Roach\Http\Request;
+use RoachPHP\Http\Request;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class RequestDropped extends Event

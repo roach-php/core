@@ -11,17 +11,17 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Downloader\Middleware;
+namespace RoachPHP\Tests\Downloader\Middleware;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Downloader\Middleware\DownloaderMiddleware;
-use Sassnowski\Roach\Downloader\Middleware\DownloaderMiddlewareAdapter;
-use Sassnowski\Roach\Downloader\Middleware\RequestMiddlewareInterface;
-use Sassnowski\Roach\Downloader\Middleware\ResponseMiddlewareInterface;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Downloader\Middleware\DownloaderMiddleware;
+use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
+use RoachPHP\Downloader\Middleware\RequestMiddlewareInterface;
+use RoachPHP\Downloader\Middleware\ResponseMiddlewareInterface;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

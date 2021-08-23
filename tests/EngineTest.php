@@ -11,21 +11,21 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests;
+namespace RoachPHP\Tests;
 
-use Sassnowski\Roach\Core\Engine;
-use Sassnowski\Roach\Core\Run;
-use Sassnowski\Roach\Downloader\Downloader;
-use Sassnowski\Roach\Events\FakeDispatcher;
-use Sassnowski\Roach\Http\Client;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\ImmutableItemPipeline;
-use Sassnowski\Roach\ItemPipeline\Item;
-use Sassnowski\Roach\ItemPipeline\Processors\FakeProcessor;
-use Sassnowski\Roach\ResponseProcessing\Processor;
-use Sassnowski\Roach\ResponseProcessing\ParseResult;
-use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
-use Sassnowski\Roach\Scheduling\Timing\FakeClock;
+use RoachPHP\Core\Engine;
+use RoachPHP\Core\Run;
+use RoachPHP\Downloader\Downloader;
+use RoachPHP\Events\FakeDispatcher;
+use RoachPHP\Http\Client;
+use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\ImmutableItemPipeline;
+use RoachPHP\ItemPipeline\Item;
+use RoachPHP\ItemPipeline\Processors\FakeProcessor;
+use RoachPHP\ResponseProcessing\ParseResult;
+use RoachPHP\ResponseProcessing\Processor;
+use RoachPHP\Scheduling\ArrayRequestScheduler;
+use RoachPHP\Scheduling\Timing\FakeClock;
 
 /**
  * @internal
@@ -51,7 +51,7 @@ final class EngineTest extends IntegrationTest
             new ArrayRequestScheduler(new FakeClock()),
             new Downloader(new Client(), $this->dispatcher),
             new Processor($this->dispatcher),
-            $this->dispatcher
+            $this->dispatcher,
         );
 
         $_SERVER['__parse.called'] = 0;

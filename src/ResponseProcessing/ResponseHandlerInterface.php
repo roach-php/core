@@ -11,10 +11,10 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ResponseProcessing;
+namespace RoachPHP\ResponseProcessing;
 
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Support\ConfigurableInterface;
+use RoachPHP\Http\Response;
+use RoachPHP\Support\ConfigurableInterface;
 
 interface ResponseHandlerInterface extends ConfigurableInterface
 {

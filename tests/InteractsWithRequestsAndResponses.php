@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests;
+namespace RoachPHP\Tests;
 
 use Closure;
 use Generator;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
 
 trait InteractsWithRequestsAndResponses
 {

@@ -11,13 +11,13 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Downloader;
+namespace RoachPHP\Downloader;
 
-use Sassnowski\Roach\Events\RequestDropped;
-use Sassnowski\Roach\Events\RequestSending;
-use Sassnowski\Roach\Http\ClientInterface;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
+use RoachPHP\Events\RequestDropped;
+use RoachPHP\Events\RequestSending;
+use RoachPHP\Http\ClientInterface;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class Downloader
@@ -66,7 +66,7 @@ final class Downloader
         if ($event->request->wasDropped()) {
             $this->eventDispatcher->dispatch(
                 new RequestDropped($event->request),
-                RequestDropped::NAME
+                RequestDropped::NAME,
             );
 
             return;

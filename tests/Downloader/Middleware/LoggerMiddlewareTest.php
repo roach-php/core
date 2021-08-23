@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Downloader\Middleware;
+namespace RoachPHP\Tests\Downloader\Middleware;
 
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Downloader\Middleware\LoggerMiddleware;
-use Sassnowski\Roach\Testing\FakeLogger;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Downloader\Middleware\LoggerMiddleware;
+use RoachPHP\Testing\FakeLogger;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

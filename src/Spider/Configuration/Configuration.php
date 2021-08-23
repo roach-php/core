@@ -11,11 +11,11 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Spider\Configuration;
+namespace RoachPHP\Spider\Configuration;
 
-use Sassnowski\Roach\Downloader\DownloaderMiddlewareInterface;
-use Sassnowski\Roach\ItemPipeline\Processors\ItemProcessorInterface;
-use Sassnowski\Roach\ResponseProcessing\MiddlewareInterface;
+use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
+use RoachPHP\ResponseProcessing\MiddlewareInterface;
 
 final class Configuration
 {

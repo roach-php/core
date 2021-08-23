@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Shell;
+namespace RoachPHP\Shell;
 
-use Sassnowski\Roach\Http\Response;
+use RoachPHP\Http\Response;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\VarDumper\Caster\Caster;

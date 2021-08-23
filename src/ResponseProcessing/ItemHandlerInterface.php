@@ -11,11 +11,11 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ResponseProcessing;
+namespace RoachPHP\ResponseProcessing;
 
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\Support\ConfigurableInterface;
+use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\Support\ConfigurableInterface;
 
 interface ItemHandlerInterface extends ConfigurableInterface
 {

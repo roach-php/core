@@ -11,19 +11,19 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Core;
+namespace RoachPHP\Core;
 
-use Sassnowski\Roach\Downloader\DownloaderMiddlewareInterface;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\ItemPipeline\ItemPipelineInterface;
-use Sassnowski\Roach\ResponseProcessing\MiddlewareInterface;
+use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\Http\Request;
+use RoachPHP\ItemPipeline\ItemPipelineInterface;
+use RoachPHP\ResponseProcessing\MiddlewareInterface;
 
 final class Run
 {
     /**
      * @param Request[]                       $startRequests
      * @param DownloaderMiddlewareInterface[] $downloaderMiddleware
-     * @param MiddlewareInterface[] $responseMiddleware
+     * @param MiddlewareInterface[]           $responseMiddleware
      */
     public function __construct(
         private array $startRequests,

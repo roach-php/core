@@ -1,11 +1,22 @@
 <?php
 
-namespace Sassnowski\Roach\Events;
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2021 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/roach-php/roach
+ */
+
+namespace RoachPHP\Events;
 
 use PHPUnit\Framework\Assert;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class FakeDispatcher implements EventDispatcherInterface
+final class FakeDispatcher implements EventDispatcherInterface
 {
     /**
      * @var Array<string, object[]>
@@ -17,7 +28,7 @@ class FakeDispatcher implements EventDispatcherInterface
      */
     private array $listeners = [];
 
-    public function dispatch(object $event, string $eventName = null): object
+    public function dispatch(object $event, ?string $eventName = null): object
     {
         if (isset($this->listeners[$eventName])) {
             foreach ($this->listeners[$eventName] as $listener) {
@@ -34,7 +45,7 @@ class FakeDispatcher implements EventDispatcherInterface
     {
         Assert::assertArrayHasKey($eventName, $this->dispatchedEvents);
 
-        if ($callback !== null) {
+        if (null !== $callback) {
             foreach ($this->dispatchedEvents[$eventName] as $event) {
                 if ($callback($event)) {
                     return;

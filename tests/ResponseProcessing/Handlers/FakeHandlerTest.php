@@ -11,15 +11,15 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\ResponseProcessing\Handlers;
+namespace RoachPHP\Tests\ResponseProcessing\Handlers;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\Item;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ResponseProcessing\Handlers\FakeHandler;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\Item;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ResponseProcessing\Handlers\FakeHandler;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

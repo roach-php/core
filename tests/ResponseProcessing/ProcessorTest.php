@@ -11,20 +11,20 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\ResponseProcessing;
+namespace RoachPHP\Tests\ResponseProcessing;
 
 use Closure;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Events\FakeDispatcher;
-use Sassnowski\Roach\Events\ItemDropped;
-use Sassnowski\Roach\Events\RequestDropped;
-use Sassnowski\Roach\Events\ResponseDropped;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\Item;
-use Sassnowski\Roach\ResponseProcessing\Handlers\FakeHandler;
-use Sassnowski\Roach\ResponseProcessing\Processor;
-use Sassnowski\Roach\ResponseProcessing\ParseResult;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Events\FakeDispatcher;
+use RoachPHP\Events\ItemDropped;
+use RoachPHP\Events\RequestDropped;
+use RoachPHP\Events\ResponseDropped;
+use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\Item;
+use RoachPHP\ResponseProcessing\Handlers\FakeHandler;
+use RoachPHP\ResponseProcessing\ParseResult;
+use RoachPHP\ResponseProcessing\Processor;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal
@@ -211,7 +211,7 @@ final class ProcessorTest extends TestCase
 
         $this->dispatcher->assertDispatched(
             RequestDropped::NAME,
-            fn (RequestDropped $event) => $event->request->getDropReason() === '::reason::'
+            static fn (RequestDropped $event) => $event->request->getDropReason() === '::reason::',
         );
     }
 
@@ -242,7 +242,7 @@ final class ProcessorTest extends TestCase
 
         $this->dispatcher->assertDispatched(
             ItemDropped::NAME,
-            fn (ItemDropped $event) => $event->item->all() === ['foo' => 'bar']
+            static fn (ItemDropped $event) => $event->item->all() === ['foo' => 'bar'],
         );
     }
 

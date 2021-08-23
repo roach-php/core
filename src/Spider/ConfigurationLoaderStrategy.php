@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Spider;
+namespace RoachPHP\Spider;
 
-use Sassnowski\Roach\Spider\Configuration\Configuration;
+use RoachPHP\Spider\Configuration\Configuration;
 
 interface ConfigurationLoaderStrategy
 {

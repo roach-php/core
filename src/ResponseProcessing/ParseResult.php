@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ResponseProcessing;
+namespace RoachPHP\ResponseProcessing;
 
 use Closure;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\ItemPipeline\Item;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
+use RoachPHP\Http\Request;
+use RoachPHP\ItemPipeline\Item;
+use RoachPHP\ItemPipeline\ItemInterface;
 
 final class ParseResult
 {

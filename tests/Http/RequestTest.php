@@ -11,16 +11,16 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Http;
+namespace RoachPHP\Tests\Http;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ResponseProcessing\ParseResult;
-use Sassnowski\Roach\Support\DroppableInterface;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
-use Sassnowski\Roach\Tests\Support\DroppableTest;
+use RoachPHP\Http\Response;
+use RoachPHP\ResponseProcessing\ParseResult;
+use RoachPHP\Support\DroppableInterface;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Tests\Support\DroppableTest;
 
 /**
  * @group http

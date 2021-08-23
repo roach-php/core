@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\ItemPipeline\Processors;
+namespace RoachPHP\Tests\ItemPipeline\Processors;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\ItemPipeline\Item;
-use Sassnowski\Roach\ItemPipeline\Processors\FakeProcessor;
+use RoachPHP\ItemPipeline\Item;
+use RoachPHP\ItemPipeline\Processors\FakeProcessor;
 
 /**
  * @internal

@@ -11,10 +11,10 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Spider;
+namespace RoachPHP\Spider;
 
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Spider\Configuration\Configuration;
+use RoachPHP\Http\Request;
+use RoachPHP\Spider\Configuration\Configuration;
 
 interface SpiderInterface
 {

@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Shell;
+namespace RoachPHP\Shell;
 
 use Psy\Configuration;
 use Psy\Shell;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\Shell\Commands\FetchCommand;
+use RoachPHP\Http\Response;
+use RoachPHP\Shell\Commands\FetchCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -45,9 +45,9 @@ final class Repl extends Command
 
         $config = Configuration::fromInput($input);
         $config->addCasters([
-            Crawler::class => 'Sassnowski\Roach\Shell\ShellCaster::castCrawler',
-            Link::class => 'Sassnowski\Roach\Shell\ShellCaster::castLink',
-            Response::class => 'Sassnowski\Roach\Shell\ShellCaster::castResponse',
+            Crawler::class => 'RoachPHP\Shell\ShellCaster::castCrawler',
+            Link::class => 'RoachPHP\Shell\ShellCaster::castLink',
+            Response::class => 'RoachPHP\Shell\ShellCaster::castResponse',
         ]);
         $config->addCommands([new FetchCommand()]);
 

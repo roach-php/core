@@ -11,13 +11,13 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Scheduling;
+namespace RoachPHP\Tests\Scheduling;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Scheduling\ArrayRequestScheduler;
-use Sassnowski\Roach\Scheduling\Timing\FakeClock;
-use Sassnowski\Roach\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Scheduling\ArrayRequestScheduler;
+use RoachPHP\Scheduling\Timing\FakeClock;
+use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @group queue

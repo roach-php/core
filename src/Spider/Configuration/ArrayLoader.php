@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Spider\Configuration;
+namespace RoachPHP\Spider\Configuration;
 
-use Sassnowski\Roach\Spider\ConfigurationLoaderStrategy;
+use RoachPHP\Spider\ConfigurationLoaderStrategy;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class ArrayLoader implements ConfigurationLoaderStrategy

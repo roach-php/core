@@ -11,9 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Events;
+namespace RoachPHP\Events;
 
-use Sassnowski\Roach\Core\Run;
+use RoachPHP\Core\Run;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class RunFinished extends Event

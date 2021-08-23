@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\Scheduling\Timing;
+namespace RoachPHP\Tests\Scheduling\Timing;
 
 use DateInterval;
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\Scheduling\Timing\ClockInterface;
-use Sassnowski\Roach\Scheduling\Timing\FakeClock;
+use RoachPHP\Scheduling\Timing\ClockInterface;
+use RoachPHP\Scheduling\Timing\FakeClock;
 
 /**
  * @internal

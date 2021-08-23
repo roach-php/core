@@ -11,10 +11,10 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\ItemPipeline;
+namespace RoachPHP\ItemPipeline;
 
 use ArrayAccess;
-use Sassnowski\Roach\Support\DroppableInterface;
+use RoachPHP\Support\DroppableInterface;
 
 /**
  * @extends ArrayAccess<string, mixed>

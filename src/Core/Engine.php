@@ -11,19 +11,18 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Core;
+namespace RoachPHP\Core;
 
-use Sassnowski\Roach\Downloader\Downloader;
-use Sassnowski\Roach\Events\RunFinished;
-use Sassnowski\Roach\Events\RunStarting;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
-use Sassnowski\Roach\ItemPipeline\ItemInterface;
-use Sassnowski\Roach\ResponseProcessing\ParseResult;
-use Sassnowski\Roach\ResponseProcessing\Processor;
-use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
+use RoachPHP\Downloader\Downloader;
+use RoachPHP\Events\RunFinished;
+use RoachPHP\Events\RunStarting;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ResponseProcessing\ParseResult;
+use RoachPHP\ResponseProcessing\Processor;
+use RoachPHP\Scheduling\RequestSchedulerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use function dump;
 
 final class Engine
 {

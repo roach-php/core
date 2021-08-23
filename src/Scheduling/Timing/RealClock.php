@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Scheduling\Timing;
+namespace RoachPHP\Scheduling\Timing;
 
 use DateTimeImmutable;
 use ErrorException;

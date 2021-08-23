@@ -11,12 +11,12 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Tests\ItemPipeline;
+namespace RoachPHP\Tests\ItemPipeline;
 
 use PHPUnit\Framework\TestCase;
-use Sassnowski\Roach\ItemPipeline\Item;
-use Sassnowski\Roach\Support\DroppableInterface;
-use Sassnowski\Roach\Tests\Support\DroppableTest;
+use RoachPHP\ItemPipeline\Item;
+use RoachPHP\Support\DroppableInterface;
+use RoachPHP\Tests\Support\DroppableTest;
 
 /**
  * @internal

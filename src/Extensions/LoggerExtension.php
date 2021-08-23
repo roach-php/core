@@ -11,15 +11,15 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Extensions;
+namespace RoachPHP\Extensions;
 
 use Psr\Log\LoggerInterface;
-use Sassnowski\Roach\Events\ItemDropped;
-use Sassnowski\Roach\Events\ItemScraped;
-use Sassnowski\Roach\Events\RequestDropped;
-use Sassnowski\Roach\Events\RequestSending;
-use Sassnowski\Roach\Events\RunFinished;
-use Sassnowski\Roach\Events\RunStarting;
+use RoachPHP\Events\ItemDropped;
+use RoachPHP\Events\ItemScraped;
+use RoachPHP\Events\RequestDropped;
+use RoachPHP\Events\RequestSending;
+use RoachPHP\Events\RunFinished;
+use RoachPHP\Events\RunStarting;
 
 final class LoggerExtension extends Extension
 {

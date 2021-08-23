@@ -11,13 +11,13 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace Sassnowski\Roach\Shell\Commands;
+namespace RoachPHP\Shell\Commands;
 
 use GuzzleHttp\Client;
 use Psy\Command\Command;
 use Psy\Shell;
-use Sassnowski\Roach\Http\Request;
-use Sassnowski\Roach\Http\Response;
+use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
