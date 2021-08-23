@@ -57,7 +57,7 @@ final class Roach
         $run = $runFactory->fromSpider($spider);
 
         /** @var EventDispatcherInterface $dispatcher */
-        $dispatcher = $container->get(EventDispatcherInterface::class);
+        $dispatcher = $container->get(EventDispatcher::class);
         $extensions = (new ExtensionsFactory($container))->buildExtensionsForRun($run);
 
         foreach ($extensions as $extension) {
@@ -75,10 +75,8 @@ final class Roach
             LoggerInterface::class,
             static fn () => (new Logger('roach'))->pushHandler(new StreamHandler('php://stdout')),
         );
-        $container->share(
-            EventDispatcherInterface::class,
-            static fn () => new EventDispatcher(),
-        );
+        $container->share(EventDispatcher::class, EventDispatcher::class);
+        $container->share(EventDispatcherInterface::class, EventDispatcher::class);
         $container->add(ClockInterface::class, RealClock::class);
         $container->add(
             RequestSchedulerInterface::class,

@@ -23,6 +23,7 @@ use Sassnowski\Roach\ResponseProcessing\ParseResult;
 use Sassnowski\Roach\ResponseProcessing\Processor;
 use Sassnowski\Roach\Scheduling\RequestSchedulerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function dump;
 
 final class Engine
 {

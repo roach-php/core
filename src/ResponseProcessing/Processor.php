@@ -20,6 +20,7 @@ use Sassnowski\Roach\Events\ResponseDropped;
 use Sassnowski\Roach\Http\Request;
 use Sassnowski\Roach\Http\Response;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Throwable;
 
 final class Processor
 {
