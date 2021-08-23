@@ -40,7 +40,7 @@ abstract class AbstractSpider implements SpiderInterface
     {
         return \array_map(function (string $url) {
             return new Request($url, [$this, 'parse']);
-        }, $this->configuration->startUrls);
+        }, $this->getStartUrls());
     }
 
     final public function loadConfiguration(): Configuration
@@ -57,5 +57,13 @@ abstract class AbstractSpider implements SpiderInterface
     protected function item(mixed $item): ParseResult
     {
         return ParseResult::item($item);
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getStartUrls(): array
+    {
+        return $this->configuration->startUrls;
     }
 }
