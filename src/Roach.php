@@ -24,7 +24,7 @@ use RoachPHP\Core\RunFactory;
 use RoachPHP\Extensions\ExtensionsFactory;
 use RoachPHP\Http\Client;
 use RoachPHP\Http\ClientInterface;
-use RoachPHP\ItemPipeline\ImmutableItemPipeline;
+use RoachPHP\ItemPipeline\ItemPipeline;
 use RoachPHP\ItemPipeline\ItemPipelineInterface;
 use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\RequestSchedulerInterface;
@@ -79,14 +79,12 @@ final class Roach
         $container->add(ClockInterface::class, RealClock::class);
         $container->add(
             RequestSchedulerInterface::class,
-            /** @psalm-suppress MixedInferredReturnType,MixedReturnStatement */
             static fn (): RequestSchedulerInterface => $container->get(ArrayRequestScheduler::class),
         );
         $container->add(ClientInterface::class, Client::class);
         $container->add(
             ItemPipelineInterface::class,
-            /** @psalm-suppress MixedInferredReturnType,MixedReturnStatement */
-            static fn (): ItemPipelineInterface => $container->get(ImmutableItemPipeline::class),
+            static fn (): ItemPipelineInterface => $container->get(ItemPipeline::class),
         );
 
         return $container;

@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 use RoachPHP\Events\FakeDispatcher;
 use RoachPHP\Events\ItemDropped;
 use RoachPHP\Events\ItemScraped;
-use RoachPHP\ItemPipeline\ImmutableItemPipeline;
+use RoachPHP\ItemPipeline\ItemPipeline;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\ItemPipeline\ItemProcessor;
@@ -29,25 +29,16 @@ use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
  *
  * @internal
  */
-final class ImmutableItemPipelineTest extends TestCase
+final class ItemPipelineTest extends TestCase
 {
-    private ImmutableItemPipeline $pipeline;
+    private ItemPipeline $pipeline;
 
     private FakeDispatcher $dispatcher;
 
     protected function setUp(): void
     {
         $this->dispatcher = new FakeDispatcher();
-        $this->pipeline = new ImmutableItemPipeline($this->dispatcher);
-    }
-
-    public function testSettingProcessorsReturnsANewPipelineInstance(): void
-    {
-        $processor = $this->makeProcessor(static fn ($item) => $item);
-
-        $pipeline = $this->pipeline->setProcessors($processor);
-
-        self::assertNotSame($this->pipeline, $pipeline);
+        $this->pipeline = new ItemPipeline($this->dispatcher);
     }
 
     public function testCallsProcessorsInOrder(): void

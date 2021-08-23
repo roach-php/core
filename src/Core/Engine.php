@@ -19,6 +19,7 @@ use RoachPHP\Events\RunStarting;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ItemPipeline\ItemPipelineInterface;
 use RoachPHP\ResponseProcessing\ParseResult;
 use RoachPHP\ResponseProcessing\Processor;
 use RoachPHP\Scheduling\RequestSchedulerInterface;
@@ -29,6 +30,7 @@ final class Engine
     public function __construct(
         private RequestSchedulerInterface $scheduler,
         private Downloader $downloader,
+        private ItemPipelineInterface $itemPipeline,
         private Processor $responseProcessor,
         private EventDispatcherInterface $eventDispatcher,
     ) {
@@ -76,7 +78,7 @@ final class Engine
         foreach ($parseResults as $result) {
             $result->apply(
                 fn (Request $request) => $this->scheduleRequest($request),
-                static fn (ItemInterface $item) => $run->itemPipeline()->sendItem($item),
+                fn (ItemInterface $item) => $this->itemPipeline->sendItem($item),
             );
         }
     }
@@ -90,6 +92,7 @@ final class Engine
     {
         $this->scheduler->setBatchSize($run->concurrency());
         $this->scheduler->setDelay($run->requestDelay());
+        $this->itemPipeline->setProcessors(...$run->itemProcessors());
         $this->downloader->withMiddleware(...$run->downloaderMiddleware());
         $this->responseProcessor->withMiddleware(...$run->responseMiddleware());
     }

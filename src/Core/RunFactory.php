@@ -16,6 +16,7 @@ namespace RoachPHP\Core;
 use Psr\Container\ContainerInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use RoachPHP\ItemPipeline\ItemPipelineInterface;
+use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
 use RoachPHP\Spider\SpiderInterface;
@@ -47,15 +48,13 @@ final class RunFactory
         }, $downloaderMiddleware);
     }
 
-    private function buildItemPipeline(array $processors): ItemPipelineInterface
+    /**
+     * @return ItemProcessorInterface[]
+     */
+    private function buildItemPipeline(array $processors): array
     {
-        /** @var ItemPipelineInterface $pipeline */
-        $pipeline = $this->container->get(ItemPipelineInterface::class);
-
         /** @psalm-suppress MixedArgument */
-        $processors = \array_map([$this, 'buildConfigurable'], $processors);
-
-        return $pipeline->setProcessors(...$processors);
+        return \array_map([$this, 'buildConfigurable'], $processors);
     }
 
     /**

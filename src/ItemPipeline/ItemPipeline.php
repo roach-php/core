@@ -18,7 +18,7 @@ use RoachPHP\Events\ItemScraped;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class ImmutableItemPipeline implements ItemPipelineInterface
+final class ItemPipeline implements ItemPipelineInterface
 {
     /**
      * @var ItemProcessorInterface[]
@@ -31,10 +31,9 @@ final class ImmutableItemPipeline implements ItemPipelineInterface
 
     public function setProcessors(ItemProcessorInterface ...$processors): ItemPipelineInterface
     {
-        $pipeline = clone $this;
-        $pipeline->processors = $processors;
+        $this->processors = $processors;
 
-        return $pipeline;
+        return $this;
     }
 
     public function sendItem(ItemInterface $item): ItemInterface

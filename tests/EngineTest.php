@@ -19,7 +19,7 @@ use RoachPHP\Downloader\Downloader;
 use RoachPHP\Events\FakeDispatcher;
 use RoachPHP\Http\Client;
 use RoachPHP\Http\Response;
-use RoachPHP\ItemPipeline\ImmutableItemPipeline;
+use RoachPHP\ItemPipeline\ItemPipeline;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\Processors\FakeProcessor;
 use RoachPHP\ResponseProcessing\ParseResult;
@@ -39,17 +39,15 @@ final class EngineTest extends IntegrationTest
 
     private FakeDispatcher $dispatcher;
 
-    private ImmutableItemPipeline $pipeline;
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->dispatcher = new FakeDispatcher();
-        $this->pipeline = new ImmutableItemPipeline($this->dispatcher);
         $this->engine = new Engine(
             new ArrayRequestScheduler(new FakeClock()),
             new Downloader(new Client(), $this->dispatcher),
+            new ItemPipeline($this->dispatcher),
             new Processor($this->dispatcher),
             $this->dispatcher,
         );
@@ -63,12 +61,7 @@ final class EngineTest extends IntegrationTest
             $this->makeRequest('http://localhost:8000/test1'),
             $this->makeRequest('http://localhost:8000/test2'),
         ];
-        $run = new Run(
-            $startRequests,
-            [],
-            $this->pipeline,
-            [],
-        );
+        $run = new Run($startRequests, [], [], []);
 
         $this->engine->start($run);
 
@@ -86,7 +79,7 @@ final class EngineTest extends IntegrationTest
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test2', $parseFunction)],
             [],
-            $this->pipeline,
+            [],
             [],
         );
 
@@ -108,7 +101,7 @@ final class EngineTest extends IntegrationTest
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
             [],
-            $this->pipeline,
+            [],
             [],
         );
 
@@ -130,7 +123,7 @@ final class EngineTest extends IntegrationTest
         $run = new Run(
             $startRequests,
             [],
-            $this->pipeline->setProcessors($processor),
+            [$processor],
             [],
         );
 
@@ -150,7 +143,7 @@ final class EngineTest extends IntegrationTest
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
             [],
-            $this->pipeline->setProcessors($processor),
+            [$processor],
             [],
         );
 
