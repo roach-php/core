@@ -34,7 +34,11 @@ final class FetchCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $client = new Client();
-        $url = (string) $input->getArgument('url');
+        /**
+         * @psalm-suppress MixedAssignement
+         * @var string
+         */
+        $url = $input->getArgument('url');
         $request = new Request($url, static fn () => yield from []);
         $response = new Response(
             $client->send($request->getGuzzleRequest()),
