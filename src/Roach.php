@@ -43,21 +43,21 @@ final class Roach
         self::$container = $container;
     }
 
+    /**
+     * @psalm-param class-string<SpiderInterface> $spiderClass
+     */
     public static function startSpider(string $spiderClass): void
     {
-        $container = self::$container ?: self::defaultContainer();
+        self::$container ??= self::defaultContainer();
 
-        /** @var SpiderInterface $spider */
-        $spider = $container->get($spiderClass);
-        $runFactory = new RunFactory($container);
+        $spider = self::resolve($spiderClass);
+        $runFactory = new RunFactory(self::$container);
 
-        /** @var Engine $engine */
-        $engine = $container->get(Engine::class);
+        $engine = self::resolve(Engine::class);
         $run = $runFactory->fromSpider($spider);
 
-        /** @var EventDispatcherInterface $dispatcher */
-        $dispatcher = $container->get(EventDispatcher::class);
-        $extensions = (new ExtensionsFactory($container))->buildExtensionsForRun($run);
+        $dispatcher = self::resolve(EventDispatcher::class);
+        $extensions = (new ExtensionsFactory(self::$container))->buildExtensionsForRun($run);
 
         foreach ($extensions as $extension) {
             $dispatcher->addSubscriber($extension);
@@ -90,5 +90,22 @@ final class Roach
         );
 
         return $container;
+    }
+
+    /**
+     * @template T
+     * @psalm-param class-string<T> $class
+     * @psalm-suppress MixedInferredReturnType
+     *
+     * @return T
+     */
+    private static function resolve(string $class): mixed
+    {
+        if (self::$container === null) {
+            self::$container = self::defaultContainer();
+        }
+
+        /** @psalm-suppress MixedReturnStatement */
+        return self::$container->get($class);
     }
 }
