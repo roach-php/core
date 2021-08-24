@@ -78,9 +78,6 @@ final class EngineTest extends IntegrationTest
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test2', $parseFunction)],
-            [],
-            [],
-            [],
         );
 
         $this->engine->start($run);
@@ -100,9 +97,6 @@ final class EngineTest extends IntegrationTest
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
-            [],
-            [],
-            [],
         );
 
         $this->engine->start($run);

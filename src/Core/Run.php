@@ -27,10 +27,10 @@ final class Run
      * @param MiddlewareInterface[]           $responseMiddleware
      */
     public function __construct(
-        public array $startRequests,
-        public array $downloaderMiddleware,
-        public array $itemProcessors,
-        public array $responseMiddleware,
+        public array $startRequests = [],
+        public array $downloaderMiddleware = [],
+        public array $itemProcessors = [],
+        public array $responseMiddleware = [],
         public int $concurrency = 25,
         public int $requestDelay = 0,
     ) {
