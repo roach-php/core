@@ -16,6 +16,7 @@ namespace RoachPHP\ResponseProcessing;
 use Closure;
 use Generator;
 use InvalidArgumentException;
+use ReflectionUnionType;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
@@ -23,37 +24,23 @@ use RoachPHP\ItemPipeline\ItemInterface;
 
 final class ParseResult
 {
-    private function __construct(private ?Request $request, private ?ItemInterface $item)
+    private function __construct(private Request|ItemInterface $value)
     {
     }
 
     public static function fromValue(Request|ItemInterface $value): self
     {
-        if ($value instanceof ItemInterface) {
-            return new self(null, $value);
-        }
-
-        return new self($value, null);
+        return new self($value);
     }
 
     public static function item(array $item): self
     {
-        return new self(null, new Item($item));
+        return new self(new Item($item));
     }
 
     public function value(): Request|ItemInterface
     {
-        if (null !== $this->request) {
-            return $this->request;
-        }
-
-        if (null !== $this->item) {
-            return $this->item;
-        }
-
-        throw new InvalidArgumentException(
-            'Neither item nor request is set. This should never happen',
-        );
+        return $this->value;
     }
 
     /**
@@ -61,10 +48,7 @@ final class ParseResult
      */
     public static function request(string $url, callable $parseCallback): self
     {
-        return new self(
-            new Request($url, $parseCallback),
-            null,
-        );
+        return new self(new Request($url, $parseCallback));
     }
 
     /**
@@ -73,12 +57,10 @@ final class ParseResult
      */
     public function apply(Closure $ifRequest, Closure $ifItem): void
     {
-        if (null !== $this->request) {
-            $ifRequest($this->request);
-        } elseif (null !== $this->item) {
-            $ifItem($this->item);
+        if ($this->value instanceof Request) {
+            $ifRequest($this->value);
         } else {
-            throw new InvalidArgumentException('ParseResult with empty item and result. This should never happen');
+            $ifItem($this->value);
         }
     }
 }

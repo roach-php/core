@@ -27,6 +27,9 @@ final class Downloader
      */
     private array $middleware = [];
 
+    /**
+     * @var Request[]
+     */
     private array $requests = [];
 
     public function __construct(

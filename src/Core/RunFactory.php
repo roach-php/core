@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace RoachPHP\Core;
 
+use RoachPHP\Support\ConfigurableInterface;
 use Psr\Container\ContainerInterface;
+use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
-use RoachPHP\ItemPipeline\ItemPipelineInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
@@ -41,6 +42,11 @@ final class RunFactory
         );
     }
 
+    /**
+     * @psalm-param class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
+     *
+     * @return DownloaderMiddlewareInterface[]
+     */
     private function buildDownloaderMiddleware(array $downloaderMiddleware): array
     {
         return \array_map(function (string|array $middleware) {
@@ -49,25 +55,33 @@ final class RunFactory
     }
 
     /**
+     * @psalm-param array<class-string<ItemProcessorInterface>> $processors
+     *
      * @return ItemProcessorInterface[]
      */
     private function buildItemPipeline(array $processors): array
     {
-        /** @psalm-suppress MixedArgument */
         return \array_map([$this, 'buildConfigurable'], $processors);
     }
 
     /**
+     * @psalm-param array<class-string<MiddlewareInterface>> $handlers
+     *
      * @return MiddlewareInterface[]
      */
     private function buildResponseMiddleware(array $handlers): array
     {
         return \array_map(function (string|array $handler) {
-            /** @psalm-suppress MixedArgument */
             return new HandlerAdapter($this->buildConfigurable($handler));
         }, $handlers);
     }
 
+    /**
+     * @template T of ConfigurableInterface
+     * @psalm-param class-string<T>|array{class-string<T>, array} $configurable
+     *
+     * @return T
+     */
     private function buildConfigurable(string|array $configurable): mixed
     {
         if (!\is_array($configurable)) {
@@ -76,6 +90,7 @@ final class RunFactory
 
         [$class, $options] = $configurable;
 
+        /** @psalm-var T $instance */
         $instance = $this->container->get($class);
         $instance->configure($options);
 

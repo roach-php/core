@@ -60,7 +60,7 @@ final class Engine
             }
 
             $this->downloader->flush(
-                fn (Response $response) => $this->onFulfilled($response, $run),
+                fn (Response $response) => $this->onFulfilled($response),
             );
         }
 
@@ -70,7 +70,7 @@ final class Engine
         );
     }
 
-    private function onFulfilled(Response $response, Run $run): void
+    private function onFulfilled(Response $response): void
     {
         /** @var ParseResult[] $parseResults */
         $parseResults = $this->responseProcessor->handle($response);

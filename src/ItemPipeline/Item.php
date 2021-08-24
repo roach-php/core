@@ -52,6 +52,7 @@ final class Item implements ItemInterface
 
     public function offsetGet($offset): mixed
     {
+        /** @psalm-suppress MixedReturnStatement */
         return $this->data[$offset];
     }
 

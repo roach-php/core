@@ -37,6 +37,7 @@ final class RealClock implements ClockInterface
         }
 
         try {
+            /** @psalm-suppress UnusedFunctionCall */
             @\time_sleep_until($date->getTimestamp());
         } catch (ErrorException) {
             return;

@@ -79,11 +79,13 @@ final class Roach
         $container->add(ClockInterface::class, RealClock::class);
         $container->add(
             RequestSchedulerInterface::class,
+            /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
             static fn (): RequestSchedulerInterface => $container->get(ArrayRequestScheduler::class),
         );
         $container->add(ClientInterface::class, Client::class);
         $container->add(
             ItemPipelineInterface::class,
+            /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
             static fn (): ItemPipelineInterface => $container->get(ItemPipeline::class),
         );
 

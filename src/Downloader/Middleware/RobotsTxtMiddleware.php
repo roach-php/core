@@ -29,6 +29,7 @@ final class RobotsTxtMiddleware extends DownloaderMiddleware implements RequestM
 
     public function handleRequest(Request $request): Request
     {
+        /** @var string|null $userAgent */
         $userAgent = $request->getHeader('User-Agent')[0] ?? null;
         $uri = $request->getUri();
 

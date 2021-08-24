@@ -41,6 +41,7 @@ final class Repl extends Command
     {
         $input->setOption('ansi', true);
 
+        /** @psalm-suppress MixedAssignment */
         $url = $input->getArgument('url');
 
         $config = Configuration::fromInput($input);
