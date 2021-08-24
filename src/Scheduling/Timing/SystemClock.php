@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace RoachPHP\Scheduling\Timing;
 
 use DateTimeImmutable;
-use ErrorException;
 
 final class SystemClock implements ClockInterface
 {

@@ -16,10 +16,7 @@ namespace RoachPHP\ResponseProcessing\Handlers;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\ResponseProcessing\Handlers\ItemHandlerInterface;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
-use RoachPHP\ResponseProcessing\Handlers\RequestHandlerInterface;
-use RoachPHP\ResponseProcessing\Handlers\ResponseHandlerInterface;
 
 final class HandlerAdapter implements MiddlewareInterface
 {

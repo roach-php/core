@@ -36,6 +36,7 @@ final class FetchCommand extends Command
         $client = new Client();
         /**
          * @psalm-suppress MixedAssignement
+         *
          * @var string
          */
         $url = $input->getArgument('url');

@@ -15,8 +15,6 @@ namespace RoachPHP\ResponseProcessing;
 
 use Closure;
 use Generator;
-use InvalidArgumentException;
-use ReflectionUnionType;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
@@ -24,7 +22,7 @@ use RoachPHP\ItemPipeline\ItemInterface;
 
 final class ParseResult
 {
-    private function __construct(private Request|ItemInterface $value)
+    private function __construct(private Request | ItemInterface $value)
     {
     }
 

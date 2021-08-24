@@ -18,9 +18,9 @@ use PHPUnit\Framework\TestCase;
 use RoachPHP\Events\FakeDispatcher;
 use RoachPHP\Events\ItemDropped;
 use RoachPHP\Events\ItemScraped;
-use RoachPHP\ItemPipeline\ItemPipeline;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\ItemPipeline\ItemPipeline;
 use RoachPHP\ItemPipeline\ItemProcessor;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 

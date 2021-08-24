@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Core;
 
-use RoachPHP\Support\ConfigurableInterface;
 use Psr\Container\ContainerInterface;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
@@ -21,6 +20,7 @@ use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
 use RoachPHP\Spider\SpiderInterface;
+use RoachPHP\Support\ConfigurableInterface;
 
 final class RunFactory
 {

@@ -101,7 +101,7 @@ final class Roach
      */
     private static function resolve(string $class): mixed
     {
-        if (self::$container === null) {
+        if (null === self::$container) {
             self::$container = self::defaultContainer();
         }
 

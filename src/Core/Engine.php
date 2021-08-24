@@ -45,7 +45,7 @@ final class Engine
 
         $this->configure($run);
 
-        foreach ($run->startRequests() as $request) {
+        foreach ($run->startRequests as $request) {
             $this->scheduleRequest($request);
         }
 
@@ -90,10 +90,10 @@ final class Engine
 
     private function configure(Run $run): void
     {
-        $this->scheduler->setBatchSize($run->concurrency());
-        $this->scheduler->setDelay($run->requestDelay());
-        $this->itemPipeline->setProcessors(...$run->itemProcessors());
-        $this->downloader->withMiddleware(...$run->downloaderMiddleware());
-        $this->responseProcessor->withMiddleware(...$run->responseMiddleware());
+        $this->scheduler->setBatchSize($run->concurrency);
+        $this->scheduler->setDelay($run->requestDelay);
+        $this->itemPipeline->setProcessors(...$run->itemProcessors);
+        $this->downloader->withMiddleware(...$run->downloaderMiddleware);
+        $this->responseProcessor->withMiddleware(...$run->responseMiddleware);
     }
 }
