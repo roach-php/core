@@ -29,7 +29,7 @@ use RoachPHP\ItemPipeline\ItemPipelineInterface;
 use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\RequestSchedulerInterface;
 use RoachPHP\Scheduling\Timing\ClockInterface;
-use RoachPHP\Scheduling\Timing\RealClock;
+use RoachPHP\Scheduling\Timing\SystemClock;
 use RoachPHP\Spider\SpiderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -76,7 +76,7 @@ final class Roach
         );
         $container->share(EventDispatcher::class, EventDispatcher::class);
         $container->share(EventDispatcherInterface::class, EventDispatcher::class);
-        $container->add(ClockInterface::class, RealClock::class);
+        $container->add(ClockInterface::class, SystemClock::class);
         $container->add(
             RequestSchedulerInterface::class,
             /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
