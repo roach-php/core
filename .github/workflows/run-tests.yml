@@ -42,8 +42,8 @@ jobs:
       - name: Install dependencies
         run: composer update --${{ matrix.dependency-version }} --no-interaction --prefer-source
 
-      - name: Run phpstan
-        run: vendor/bin/phpstan analyse src/ tests/
+      - name: Run psalm
+        run: composer analyze
 
       - name: Start server
         run: (php -S localhost:8000 -t ./tests/Server &) || /bin/true
