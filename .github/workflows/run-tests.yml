@@ -43,7 +43,7 @@ jobs:
         run: composer update --${{ matrix.dependency-version }} --no-interaction --prefer-source
 
       - name: Run psalm
-        run: composer analyze
+        run: vendor/bin/psalm --shepherd
 
       - name: Start server
         run: (php -S localhost:8000 -t ./tests/Server &) || /bin/true
