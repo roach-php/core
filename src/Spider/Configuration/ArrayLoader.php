@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace RoachPHP\Spider\Configuration;
 
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\Extensions\Extension;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
-use RoachPHP\Extensions\Extension;
 use RoachPHP\Spider\ConfigurationLoaderStrategy;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

@@ -47,7 +47,7 @@ final class RunFactory
             $this->buildResponseMiddleware($configuration->spiderMiddleware),
             $configuration->concurrency,
             $configuration->requestDelay,
-            $this->buildExtensions($configuration->extensions)
+            $this->buildExtensions($configuration->extensions),
         );
     }
 
@@ -113,10 +113,10 @@ final class RunFactory
      */
     private function buildExtensions(array $extensions): array
     {
-        return array_map(
+        return \array_map(
             /** @psalm-suppress MixedInferredReturnType, MixedReturnStatement */
             fn (string $extension): Extension => $this->container->get($extension),
-            array_merge(self::DEFAULT_EXTENSIONS, $extensions)
+            \array_merge(self::DEFAULT_EXTENSIONS, $extensions),
         );
     }
 }

@@ -21,7 +21,6 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RoachPHP\Core\Engine;
 use RoachPHP\Core\RunFactory;
-use RoachPHP\Extensions\ExtensionsFactory;
 use RoachPHP\Http\Client;
 use RoachPHP\Http\ClientInterface;
 use RoachPHP\ItemPipeline\ItemPipeline;
@@ -68,6 +67,7 @@ final class Roach
             static fn () => (new Logger('roach'))->pushHandler(new StreamHandler('php://stdout')),
         );
         $container->share(EventDispatcher::class, EventDispatcher::class);
+        $container->share(EventDispatcherInterface::class, EventDispatcher::class);
         $container->share(EventDispatcherInterface::class, EventDispatcher::class);
         $container->add(ClockInterface::class, SystemClock::class);
         $container->add(

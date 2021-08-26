@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2021 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/roach-php/roach
+ */
 
 namespace RoachPHP\Tests\Extensions;
 
@@ -15,50 +26,48 @@ use RoachPHP\ItemPipeline\Item;
 use RoachPHP\Testing\FakeLogger;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
-class LoggerExtensionTest extends ExtensionTestCase
+/**
+ * @internal
+ */
+final class LoggerExtensionTest extends ExtensionTestCase
 {
     use InteractsWithRequestsAndResponses;
 
-    /** @psalm-suppress PropertyNotSetInConstructor */
+    /**
+     * @psalm-suppress PropertyNotSetInConstructor
+     */
     private FakeLogger $logger;
-
-    protected function createExtension(): Extension
-    {
-        $this->logger = new FakeLogger();
-
-        return new LoggerExtension($this->logger);
-    }
 
     public function testLogWhenRunStarts(): void
     {
         self::assertFalse(
-            $this->logger->messageWasLogged('info', 'Run starting')
+            $this->logger->messageWasLogged('info', 'Run starting'),
         );
 
         $this->dispatch(new RunStarting(new Run()), RunStarting::NAME);
 
         self::assertTrue(
-            $this->logger->messageWasLogged('info', 'Run starting')
+            $this->logger->messageWasLogged('info', 'Run starting'),
         );
     }
 
     public function testLogWhenRunFinished(): void
     {
         self::assertFalse(
-            $this->logger->messageWasLogged('info', 'Run finished')
+            $this->logger->messageWasLogged('info', 'Run finished'),
         );
 
         $this->dispatch(new RunFinished(new Run()), RunFinished::NAME);
 
         self::assertTrue(
-            $this->logger->messageWasLogged('info', 'Run finished')
+            $this->logger->messageWasLogged('info', 'Run finished'),
         );
     }
 
     public function testLogWhenItemGotDropped(): void
     {
         self::assertFalse(
-            $this->logger->messageWasLogged('info', 'Item dropped')
+            $this->logger->messageWasLogged('info', 'Item dropped'),
         );
 
         $item = (new Item(['foo' => 'bar']))->drop('::reason::');
@@ -68,14 +77,14 @@ class LoggerExtensionTest extends ExtensionTestCase
             $this->logger->messageWasLogged('info', 'Item dropped', [
                 'item' => $item->all(),
                 'reason' => '::reason::',
-            ])
+            ]),
         );
     }
 
     public function testLogWhenRequestWasDropped(): void
     {
         self::assertFalse(
-            $this->logger->messageWasLogged('info', 'Request dropped')
+            $this->logger->messageWasLogged('info', 'Request dropped'),
         );
 
         $request = $this->makeRequest('::request-url::')->drop('::reason::');
@@ -85,14 +94,14 @@ class LoggerExtensionTest extends ExtensionTestCase
             $this->logger->messageWasLogged('info', 'Request dropped', [
                 'uri' => '::request-url::',
                 'reason' => '::reason::',
-            ])
+            ]),
         );
     }
 
     public function testLogWhenRequestWasSent(): void
     {
         self::assertFalse(
-            $this->logger->messageWasLogged('info', 'Dispatching request')
+            $this->logger->messageWasLogged('info', 'Dispatching request'),
         );
 
         $request = $this->makeRequest('::request-url::');
@@ -101,21 +110,28 @@ class LoggerExtensionTest extends ExtensionTestCase
         self::assertTrue(
             $this->logger->messageWasLogged('info', 'Dispatching request', [
                 'uri' => '::request-url::',
-            ])
+            ]),
         );
     }
 
     public function testLogWhenItemWasScraped(): void
     {
         self::assertFalse(
-            $this->logger->messageWasLogged('info', 'Item scraped')
+            $this->logger->messageWasLogged('info', 'Item scraped'),
         );
 
         $item = new Item(['foo' => 'bar']);
         $this->dispatch(new ItemScraped($item), ItemScraped::NAME);
 
         self::assertTrue(
-            $this->logger->messageWasLogged('info', 'Item scraped', ['foo' => 'bar'])
+            $this->logger->messageWasLogged('info', 'Item scraped', ['foo' => 'bar']),
         );
+    }
+
+    protected function createExtension(): Extension
+    {
+        $this->logger = new FakeLogger();
+
+        return new LoggerExtension($this->logger);
     }
 }
