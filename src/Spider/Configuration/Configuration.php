@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace RoachPHP\Spider\Configuration;
 
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\Extensions\Extension;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
 
@@ -24,12 +25,14 @@ final class Configuration
      * @psalm-param class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
      * @psalm-param class-string<ItemProcessorInterface>[] $itemProcessors
      * @psalm-param class-string<MiddlewareInterface>[] $spiderMiddleware
+     * @psalm-param class-string<Extension>[] $extensions
      */
     public function __construct(
         public array $startUrls,
         public array $downloaderMiddleware,
         public array $itemProcessors,
         public array $spiderMiddleware,
+        public array $extensions,
         public int $concurrency,
         public int $requestDelay,
     ) {

@@ -23,7 +23,7 @@ use RoachPHP\ItemPipeline\ItemPipelineInterface;
 use RoachPHP\ResponseProcessing\ParseResult;
 use RoachPHP\ResponseProcessing\Processor;
 use RoachPHP\Scheduling\RequestSchedulerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Engine
 {
@@ -38,12 +38,12 @@ final class Engine
 
     public function start(Run $run): void
     {
+        $this->configure($run);
+
         $this->eventDispatcher->dispatch(
             new RunStarting($run),
             RunStarting::NAME,
         );
-
-        $this->configure($run);
 
         foreach ($run->startRequests as $request) {
             $this->scheduleRequest($request);
@@ -95,5 +95,9 @@ final class Engine
         $this->itemPipeline->setProcessors(...$run->itemProcessors);
         $this->downloader->withMiddleware(...$run->downloaderMiddleware);
         $this->responseProcessor->withMiddleware(...$run->responseMiddleware);
+
+        foreach ($run->extensions as $extension) {
+            $this->eventDispatcher->addSubscriber($extension);
+        }
     }
 }

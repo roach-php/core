@@ -56,13 +56,6 @@ final class Roach
         $engine = self::resolve(Engine::class);
         $run = $runFactory->fromSpider($spider);
 
-        $dispatcher = self::resolve(EventDispatcher::class);
-        $extensions = (new ExtensionsFactory(self::$container))->buildExtensionsForRun($run);
-
-        foreach ($extensions as $extension) {
-            $dispatcher->addSubscriber($extension);
-        }
-
         $engine->start($run);
     }
 

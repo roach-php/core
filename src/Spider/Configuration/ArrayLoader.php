@@ -16,6 +16,7 @@ namespace RoachPHP\Spider\Configuration;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
+use RoachPHP\Extensions\Extension;
 use RoachPHP\Spider\ConfigurationLoaderStrategy;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,6 +28,7 @@ final class ArrayLoader implements ConfigurationLoaderStrategy
      *             downloaderMiddleware: class-string<DownloaderMiddlewareInterface>[],
      *             spiderMiddleware: class-string<MiddlewareInterface>[],
      *             itemProcessors: class-string<ItemProcessorInterface>[],
+     *             extensions: class-string<Extension>[],
      *             concurrency: int,
      *             requestDelay: int
      *             }
@@ -42,6 +44,7 @@ final class ArrayLoader implements ConfigurationLoaderStrategy
             'downloaderMiddleware' => [],
             'itemProcessors' => [],
             'spiderMiddleware' => [],
+            'extensions' => [],
             'concurrency' => 5,
             'requestDelay' => 0,
         ]);
@@ -57,6 +60,7 @@ final class ArrayLoader implements ConfigurationLoaderStrategy
             $this->config['downloaderMiddleware'],
             $this->config['itemProcessors'],
             $this->config['spiderMiddleware'],
+            $this->config['extensions'],
             $this->config['concurrency'],
             $this->config['requestDelay'],
         );

@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace RoachPHP\Spider;
 
 use RoachPHP\Downloader\Middleware\RequestDeduplicationMiddleware;
+use RoachPHP\Extensions\Extension;
+use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\Spider\Configuration\ArrayLoader;
 
 abstract class BasicSpider extends AbstractSpider
@@ -36,9 +38,14 @@ abstract class BasicSpider extends AbstractSpider
     ];
 
     /**
-     * @var string[]
+     * @psalm-var class-string<ItemProcessorInterface>[]
      */
     public array $itemProcessors = [];
+
+    /**
+     * @psalm-var class-string<Extension>[]
+     */
+    public array $extensions = [];
 
     public int $concurrency = 5;
 

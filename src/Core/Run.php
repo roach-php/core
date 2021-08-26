@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace RoachPHP\Core;
 
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\Extensions\Extension;
 use RoachPHP\Http\Request;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
@@ -25,6 +26,7 @@ final class Run
      * @param DownloaderMiddlewareInterface[] $downloaderMiddleware
      * @param ItemProcessorInterface[]        $itemProcessors
      * @param MiddlewareInterface[]           $responseMiddleware
+     * @param Extension[]                     $extensions
      */
     public function __construct(
         public array $startRequests = [],
@@ -33,6 +35,7 @@ final class Run
         public array $responseMiddleware = [],
         public int $concurrency = 25,
         public int $requestDelay = 0,
+        public array $extensions = [],
     ) {
     }
 }

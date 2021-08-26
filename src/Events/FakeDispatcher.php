@@ -14,29 +14,20 @@ declare(strict_types=1);
 namespace RoachPHP\Events;
 
 use PHPUnit\Framework\Assert;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
-final class FakeDispatcher implements EventDispatcherInterface
+final class FakeDispatcher extends EventDispatcher
 {
     /**
      * @var Array<string, object[]>
      */
     private array $dispatchedEvents = [];
 
-    /**
-     * @var Array<string, callable[]>
-     */
-    private array $listeners = [];
-
     public function dispatch(object $event, ?string $eventName = null): object
     {
         $eventName ??= \get_class($event);
 
-        if (isset($this->listeners[$eventName])) {
-            foreach ($this->listeners[$eventName] as $listener) {
-                $listener($event);
-            }
-        }
+        parent::dispatch($event, $eventName);
 
         $this->dispatchedEvents[$eventName][] = $event;
 
@@ -65,6 +56,6 @@ final class FakeDispatcher implements EventDispatcherInterface
 
     public function listen(string $eventName, callable $listener): void
     {
-        $this->listeners[$eventName][] = $listener;
+        $this->addListener($eventName, $listener);
     }
 }

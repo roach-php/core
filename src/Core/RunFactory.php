@@ -16,6 +16,9 @@ namespace RoachPHP\Core;
 use Psr\Container\ContainerInterface;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
+use RoachPHP\Extensions\Extension;
+use RoachPHP\Extensions\LoggerExtension;
+use RoachPHP\Extensions\StatsCollectorExtension;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
@@ -24,6 +27,11 @@ use RoachPHP\Support\ConfigurableInterface;
 
 final class RunFactory
 {
+    private const DEFAULT_EXTENSIONS = [
+        LoggerExtension::class,
+        StatsCollectorExtension::class,
+    ];
+
     public function __construct(private ContainerInterface $container)
     {
     }
@@ -39,6 +47,7 @@ final class RunFactory
             $this->buildResponseMiddleware($configuration->spiderMiddleware),
             $configuration->concurrency,
             $configuration->requestDelay,
+            $this->buildExtensions($configuration->extensions)
         );
     }
 
@@ -95,5 +104,19 @@ final class RunFactory
         $instance->configure($options);
 
         return $instance;
+    }
+
+    /**
+     * @psalm-param class-string<Extension>[] $extensions
+     *
+     * @return Extension[]
+     */
+    private function buildExtensions(array $extensions): array
+    {
+        return array_map(
+            /** @psalm-suppress MixedInferredReturnType, MixedReturnStatement */
+            fn (string $extension): Extension => $this->container->get($extension),
+            array_merge(self::DEFAULT_EXTENSIONS, $extensions)
+        );
     }
 }
