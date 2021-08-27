@@ -60,6 +60,7 @@ abstract class BasicSpider extends AbstractSpider
             'itemProcessors' => $this->itemProcessors,
             'concurrency' => $this->concurrency,
             'requestDelay' => $this->requestDelay,
+            'extensions' => $this->extensions,
         ]));
     }
 }

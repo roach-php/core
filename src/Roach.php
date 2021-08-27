@@ -32,6 +32,7 @@ use RoachPHP\Scheduling\Timing\SystemClock;
 use RoachPHP\Spider\SpiderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as EventDispatcherContract;
 
 final class Roach
 {
@@ -66,9 +67,17 @@ final class Roach
             LoggerInterface::class,
             static fn () => (new Logger('roach'))->pushHandler(new StreamHandler('php://stdout')),
         );
-        $container->share(EventDispatcher::class, EventDispatcher::class);
-        $container->share(EventDispatcherInterface::class, EventDispatcher::class);
-        $container->share(EventDispatcherInterface::class, EventDispatcher::class);
+        $container->share(EventDispatcher::class);
+        $container->add(
+            EventDispatcherInterface::class,
+            /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
+            fn (): EventDispatcherInterface => $container->get(EventDispatcher::class)
+        );
+        $container->add(
+            EventDispatcherContract::class,
+            /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
+            fn (): EventDispatcher => $container->get(EventDispatcher::class)
+        );
         $container->add(ClockInterface::class, SystemClock::class);
         $container->add(
             RequestSchedulerInterface::class,
