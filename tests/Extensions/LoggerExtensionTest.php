@@ -44,7 +44,7 @@ final class LoggerExtensionTest extends ExtensionTestCase
             $this->logger->messageWasLogged('info', 'Run starting'),
         );
 
-        $this->dispatch(new RunStarting(new Run()), RunStarting::NAME);
+        $this->dispatch(new RunStarting(new Run([])), RunStarting::NAME);
 
         self::assertTrue(
             $this->logger->messageWasLogged('info', 'Run starting'),
@@ -57,7 +57,7 @@ final class LoggerExtensionTest extends ExtensionTestCase
             $this->logger->messageWasLogged('info', 'Run finished'),
         );
 
-        $this->dispatch(new RunFinished(new Run()), RunFinished::NAME);
+        $this->dispatch(new RunFinished(new Run([])), RunFinished::NAME);
 
         self::assertTrue(
             $this->logger->messageWasLogged('info', 'Run finished'),
