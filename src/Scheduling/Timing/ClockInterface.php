@@ -19,6 +19,9 @@ interface ClockInterface
 {
     public function now(): DateTimeImmutable;
 
+    /**
+     * @param 0|positive-int $seconds
+     */
     public function sleep(int $seconds): void;
 
     public function sleepUntil(DateTimeImmutable $date): void;

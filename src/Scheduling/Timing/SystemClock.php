@@ -22,6 +22,9 @@ final class SystemClock implements ClockInterface
         return new DateTimeImmutable();
     }
 
+    /**
+     * @param 0|positive-int $seconds
+     */
     public function sleep(int $seconds): void
     {
         \sleep($seconds);
