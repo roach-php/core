@@ -21,11 +21,11 @@ use RoachPHP\ResponseProcessing\MiddlewareInterface;
 final class Configuration
 {
     /**
-     * @param string[] $startUrls
-     * @psalm-param class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
-     * @psalm-param class-string<ItemProcessorInterface>[] $itemProcessors
-     * @psalm-param class-string<MiddlewareInterface>[] $spiderMiddleware
-     * @psalm-param class-string<Extension>[] $extensions
+     * @param string[]                                      $startUrls
+     * @param class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
+     * @param class-string<ItemProcessorInterface>[]        $itemProcessors
+     * @param class-string<MiddlewareInterface>[]           $spiderMiddleware
+     * @param class-string<Extension>[]                     $extensions
      */
     public function __construct(
         public array $startUrls,

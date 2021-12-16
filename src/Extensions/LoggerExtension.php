@@ -25,17 +25,18 @@ final class LoggerExtension extends Extension
 {
     public function __construct(private LoggerInterface $logger)
     {
+        parent::__construct();
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            RunStarting::NAME => ['onRunStarting', 0],
-            RunFinished::NAME => ['onRunFinished', 0],
-            RequestSending::NAME => ['onRequestSending', 0],
-            RequestDropped::NAME => ['onRequestDropped', 0],
-            ItemScraped::NAME => ['onItemScraped', 0],
-            ItemDropped::NAME => ['onItemDropped', 0],
+            RunStarting::NAME => ['onRunStarting', 100],
+            RunFinished::NAME => ['onRunFinished', 100],
+            RequestSending::NAME => ['onRequestSending', 100],
+            RequestDropped::NAME => ['onRequestDropped', 100],
+            ItemScraped::NAME => ['onItemScraped', 100],
+            ItemDropped::NAME => ['onItemDropped', 100],
         ];
     }
 

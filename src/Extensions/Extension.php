@@ -13,8 +13,23 @@ declare(strict_types=1);
 
 namespace RoachPHP\Extensions;
 
+use RoachPHP\Support\ConfigurableInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class Extension implements EventSubscriberInterface
+abstract class Extension implements ConfigurableInterface, EventSubscriberInterface
 {
+    private OptionsResolver $resolver;
+
+    public function __construct(protected array $options = [])
+    {
+        $this->resolver = new OptionsResolver();
+
+        $this->resolver->setDefaults($this->options);
+    }
+
+    final public function configure(array $options): void
+    {
+        $this->options = $this->resolver->resolve($options);
+    }
 }

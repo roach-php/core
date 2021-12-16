@@ -18,7 +18,7 @@ use RoachPHP\Events\RequestSending;
 use RoachPHP\Http\ClientInterface;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Downloader
 {

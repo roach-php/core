@@ -26,24 +26,23 @@ abstract class BasicSpider extends AbstractSpider
     public array $startUrls = [];
 
     /**
-     * @var string[]
+     * @var class-string[]
      */
     public array $spiderMiddleware = [];
 
     /**
-     * @var string[]
+     * @var class-string[]
      */
     public array $downloaderMiddleware = [
         RequestDeduplicationMiddleware::class,
     ];
 
     /**
-     * @psalm-var class-string<ItemProcessorInterface>[]
      */
     public array $itemProcessors = [];
 
     /**
-     * @psalm-var class-string<Extension>[]
+     * @var class-string[]
      */
     public array $extensions = [];
 
@@ -58,9 +57,9 @@ abstract class BasicSpider extends AbstractSpider
             'downloaderMiddleware' => $this->downloaderMiddleware,
             'spiderMiddleware' => $this->spiderMiddleware,
             'itemProcessors' => $this->itemProcessors,
+            'extensions' => $this->extensions,
             'concurrency' => $this->concurrency,
             'requestDelay' => $this->requestDelay,
-            'extensions' => $this->extensions,
         ]));
     }
 }

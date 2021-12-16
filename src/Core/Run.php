@@ -19,6 +19,9 @@ use RoachPHP\Http\Request;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
 
+/**
+ * @psalm-immutable
+ */
 final class Run
 {
     /**
@@ -29,13 +32,13 @@ final class Run
      * @param Extension[]                     $extensions
      */
     public function __construct(
-        public array $startRequests = [],
+        public array $startRequests,
         public array $downloaderMiddleware = [],
         public array $itemProcessors = [],
         public array $responseMiddleware = [],
+        public array $extensions = [],
         public int $concurrency = 25,
         public int $requestDelay = 0,
-        public array $extensions = [],
     ) {
     }
 }

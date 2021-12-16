@@ -16,7 +16,8 @@ namespace RoachPHP\Tests;
 use RoachPHP\Core\Engine;
 use RoachPHP\Core\Run;
 use RoachPHP\Downloader\Downloader;
-use RoachPHP\Events\FakeDispatcher;
+use RoachPHP\Extensions\LoggerExtension;
+use RoachPHP\Extensions\StatsCollectorExtension;
 use RoachPHP\Http\Client;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
@@ -26,6 +27,8 @@ use RoachPHP\ResponseProcessing\ParseResult;
 use RoachPHP\ResponseProcessing\Processor;
 use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\Timing\FakeClock;
+use RoachPHP\Testing\FakeLogger;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @internal
@@ -37,19 +40,17 @@ final class EngineTest extends IntegrationTest
 
     private Engine $engine;
 
-    private FakeDispatcher $dispatcher;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->dispatcher = new FakeDispatcher();
+        $dispatcher = new EventDispatcher();
         $this->engine = new Engine(
             new ArrayRequestScheduler(new FakeClock()),
-            new Downloader(new Client(), $this->dispatcher),
-            new ItemPipeline($this->dispatcher),
-            new Processor($this->dispatcher),
-            $this->dispatcher,
+            new Downloader(new Client(), $dispatcher),
+            new ItemPipeline($dispatcher),
+            new Processor($dispatcher),
+            $dispatcher,
         );
 
         $_SERVER['__parse.called'] = 0;
@@ -61,7 +62,7 @@ final class EngineTest extends IntegrationTest
             $this->makeRequest('http://localhost:8000/test1'),
             $this->makeRequest('http://localhost:8000/test2'),
         ];
-        $run = new Run($startRequests, [], [], []);
+        $run = new Run($startRequests);
 
         $this->engine->start($run);
 
@@ -116,9 +117,7 @@ final class EngineTest extends IntegrationTest
         ];
         $run = new Run(
             $startRequests,
-            [],
-            [$processor],
-            [],
+            itemProcessors: [$processor],
         );
 
         $this->engine->start($run);
@@ -136,9 +135,7 @@ final class EngineTest extends IntegrationTest
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
-            [],
-            [$processor],
-            [],
+            itemProcessors: [$processor],
         );
 
         $this->engine->start($run);
@@ -146,5 +143,38 @@ final class EngineTest extends IntegrationTest
         $processor->assertCalledWith(new Item(['title' => '::title::']));
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
+    }
+
+    public function testRegisterExtensions(): void
+    {
+        $logger = new FakeLogger();
+        $parseCallback = static function () {
+            yield ParseResult::item(['title' => '::title::']);
+        };
+        $run = new Run(
+            [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
+            extensions: [
+                new StatsCollectorExtension($logger, new FakeClock()),
+                new LoggerExtension($logger),
+            ],
+        );
+
+        $this->engine->start($run);
+
+        self::assertTrue($logger->messageWasLogged('info', 'Run starting'));
+        self::assertTrue($logger->messageWasLogged('info', 'Dispatching request', [
+            'uri' => 'http://localhost:8000/test1',
+        ]));
+        self::assertTrue($logger->messageWasLogged('info', 'Item scraped', [
+            'title' => '::title::',
+        ]));
+        self::assertTrue($logger->messageWasLogged('info', 'Run finished'));
+        self::assertTrue($logger->messageWasLogged('info', 'Run statistics', [
+            'duration' => '00:00:00',
+            'requests.sent' => 1,
+            'requests.dropped' => 0,
+            'items.scraped' => 1,
+            'items.dropped' => 0,
+        ]));
     }
 }

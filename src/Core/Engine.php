@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace RoachPHP\Core;
 
 use RoachPHP\Downloader\Downloader;
+use RoachPHP\Events\RequestDropped;
+use RoachPHP\Events\RequestScheduling;
 use RoachPHP\Events\RunFinished;
 use RoachPHP\Events\RunStarting;
 use RoachPHP\Http\Request;
@@ -85,6 +87,20 @@ final class Engine
 
     private function scheduleRequest(Request $request): void
     {
+        $this->eventDispatcher->dispatch(
+            new RequestScheduling($request),
+            RequestScheduling::NAME,
+        );
+
+        if ($request->wasDropped()) {
+            $this->eventDispatcher->dispatch(
+                new RequestDropped($request),
+                RequestDropped::NAME,
+            );
+
+            return;
+        }
+
         $this->scheduler->schedule($request);
     }
 

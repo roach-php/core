@@ -16,7 +16,7 @@ namespace RoachPHP\ItemPipeline;
 use RoachPHP\Events\ItemDropped;
 use RoachPHP\Events\ItemScraped;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class ItemPipeline implements ItemPipelineInterface
 {

@@ -21,6 +21,7 @@ use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\RequestSending;
 use RoachPHP\Events\RunFinished;
 use RoachPHP\Events\RunStarting;
+use RoachPHP\Scheduling\Timing\ClockInterface;
 
 final class StatsCollectorExtension extends Extension
 {
@@ -43,40 +44,43 @@ final class StatsCollectorExtension extends Extension
         'items.dropped' => 0,
     ];
 
-    public function __construct(private LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger, private ClockInterface $clock)
     {
+        parent::__construct();
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            RunStarting::NAME => ['onRunStarting', 0],
-            RequestSending::NAME => ['onRequestSending', 0],
-            RequestDropped::NAME => ['onRequestDropped', 0],
-            ItemDropped::NAME => ['onItemDropped', 0],
-            ItemScraped::NAME => ['onItemScraped', 0],
-            RunFinished::NAME => ['onRunFinished', 0],
+            RunStarting::NAME => ['onRunStarting', 200],
+            RequestSending::NAME => ['onRequestSending', 200],
+            RequestDropped::NAME => ['onRequestDropped', 200],
+            ItemDropped::NAME => ['onItemDropped', 200],
+            ItemScraped::NAME => ['onItemScraped', 200],
+            RunFinished::NAME => ['onRunFinished', 200],
         ];
     }
 
     public function onRunStarting(): void
     {
-        $this->startTime = new DateTimeImmutable();
+        $this->startTime = $this->clock->now();
     }
 
     public function onRunFinished(): void
     {
         if (null !== $this->startTime) {
-            $duration = $this->startTime->diff(new DateTimeImmutable());
+            $duration = $this->startTime->diff($this->clock->now());
             $this->stats['duration'] = $duration->format('%H:%I:%S');
         }
 
         $this->logger->info('Run statistics', $this->stats);
     }
 
-    public function onRequestSending(): void
+    public function onRequestSending(RequestSending $event): void
     {
-        ++$this->stats['requests.sent'];
+        if (!$event->request->wasDropped()) {
+            ++$this->stats['requests.sent'];
+        }
     }
 
     public function onRequestDropped(): void
