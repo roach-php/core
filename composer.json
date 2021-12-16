@@ -1,8 +1,8 @@
 {
     "name": "roach-php/core",
-    "type": "library",
     "description": "A complete web scraping toolkit for PHP",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Kai Sassnowski",
