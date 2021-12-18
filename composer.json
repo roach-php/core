@@ -44,7 +44,7 @@
         }
     },
     "bin": [
-        "bin/roach"
+        "roach"
     ],
     "scripts": {
         "post-install-cmd": [
