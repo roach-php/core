@@ -12,7 +12,13 @@ declare(strict_types=1);
  * @see https://github.com/ksassnowski/roach
  */
 
-require __DIR__.'/../vendor/autoload.php';
+foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/../autoload.php', __DIR__ . '/vendor/autoload.php'] as $file) {
+    if (file_exists($file)) {
+        require $file;
+
+        break;
+    }
+}
 
 use RoachPHP\Shell\Repl;
 use Symfony\Component\Console\Application;
