@@ -43,6 +43,11 @@ abstract class IntegrationTest extends TestCase
         }
     }
 
+    protected function assertRouteWasCrawled(string $route): void
+    {
+        self::assertArrayHasKey($route, $this->getCrawledRoutes());
+    }
+
     protected function assertRouteWasCrawledTimes(string $route, int $times): void
     {
         $crawledRoutes = $this->getCrawledRoutes();

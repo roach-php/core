@@ -66,6 +66,17 @@ $app->get('/crawled-routes', static function (Request $request, Response $respon
         ->withHeader('Content-Type', 'application/json');
 });
 
+$app->get('/robots', static function (Request $request, Response $response, $args): Response {
+    $robots = <<<PLAIN
+User-agent: *
+Disallow: /test2
+PLAIN;
+
+    $response->getBody()->write($robots);
+
+    return $response->withAddedHeader('Content-type', 'text/plain');
+});
+
 $app->get('/test1', static function (Request $request, Response $response, $args) {
     $response->getBody()->write('<div><h1 id="headline">Such headline, wow</h1></div>');
 
