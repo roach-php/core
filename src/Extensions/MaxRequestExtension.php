@@ -15,17 +15,13 @@ namespace RoachPHP\Extensions;
 
 use RoachPHP\Events\RequestScheduling;
 use RoachPHP\Events\RequestSending;
+use RoachPHP\Support\Configurable;
 
-final class MaxRequestExtension extends Extension
+final class MaxRequestExtension implements ExtensionInterface
 {
-    private int $sentRequests = 0;
+    use Configurable;
 
-    public function __construct()
-    {
-        parent::__construct([
-            'limit' => 10,
-        ]);
-    }
+    private int $sentRequests = 0;
 
     public static function getSubscribedEvents(): array
     {
@@ -51,8 +47,15 @@ final class MaxRequestExtension extends Extension
 
     private function dropRequestIfLimitReached(RequestSending|RequestScheduling $event): void
     {
-        if ($this->sentRequests >= $this->options['limit']) {
-            $event->request = $event->request->drop("Reached maximum request limit of {$this->options['limit']}");
+        if ($this->option('limit') <= $this->sentRequests) {
+            $event->request = $event->request->drop("Reached maximum request limit of {$this->option('limit')}");
         }
+    }
+
+    private function defaultOptions(): array
+    {
+        return [
+            'limit' => 10,
+        ];
     }
 }

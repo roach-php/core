@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace RoachPHP\Spider\Configuration;
 
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
-use RoachPHP\Extensions\Extension;
+use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
 use RoachPHP\Spider\ConfigurationLoaderStrategy;
@@ -28,7 +28,7 @@ final class ArrayLoader implements ConfigurationLoaderStrategy
      *             downloaderMiddleware: class-string<DownloaderMiddlewareInterface>[],
      *             spiderMiddleware: class-string<MiddlewareInterface>[],
      *             itemProcessors: class-string<ItemProcessorInterface>[],
-     *             extensions: class-string<Extension>[],
+     *             extensions: class-string<ExtensionInterface>[],
      *             concurrency: int,
      *             requestDelay: int
      *             }

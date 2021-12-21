@@ -16,7 +16,7 @@ namespace RoachPHP\Core;
 use Psr\Container\ContainerInterface;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
-use RoachPHP\Extensions\Extension;
+use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
 use RoachPHP\ResponseProcessing\MiddlewareInterface;
@@ -78,9 +78,9 @@ final class RunFactory
     }
 
     /**
-     * @param array<class-string<Extension>> $extensions
+     * @param array<class-string<ExtensionInterface>> $extensions
      *
-     * @return Extension[]
+     * @return ExtensionInterface[]
      */
     private function buildExtensions(array $extensions): array
     {
