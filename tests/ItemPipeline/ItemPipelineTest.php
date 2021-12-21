@@ -32,6 +32,7 @@ use RoachPHP\Support\Configurable;
 final class ItemPipelineTest extends TestCase
 {
     private ItemPipeline $pipeline;
+
     private FakeDispatcher $dispatcher;
 
     protected function setUp(): void

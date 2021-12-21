@@ -21,7 +21,7 @@ use RoachPHP\ResponseProcessing\MiddlewareInterface;
 final class HandlerAdapter implements MiddlewareInterface
 {
     public function __construct(
-        private RequestHandlerInterface | ItemHandlerInterface | ResponseHandlerInterface $handler,
+        private RequestHandlerInterface|ItemHandlerInterface|ResponseHandlerInterface $handler,
     ) {
     }
 

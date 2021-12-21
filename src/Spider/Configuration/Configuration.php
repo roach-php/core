@@ -21,7 +21,7 @@ use RoachPHP\ResponseProcessing\MiddlewareInterface;
 final class Configuration
 {
     /**
-     * @param string[]                                      $startUrls
+     * @param string[] $startUrls
      * @param class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
      * @param class-string<ItemProcessorInterface>[]        $itemProcessors
      * @param class-string<MiddlewareInterface>[]           $spiderMiddleware

@@ -24,6 +24,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 abstract class ExtensionTestCase extends TestCase
 {
     protected ExtensionInterface $extension;
+
     private FakeDispatcher $dispatcher;
 
     protected function setUp(): void

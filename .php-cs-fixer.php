@@ -14,6 +14,14 @@ EOF;
 
 $config = Config\Factory::fromRuleSet(new Config\RuleSet\Php80($header), [
     'php_unit_test_class_requires_covers' => false,
+    'class_attributes_separation' => [
+        'elements' => [
+            'const' => 'one',
+            'method' => 'one',
+            'property' => 'one',
+            'trait_import' => 'none',
+        ],
+    ],
     'error_suppression' => [
         'noise_remaining_usages' => false,
     ],

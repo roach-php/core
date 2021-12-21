@@ -27,6 +27,7 @@ use RoachPHP\Support\Configurable;
 final class StatsCollectorExtension implements ExtensionInterface
 {
     use Configurable;
+
     private ?DateTimeImmutable $startTime = null;
 
     /**

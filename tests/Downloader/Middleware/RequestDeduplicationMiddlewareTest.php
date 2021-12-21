@@ -27,7 +27,9 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 final class RequestDeduplicationMiddlewareTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
+
     private RequestDeduplicationMiddleware $middleware;
+
     private FakeLogger $logger;
 
     protected function setUp(): void

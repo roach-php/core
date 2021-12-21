@@ -23,7 +23,7 @@ use RoachPHP\Http\Response;
 final class DownloaderMiddlewareAdapter implements DownloaderMiddlewareInterface
 {
     public function __construct(
-        private RequestMiddlewareInterface | ResponseMiddlewareInterface $middleware,
+        private RequestMiddlewareInterface|ResponseMiddlewareInterface $middleware,
     ) {
     }
 
