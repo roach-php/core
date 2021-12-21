@@ -15,12 +15,15 @@ namespace RoachPHP\Downloader\Middleware;
 
 use Psr\Log\LoggerInterface;
 use RoachPHP\Http\Request;
+use RoachPHP\Support\Configurable;
 use const HTTP_URL_REPLACE;
 use const HTTP_URL_STRIP_FRAGMENT;
 use const HTTP_URL_STRIP_QUERY;
 
-final class RequestDeduplicationMiddleware extends DownloaderMiddleware implements RequestMiddlewareInterface
+final class RequestDeduplicationMiddleware implements RequestMiddlewareInterface
 {
+    use Configurable;
+
     /**
      * @var string[]
      */
@@ -28,11 +31,6 @@ final class RequestDeduplicationMiddleware extends DownloaderMiddleware implemen
 
     public function __construct(private LoggerInterface $logger)
     {
-        parent::__construct([
-            'ignore_url_fragments' => false,
-            'ignore_trailing_slashes' => true,
-            'ignore_query_string' => false,
-        ]);
     }
 
     public function handleRequest(Request $request): Request
@@ -41,15 +39,15 @@ final class RequestDeduplicationMiddleware extends DownloaderMiddleware implemen
         $replaceFlags = HTTP_URL_REPLACE;
         $parts = \parse_url($uri);
 
-        if ($this->options['ignore_url_fragments']) {
+        if ($this->option('ignore_url_fragments')) {
             $replaceFlags |= HTTP_URL_STRIP_FRAGMENT;
         }
 
-        if ($this->options['ignore_trailing_slashes'] && isset($parts['path'])) {
+        if ($this->option('ignore_trailing_slashes') && isset($parts['path'])) {
             $parts['path'] = \rtrim($parts['path'], '/');
         }
 
-        if ($this->options['ignore_query_string']) {
+        if ($this->option('ignore_query_string')) {
             $replaceFlags |= HTTP_URL_STRIP_QUERY;
         }
 
@@ -67,5 +65,14 @@ final class RequestDeduplicationMiddleware extends DownloaderMiddleware implemen
         $this->seenUris[] = $uri;
 
         return $request;
+    }
+
+    private function defaultOptions(): array
+    {
+        return [
+            'ignore_url_fragments' => false,
+            'ignore_trailing_slashes' => true,
+            'ignore_query_string' => false,
+        ];
     }
 }

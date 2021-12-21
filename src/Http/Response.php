@@ -26,7 +26,6 @@ final class Response implements DroppableInterface
 {
     use HasMetaData;
     use Droppable;
-
     private Crawler $crawler;
 
     public function __construct(private ResponseInterface $response, private Request $request)

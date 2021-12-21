@@ -30,6 +30,7 @@ final class UserAgentMiddlewareTest extends TestCase
     public function testSetDefaultUserAgentOnRequest(): void
     {
         $middleware = new UserAgentMiddleware();
+        $middleware->configure([]);
 
         $request = $middleware->handleRequest($this->makeRequest());
 

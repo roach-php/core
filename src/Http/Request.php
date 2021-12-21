@@ -30,7 +30,6 @@ final class Request implements DroppableInterface
      * @var Closure(Response): Generator<ParseResult>
      */
     private Closure $parseCallback;
-
     private GuzzleRequest $guzzleRequest;
 
     /**

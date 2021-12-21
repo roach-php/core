@@ -15,12 +15,12 @@ namespace RoachPHP\Tests\Downloader\Middleware;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
-use RoachPHP\Downloader\Middleware\DownloaderMiddleware;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use RoachPHP\Downloader\Middleware\RequestMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\ResponseMiddlewareInterface;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
+use RoachPHP\Support\Configurable;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
@@ -35,7 +35,9 @@ final class MiddlewareAdapaterTest extends TestCase
      */
     public function testRequestMiddlewareImplementation(callable $testCase): void
     {
-        $middleware = new class() extends DownloaderMiddleware implements RequestMiddlewareInterface {
+        $middleware = new class() implements RequestMiddlewareInterface {
+            use Configurable;
+
             public function handleRequest(Request $request): Request
             {
                 return $request->withMeta('::key::', '::value::');
@@ -70,7 +72,9 @@ final class MiddlewareAdapaterTest extends TestCase
      */
     public function testResponseMiddlewareImplementation(callable $testCase): void
     {
-        $middleware = new class() extends DownloaderMiddleware implements ResponseMiddlewareInterface {
+        $middleware = new class() implements ResponseMiddlewareInterface {
+            use Configurable;
+
             public function handleResponse(Response $response): Response
             {
                 return $response->withMeta('::key::', '::value::');

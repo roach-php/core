@@ -15,7 +15,7 @@ namespace RoachPHP\Tests\Extensions;
 
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Events\FakeDispatcher;
-use RoachPHP\Extensions\Extension;
+use RoachPHP\Extensions\ExtensionInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -23,8 +23,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 abstract class ExtensionTestCase extends TestCase
 {
-    protected Extension $extension;
-
+    protected ExtensionInterface $extension;
     private FakeDispatcher $dispatcher;
 
     protected function setUp(): void
@@ -32,13 +31,10 @@ abstract class ExtensionTestCase extends TestCase
         $this->dispatcher = new FakeDispatcher();
         $this->extension = $this->createExtension();
 
-        /** @var array{string, int} $handler */
-        foreach ($this->extension::getSubscribedEvents() as $eventName => $handler) {
-            $this->dispatcher->listen($eventName, [$this->extension, $handler[0]]);
-        }
+        $this->dispatcher->addSubscriber($this->extension);
     }
 
-    abstract protected function createExtension(): Extension;
+    abstract protected function createExtension(): ExtensionInterface;
 
     protected function dispatch(Event $event, string $eventName): void
     {

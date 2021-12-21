@@ -20,7 +20,7 @@ use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\RequestSending;
 use RoachPHP\Events\RunFinished;
 use RoachPHP\Events\RunStarting;
-use RoachPHP\Extensions\Extension;
+use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\Extensions\LoggerExtension;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\Testing\FakeLogger;
@@ -128,7 +128,7 @@ final class LoggerExtensionTest extends ExtensionTestCase
         );
     }
 
-    protected function createExtension(): Extension
+    protected function createExtension(): ExtensionInterface
     {
         $this->logger = new FakeLogger();
 

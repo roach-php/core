@@ -18,12 +18,15 @@ use PHPUnit\Framework\Assert;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
+use RoachPHP\Support\Configurable;
 
 /**
  * @internal
  */
-final class FakeMiddleware extends DownloaderMiddleware implements DownloaderMiddlewareInterface
+final class FakeMiddleware implements DownloaderMiddlewareInterface
 {
+    use Configurable;
+
     /**
      * @var array Request[]
      */
@@ -40,7 +43,6 @@ final class FakeMiddleware extends DownloaderMiddleware implements DownloaderMid
      */
     public function __construct(private ?Closure $requestHandler = null, private ?Closure $responseHandler = null)
     {
-        parent::__construct();
     }
 
     public function handleRequest(Request $request): Request

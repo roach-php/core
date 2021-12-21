@@ -23,9 +23,7 @@ use RoachPHP\ResponseProcessing\MiddlewareInterface;
 final class FakeHandler extends Handler implements MiddlewareInterface
 {
     private array $responseCalls = [];
-
     private array $itemCalls = [];
-
     private array $requestCalls = [];
 
     /**

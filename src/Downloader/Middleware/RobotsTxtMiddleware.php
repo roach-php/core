@@ -14,27 +14,23 @@ declare(strict_types=1);
 namespace RoachPHP\Downloader\Middleware;
 
 use RoachPHP\Http\Request;
+use RoachPHP\Support\Configurable;
 use Spatie\Robots\Robots;
 use const PHP_URL_HOST;
 use const PHP_URL_PORT;
 use const PHP_URL_SCHEME;
 
-final class RobotsTxtMiddleware extends DownloaderMiddleware implements RequestMiddlewareInterface
+final class RobotsTxtMiddleware implements RequestMiddlewareInterface
 {
+    use Configurable;
+
     /** @var array<string, Robots> */
     private array $robots = [];
 
-    public function __construct()
-    {
-        parent::__construct([
-            'fileName' => 'robots.txt'
-        ]);
-    }
-
     public function handleRequest(Request $request): Request
     {
-        /** @var null|string $userAgent */
-        $userAgent = $request->getHeader('User-Agent')[0] ?? null;
+        /** @var string $userAgent */
+        $userAgent = $request->getHeader('User-Agent')[0] ?? '';
         $uri = $request->getUri();
         $robotsUrl = $this->createRobotsUrl($uri);
 
@@ -59,6 +55,13 @@ final class RobotsTxtMiddleware extends DownloaderMiddleware implements RequestM
             $robotsUrl .= ":{$port}";
         }
 
-        return "{$robotsUrl}/{$this->options['fileName']}";
+        return "{$robotsUrl}/{$this->option('fileName')}";
+    }
+
+    private function defaultOptions(): array
+    {
+        return [
+            'fileName' => 'robots.txt'
+        ];
     }
 }

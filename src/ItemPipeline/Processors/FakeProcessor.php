@@ -15,10 +15,11 @@ namespace RoachPHP\ItemPipeline\Processors;
 
 use PHPUnit\Framework\Assert;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\ItemPipeline\ItemProcessor;
+use RoachPHP\Support\Configurable;
 
-final class FakeProcessor extends ItemProcessor
+final class FakeProcessor implements ItemProcessorInterface
 {
+    use Configurable;
     private array $calls = [];
 
     public function processItem(ItemInterface $item): ItemInterface

@@ -27,9 +27,7 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 final class RequestDeduplicationMiddlewareTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
-
     private RequestDeduplicationMiddleware $middleware;
-
     private FakeLogger $logger;
 
     protected function setUp(): void
@@ -41,6 +39,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
     public function testDropsRequestIfItWasAlreadySeenBefore(): void
     {
         $request = $this->makeRequest('https://example.com');
+        $this->middleware->configure([]);
 
         $request = $this->middleware->handleRequest($request);
         self::assertFalse($request->wasDropped());
@@ -53,6 +52,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
     {
         $requestA = $this->makeRequest('https://example.com/a');
         $requestB = $this->makeRequest('https://example.com/b');
+        $this->middleware->configure([]);
 
         $requestA = $this->middleware->handleRequest($requestA);
         $requestB = $this->middleware->handleRequest($requestB);
@@ -64,6 +64,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
     public function testLogDroppedRequestsIfLoggerWasProvided(): void
     {
         $request = $this->makeRequest('https://example.com');
+        $this->middleware->configure([]);
 
         $this->middleware->handleRequest($request);
         $this->middleware->handleRequest($request);
@@ -81,6 +82,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
     {
         $requestA = $this->makeRequest('https://example.com');
         $requestB = $this->makeRequest('https://example.com/');
+        $this->middleware->configure([]);
 
         $this->middleware->handleRequest($requestA);
 
@@ -144,6 +146,7 @@ final class RequestDeduplicationMiddlewareTest extends TestCase
     {
         $requestA = $this->makeRequest('https://example.com');
         $requestB = $this->makeRequest('https://example.com?foo=bar');
+        $this->middleware->configure([]);
 
         $requestA = $this->middleware->handleRequest($requestA);
         $requestB = $this->middleware->handleRequest($requestB);

@@ -14,17 +14,22 @@ declare(strict_types=1);
 namespace RoachPHP\Downloader\Middleware;
 
 use RoachPHP\Http\Request;
+use RoachPHP\Support\Configurable;
 
-final class UserAgentMiddleware extends DownloaderMiddleware implements RequestMiddlewareInterface
+final class UserAgentMiddleware implements RequestMiddlewareInterface
 {
-    public function __construct()
-    {
-        parent::__construct(['userAgent' => 'roach-php']);
-    }
+    use Configurable;
 
     public function handleRequest(Request $request): Request
     {
         /** @psalm-suppress MixedArgument */
-        return $request->addHeader('User-Agent', $this->options['userAgent']);
+        return $request->addHeader('User-Agent', $this->option('userAgent'));
+    }
+
+    private function defaultOptions(): array
+    {
+        return [
+            'userAgent' => 'roach-php',
+        ];
     }
 }

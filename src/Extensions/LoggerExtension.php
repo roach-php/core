@@ -20,12 +20,14 @@ use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\RequestSending;
 use RoachPHP\Events\RunFinished;
 use RoachPHP\Events\RunStarting;
+use RoachPHP\Support\Configurable;
 
-final class LoggerExtension extends Extension
+final class LoggerExtension implements ExtensionInterface
 {
+    use Configurable;
+
     public function __construct(private LoggerInterface $logger)
     {
-        parent::__construct();
     }
 
     public static function getSubscribedEvents(): array

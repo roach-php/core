@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 final class FakeDispatcher extends EventDispatcher
 {
     /**
-     * @var Array<string, object[]>
+     * @var array<string, object[]>
      */
     private array $dispatchedEvents = [];
 

@@ -21,8 +21,8 @@ use RoachPHP\Events\ItemScraped;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\ItemPipeline\ItemPipeline;
-use RoachPHP\ItemPipeline\ItemProcessor;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
+use RoachPHP\Support\Configurable;
 
 /**
  * @group items
@@ -32,7 +32,6 @@ use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 final class ItemPipelineTest extends TestCase
 {
     private ItemPipeline $pipeline;
-
     private FakeDispatcher $dispatcher;
 
     protected function setUp(): void
@@ -118,10 +117,11 @@ final class ItemPipelineTest extends TestCase
 
     private function makeProcessor(Closure $processItem): ItemProcessorInterface
     {
-        return new class($processItem) extends ItemProcessor {
+        return new class($processItem) implements ItemProcessorInterface {
+            use Configurable;
+
             public function __construct(private Closure $processItem)
             {
-                parent::__construct();
             }
 
             public function processItem(ItemInterface $item): ItemInterface

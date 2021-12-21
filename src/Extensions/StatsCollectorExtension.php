@@ -22,9 +22,11 @@ use RoachPHP\Events\RequestSending;
 use RoachPHP\Events\RunFinished;
 use RoachPHP\Events\RunStarting;
 use RoachPHP\Scheduling\Timing\ClockInterface;
+use RoachPHP\Support\Configurable;
 
-final class StatsCollectorExtension extends Extension
+final class StatsCollectorExtension implements ExtensionInterface
 {
+    use Configurable;
     private ?DateTimeImmutable $startTime = null;
 
     /**
@@ -46,7 +48,6 @@ final class StatsCollectorExtension extends Extension
 
     public function __construct(private LoggerInterface $logger, private ClockInterface $clock)
     {
-        parent::__construct();
     }
 
     public static function getSubscribedEvents(): array
