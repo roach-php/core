@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2021 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/roach-php/roach
+ */
 
 namespace RoachPHP\Tests\Downloader\Middleware;
 
@@ -16,15 +27,18 @@ use RoachPHP\ResponseProcessing\ParseResult;
 use RoachPHP\ResponseProcessing\Processor;
 use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\Timing\FakeClock;
-use RoachPHP\Scheduling\Timing\SystemClock;
 use RoachPHP\Tests\IntegrationTest;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
-class RobotsTxtMiddlewareTest extends IntegrationTest
+/**
+ * @internal
+ */
+final class RobotsTxtMiddlewareTest extends IntegrationTest
 {
     use InteractsWithRequestsAndResponses;
 
     private Engine $engine;
+
     private DownloaderMiddlewareInterface $middleware;
 
     protected function setUp(): void

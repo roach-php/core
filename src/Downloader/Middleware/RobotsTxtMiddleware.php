@@ -24,7 +24,9 @@ final class RobotsTxtMiddleware implements RequestMiddlewareInterface
 {
     use Configurable;
 
-    /** @var array<string, Robots> */
+    /**
+     * @var array<string, Robots>
+     */
     private array $robots = [];
 
     public function handleRequest(Request $request): Request
@@ -49,9 +51,9 @@ final class RobotsTxtMiddleware implements RequestMiddlewareInterface
 
     private function createRobotsUrl(string $url): string
     {
-        $robotsUrl = parse_url($url, PHP_URL_SCHEME).'://'.parse_url($url, PHP_URL_HOST);
+        $robotsUrl = \parse_url($url, PHP_URL_SCHEME) . '://' . \parse_url($url, PHP_URL_HOST);
 
-        if ($port = parse_url($url, PHP_URL_PORT)) {
+        if ($port = \parse_url($url, PHP_URL_PORT)) {
             $robotsUrl .= ":{$port}";
         }
 
@@ -61,7 +63,7 @@ final class RobotsTxtMiddleware implements RequestMiddlewareInterface
     private function defaultOptions(): array
     {
         return [
-            'fileName' => 'robots.txt'
+            'fileName' => 'robots.txt',
         ];
     }
 }

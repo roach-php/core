@@ -67,7 +67,7 @@ $app->get('/crawled-routes', static function (Request $request, Response $respon
 });
 
 $app->get('/robots', static function (Request $request, Response $response, $args): Response {
-    $robots = <<<PLAIN
+    $robots = <<<'PLAIN'
 User-agent: *
 Disallow: /test2
 PLAIN;
