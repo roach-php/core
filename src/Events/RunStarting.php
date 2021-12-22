@@ -20,12 +20,7 @@ final class RunStarting extends Event
 {
     public const NAME = 'run.starting';
 
-    public function __construct(private Run $run)
+    public function __construct(public Run $run)
     {
-    }
-
-    public function getRun(): Run
-    {
-        return $this->run;
     }
 }
