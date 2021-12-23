@@ -34,6 +34,33 @@ final class MiddlewareAdapterTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
 
+    public function testDontDecorateClassIfItAlreadyImplementsTheFullInterface(): void
+    {
+        $middleware = new class implements MiddlewareInterface {
+            use Configurable;
+
+            public function handleItem(ItemInterface $item, Response $response): ItemInterface
+            {
+                return $item;
+            }
+
+            public function handleRequest(Request $request, Response $response): Request
+            {
+                return $request;
+            }
+
+            public function handleResponse(Response $response): Response
+            {
+                return $response;
+            }
+        };
+
+        $class = MiddlewareAdapter::fromMiddleware($middleware);
+
+        self::assertNotInstanceOf(MiddlewareAdapter::class, $class);
+        self::assertSame($middleware, $class);
+    }
+
     /**
      * @dataProvider itemMiddlewareProvider
      */
@@ -47,7 +74,7 @@ final class MiddlewareAdapterTest extends TestCase
                 return $item->set('::key::', '::value::');
             }
         };
-        $adapter = new MiddlewareAdapter($middleware);
+        $adapter = MiddlewareAdapter::fromMiddleware($middleware);
 
         $testCase($adapter);
     }
@@ -94,7 +121,7 @@ final class MiddlewareAdapterTest extends TestCase
                 return $request->withMeta('::key::', '::value::');
             }
         };
-        $adapter = new MiddlewareAdapter($middleware);
+        $adapter = MiddlewareAdapter::fromMiddleware($middleware);
 
         $testCase($adapter);
     }
@@ -141,7 +168,7 @@ final class MiddlewareAdapterTest extends TestCase
                 return $response->withMeta('::key::', '::value::');
             }
         };
-        $adapter = new MiddlewareAdapter($middleware);
+        $adapter = MiddlewareAdapter::fromMiddleware($middleware);
 
         $testCase($adapter);
     }

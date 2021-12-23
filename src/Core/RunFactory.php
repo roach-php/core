@@ -73,7 +73,7 @@ final class RunFactory
     private function buildResponseMiddleware(array $handlers): array
     {
         return \array_map(function (string|array $handler) {
-            return new MiddlewareAdapter($this->buildConfigurable($handler));
+            return MiddlewareAdapter::fromMiddleware($this->buildConfigurable($handler));
         }, $handlers);
     }
 

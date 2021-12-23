@@ -17,17 +17,30 @@ use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
 
+/**
+ * @internal
+ */
 final class MiddlewareAdapter implements MiddlewareInterface
 {
-    public function __construct(
-        private RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $handler,
+    private function __construct(
+        private RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $middleware,
     ) {
+    }
+
+    public static function fromMiddleware(
+        RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $middleware
+    ): MiddlewareInterface {
+        if ($middleware instanceof MiddlewareInterface) {
+            return $middleware;
+        }
+
+        return new self($middleware);
     }
 
     public function handleItem(ItemInterface $item, Response $response): ItemInterface
     {
-        if ($this->handler instanceof ItemMiddlewareInterface) {
-            return $this->handler->handleItem($item, $response);
+        if ($this->middleware instanceof ItemMiddlewareInterface) {
+            return $this->middleware->handleItem($item, $response);
         }
 
         return $item;
@@ -35,8 +48,8 @@ final class MiddlewareAdapter implements MiddlewareInterface
 
     public function handleRequest(Request $request, Response $response): Request
     {
-        if ($this->handler instanceof RequestMiddlewareInterface) {
-            return $this->handler->handleRequest($request, $response);
+        if ($this->middleware instanceof RequestMiddlewareInterface) {
+            return $this->middleware->handleRequest($request, $response);
         }
 
         return $request;
@@ -44,8 +57,8 @@ final class MiddlewareAdapter implements MiddlewareInterface
 
     public function handleResponse(Response $response): Response
     {
-        if ($this->handler instanceof ResponseMiddlewareInterface) {
-            return $this->handler->handleResponse($response);
+        if ($this->middleware instanceof ResponseMiddlewareInterface) {
+            return $this->middleware->handleResponse($response);
         }
 
         return $response;
@@ -53,6 +66,6 @@ final class MiddlewareAdapter implements MiddlewareInterface
 
     public function configure(array $options): void
     {
-        $this->handler->configure($options);
+        $this->middleware->configure($options);
     }
 }
