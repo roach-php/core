@@ -30,16 +30,16 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 /**
  * @internal
  */
-final class HandlerAdapterTest extends TestCase
+final class MiddlewareAdapterTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
 
     /**
-     * @dataProvider itemHandlerProvider
+     * @dataProvider itemMiddlewareProvider
      */
-    public function testItemHandlerImplementation(callable $testCase): void
+    public function testItemMiddlewareImplementation(callable $testCase): void
     {
-        $handler = new class() implements ItemMiddlewareInterface {
+        $middleware = new class() implements ItemMiddlewareInterface {
             use Configurable;
 
             public function handleItem(ItemInterface $item, Response $response): ItemInterface
@@ -47,12 +47,12 @@ final class HandlerAdapterTest extends TestCase
                 return $item->set('::key::', '::value::');
             }
         };
-        $adapter = new MiddlewareAdapter($handler);
+        $adapter = new MiddlewareAdapter($middleware);
 
         $testCase($adapter);
     }
 
-    public function itemHandlerProvider(): Generator
+    public function itemMiddlewareProvider(): Generator
     {
         yield 'return request unchanged' => [function (MiddlewareAdapter $adapter): void {
             $response = $this->makeResponse($this->makeRequest('::url-a::'));
@@ -71,7 +71,7 @@ final class HandlerAdapterTest extends TestCase
             self::assertEquals($response, $result);
         }];
 
-        yield 'call handler function for items' => [function (MiddlewareAdapter $adapter): void {
+        yield 'call middleware function for items' => [function (MiddlewareAdapter $adapter): void {
             $response = $this->makeResponse($this->makeRequest());
             $item = new Item([]);
 
@@ -82,11 +82,11 @@ final class HandlerAdapterTest extends TestCase
     }
 
     /**
-     * @dataProvider requestHandlerProvider
+     * @dataProvider requestMiddlewareProvider
      */
-    public function testRequestHandlerImplementation(callable $testCase): void
+    public function testRequestMiddlewareImplementation(callable $testCase): void
     {
-        $handler = new class() implements RequestMiddlewareInterface {
+        $middleware = new class() implements RequestMiddlewareInterface {
             use Configurable;
 
             public function handleRequest(Request $request, Response $response): Request
@@ -94,12 +94,12 @@ final class HandlerAdapterTest extends TestCase
                 return $request->withMeta('::key::', '::value::');
             }
         };
-        $adapter = new MiddlewareAdapter($handler);
+        $adapter = new MiddlewareAdapter($middleware);
 
         $testCase($adapter);
     }
 
-    public function requestHandlerProvider(): Generator
+    public function requestMiddlewareProvider(): Generator
     {
         yield 'return response unchanged' => [function (MiddlewareAdapter $adapter): void {
             $response = $this->makeResponse($this->makeRequest());
@@ -118,7 +118,7 @@ final class HandlerAdapterTest extends TestCase
             self::assertSame(['::key::' => '::value::'], $result->all());
         }];
 
-        yield 'call handler function for requests' => [function (MiddlewareAdapter $adapter): void {
+        yield 'call middleware function for requests' => [function (MiddlewareAdapter $adapter): void {
             $response = $this->makeResponse($this->makeRequest('::url-a::'));
             $request = $this->makeRequest('::url-b::');
 
@@ -129,11 +129,11 @@ final class HandlerAdapterTest extends TestCase
     }
 
     /**
-     * @dataProvider responseHandlerProvider
+     * @dataProvider responseMiddlewareProvider
      */
-    public function testResponseHandlerImplementation(callable $testCase): void
+    public function testResponseMiddlewareImplementation(callable $testCase): void
     {
-        $handler = new class() implements ResponseMiddlewareInterface {
+        $middleware = new class() implements ResponseMiddlewareInterface {
             use Configurable;
 
             public function handleResponse(Response $response): Response
@@ -141,12 +141,12 @@ final class HandlerAdapterTest extends TestCase
                 return $response->withMeta('::key::', '::value::');
             }
         };
-        $adapter = new MiddlewareAdapter($handler);
+        $adapter = new MiddlewareAdapter($middleware);
 
         $testCase($adapter);
     }
 
-    public function responseHandlerProvider(): Generator
+    public function responseMiddlewareProvider(): Generator
     {
         yield 'return item unchanged' => [function (MiddlewareAdapter $adapter): void {
             $item = new Item(['::key::' => '::value::']);
@@ -166,7 +166,7 @@ final class HandlerAdapterTest extends TestCase
             self::assertEquals($request, $result);
         }];
 
-        yield 'call handler function for responses' => [function (MiddlewareAdapter $adapter): void {
+        yield 'call middleware function for responses' => [function (MiddlewareAdapter $adapter): void {
             $response = $this->makeResponse($this->makeRequest('::url-a::'));
 
             $result = $adapter->handleResponse($response);
