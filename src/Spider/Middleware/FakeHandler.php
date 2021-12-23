@@ -18,9 +18,12 @@ use PHPUnit\Framework\Assert;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\Support\Configurable;
 
-final class FakeHandler extends Handler implements MiddlewareInterface
+final class FakeHandler implements MiddlewareInterface
 {
+    use Configurable;
+
     private array $responseCalls = [];
 
     private array $itemCalls = [];
@@ -37,7 +40,6 @@ final class FakeHandler extends Handler implements MiddlewareInterface
         private ?Closure $handleItemCallback = null,
         private ?Closure $handleRequestCallback = null,
     ) {
-        parent::__construct();
     }
 
     public function handleResponse(Response $response): Response

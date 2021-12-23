@@ -16,7 +16,7 @@ namespace RoachPHP\Spider\Middleware;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\ConfigurableInterface;
 
-interface ResponseHandlerInterface extends ConfigurableInterface
+interface ResponseMiddlewareInterface extends ConfigurableInterface
 {
     /**
      * Handles a response before the parse callback gets

@@ -18,7 +18,7 @@ use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
-use RoachPHP\Spider\Middleware\HandlerAdapter;
+use RoachPHP\Spider\Middleware\MiddlewareAdapter;
 use RoachPHP\Spider\Middleware\MiddlewareInterface;
 use RoachPHP\Spider\SpiderInterface;
 
@@ -73,7 +73,7 @@ final class RunFactory
     private function buildResponseMiddleware(array $handlers): array
     {
         return \array_map(function (string|array $handler) {
-            return new HandlerAdapter($this->buildConfigurable($handler));
+            return new MiddlewareAdapter($this->buildConfigurable($handler));
         }, $handlers);
     }
 

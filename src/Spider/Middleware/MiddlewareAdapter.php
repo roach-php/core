@@ -17,16 +17,16 @@ use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
 
-final class HandlerAdapter implements MiddlewareInterface
+final class MiddlewareAdapter implements MiddlewareInterface
 {
     public function __construct(
-        private RequestHandlerInterface|ItemHandlerInterface|ResponseHandlerInterface $handler,
+        private RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $handler,
     ) {
     }
 
     public function handleItem(ItemInterface $item, Response $response): ItemInterface
     {
-        if ($this->handler instanceof ItemHandlerInterface) {
+        if ($this->handler instanceof ItemMiddlewareInterface) {
             return $this->handler->handleItem($item, $response);
         }
 
@@ -35,7 +35,7 @@ final class HandlerAdapter implements MiddlewareInterface
 
     public function handleRequest(Request $request, Response $response): Request
     {
-        if ($this->handler instanceof RequestHandlerInterface) {
+        if ($this->handler instanceof RequestMiddlewareInterface) {
             return $this->handler->handleRequest($request, $response);
         }
 
@@ -44,7 +44,7 @@ final class HandlerAdapter implements MiddlewareInterface
 
     public function handleResponse(Response $response): Response
     {
-        if ($this->handler instanceof ResponseHandlerInterface) {
+        if ($this->handler instanceof ResponseMiddlewareInterface) {
             return $this->handler->handleResponse($response);
         }
 

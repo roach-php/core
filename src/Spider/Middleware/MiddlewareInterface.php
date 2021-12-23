@@ -13,6 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Spider\Middleware;
 
-interface MiddlewareInterface extends ItemHandlerInterface, RequestHandlerInterface, ResponseHandlerInterface
+interface MiddlewareInterface extends ItemMiddlewareInterface, RequestMiddlewareInterface, ResponseMiddlewareInterface
 {
 }

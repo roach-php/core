@@ -13,17 +13,14 @@ declare(strict_types=1);
 
 namespace RoachPHP\Spider\Middleware;
 
+use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
-use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\Support\ConfigurableInterface;
 
-interface ItemHandlerInterface extends ConfigurableInterface
+interface RequestMiddlewareInterface extends ConfigurableInterface
 {
     /**
-     * Handles an item that got emitted while parsing $response.
+     * Handles a request that got emitted while parsing $response.
      */
-    public function handleItem(
-        ItemInterface $item,
-        Response $response,
-    ): ItemInterface;
+    public function handleRequest(Request $request, Response $response): Request;
 }
