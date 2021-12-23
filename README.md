@@ -20,6 +20,8 @@
 
 <p align="center">A complete web scraping toolkit for PHP</p>
 
+## About
+
 Roach is a complete web scraping toolkit for PHP. It is heavily inspired (read: a shameless clone) of the popular [Scrapy](https://docs.scrapy.org)
 package for Python.
 
