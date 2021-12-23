@@ -26,7 +26,7 @@ final class ArrayLoader implements ConfigurationLoaderStrategy
      * @var array{
      *             startUrls: string[],
      *             downloaderMiddleware: class-string<DownloaderMiddlewareInterface>[],
-     *             spiderMiddleware: class-string<MiddlewareInterface>[],
+     *             spiderMiddleware: class-string<SpiderMiddlewareInterface>[],
      *             itemProcessors: class-string<ItemProcessorInterface>[],
      *             extensions: class-string<ExtensionInterface>[],
      *             concurrency: int,
