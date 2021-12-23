@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\Tests\ItemPipeline\Processors;
+namespace RoachPHP\Tests\Spider\Middleware;
 
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;

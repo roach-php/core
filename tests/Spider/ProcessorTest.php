@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\Tests\ResponseProcessing;
+namespace RoachPHP\Tests\Spider;
 
 use Closure;
 use PHPUnit\Framework\TestCase;

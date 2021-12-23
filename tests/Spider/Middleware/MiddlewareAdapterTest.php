@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\Tests\ResponseProcessing\Handlers;
+namespace RoachPHP\Tests\Spider\Middleware;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
@@ -21,6 +21,7 @@ use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\Spider\Middleware\MiddlewareAdapter;
 use RoachPHP\Spider\Middleware\ItemMiddlewareInterface;
+use RoachPHP\Spider\Middleware\MiddlewareInterface;
 use RoachPHP\Spider\Middleware\RequestMiddlewareInterface;
 use RoachPHP\Spider\Middleware\ResponseMiddlewareInterface;
 use RoachPHP\Support\Configurable;
