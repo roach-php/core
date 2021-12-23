@@ -17,7 +17,7 @@ use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\Spider\ConfigurationLoaderStrategy;
-use RoachPHP\Spider\Middleware\MiddlewareInterface;
+use RoachPHP\Spider\SpiderMiddlewareInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class ArrayLoader implements ConfigurationLoaderStrategy

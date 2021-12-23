@@ -17,7 +17,7 @@ use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\Http\Request;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
-use RoachPHP\Spider\Middleware\MiddlewareInterface;
+use RoachPHP\Spider\SpiderMiddlewareInterface;
 
 /**
  * @psalm-immutable
@@ -28,7 +28,7 @@ final class Run
      * @param Request[]                       $startRequests
      * @param DownloaderMiddlewareInterface[] $downloaderMiddleware
      * @param ItemProcessorInterface[]        $itemProcessors
-     * @param MiddlewareInterface[]           $responseMiddleware
+     * @param SpiderMiddlewareInterface[]           $responseMiddleware
      * @param ExtensionInterface[]            $extensions
      */
     public function __construct(

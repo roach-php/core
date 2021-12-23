@@ -18,9 +18,10 @@ use PHPUnit\Framework\Assert;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\Spider\SpiderMiddlewareInterface;
 use RoachPHP\Support\Configurable;
 
-final class FakeHandler implements MiddlewareInterface
+final class FakeHandler implements SpiderMiddlewareInterface
 {
     use Configurable;
 

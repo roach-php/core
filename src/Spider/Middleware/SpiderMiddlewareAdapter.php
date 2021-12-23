@@ -16,11 +16,12 @@ namespace RoachPHP\Spider\Middleware;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\Spider\SpiderMiddlewareInterface;
 
 /**
  * @internal
  */
-final class MiddlewareAdapter implements MiddlewareInterface
+final class SpiderMiddlewareAdapter implements SpiderMiddlewareInterface
 {
     private function __construct(
         private RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $middleware,
@@ -29,8 +30,8 @@ final class MiddlewareAdapter implements MiddlewareInterface
 
     public static function fromMiddleware(
         RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $middleware
-    ): MiddlewareInterface {
-        if ($middleware instanceof MiddlewareInterface) {
+    ): SpiderMiddlewareInterface {
+        if ($middleware instanceof SpiderMiddlewareInterface) {
             return $middleware;
         }
 

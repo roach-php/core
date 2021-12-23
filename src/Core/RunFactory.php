@@ -18,8 +18,8 @@ use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
-use RoachPHP\Spider\Middleware\MiddlewareAdapter;
-use RoachPHP\Spider\Middleware\MiddlewareInterface;
+use RoachPHP\Spider\Middleware\SpiderMiddlewareAdapter;
+use RoachPHP\Spider\SpiderMiddlewareInterface;
 use RoachPHP\Spider\SpiderInterface;
 
 final class RunFactory
@@ -66,14 +66,14 @@ final class RunFactory
     }
 
     /**
-     * @psalm-param array<class-string<MiddlewareInterface>> $handlers
+     * @psalm-param array<class-string<SpiderMiddlewareInterface>> $handlers
      *
-     * @return MiddlewareInterface[]
+     * @return SpiderMiddlewareInterface[]
      */
     private function buildResponseMiddleware(array $handlers): array
     {
         return \array_map(function (string|array $handler) {
-            return MiddlewareAdapter::fromMiddleware($this->buildConfigurable($handler));
+            return SpiderMiddlewareAdapter::fromMiddleware($this->buildConfigurable($handler));
         }, $handlers);
     }
 

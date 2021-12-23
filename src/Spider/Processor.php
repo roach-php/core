@@ -20,13 +20,13 @@ use RoachPHP\Events\ResponseDropped;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\Spider\Middleware\MiddlewareInterface;
+use RoachPHP\Spider\SpiderMiddlewareInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Processor
 {
     /**
-     * @var MiddlewareInterface[]
+     * @var SpiderMiddlewareInterface[]
      */
     private array $middleware = [];
 
@@ -34,7 +34,7 @@ final class Processor
     {
     }
 
-    public function withMiddleware(MiddlewareInterface ...$middleware): self
+    public function withMiddleware(SpiderMiddlewareInterface ...$middleware): self
     {
         $this->middleware = $middleware;
 
