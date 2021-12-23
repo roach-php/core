@@ -68,7 +68,7 @@ final class ArrayLoaderTest extends TestCase
             ['::spider-middleware::'],
             [LoggerExtension::class],
             2,
-            2
+            2,
         );
         self::assertEquals($expected, $actual);
     }
