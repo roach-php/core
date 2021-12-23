@@ -22,9 +22,19 @@ use RoachPHP\Http\Response;
  */
 final class DownloaderMiddlewareAdapter implements DownloaderMiddlewareInterface
 {
-    public function __construct(
+    private function __construct(
         private RequestMiddlewareInterface|ResponseMiddlewareInterface $middleware,
     ) {
+    }
+
+    public static function fromMiddleware(
+        RequestMiddlewareInterface|ResponseMiddlewareInterface $middleware
+    ): DownloaderMiddlewareInterface {
+        if ($middleware instanceof DownloaderMiddlewareInterface) {
+            return $middleware;
+        }
+
+        return new self($middleware);
     }
 
     public function handleRequest(Request $request): Request

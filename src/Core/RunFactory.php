@@ -51,7 +51,7 @@ final class RunFactory
     private function buildDownloaderMiddleware(array $downloaderMiddleware): array
     {
         return \array_map(function (string|array $middleware) {
-            return new DownloaderMiddlewareAdapter($this->buildConfigurable($middleware));
+            return DownloaderMiddlewareAdapter::fromMiddleware($this->buildConfigurable($middleware));
         }, $downloaderMiddleware);
     }
 

@@ -11,10 +11,11 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\Tests\Downloader\Middleware;
+namespace RoachPHP\Tests\Downloader;
 
 use Generator;
 use PHPUnit\Framework\TestCase;
+use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use RoachPHP\Downloader\Middleware\RequestMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\ResponseMiddlewareInterface;
@@ -26,9 +27,31 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 /**
  * @internal
  */
-final class MiddlewareAdapterTest extends TestCase
+final class DownloaderMiddlewareAdapterTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
+
+    public function testDontWrapMiddlewareIfItAlreadyImplementsFullInterface(): void
+    {
+        $middleware = new class implements DownloaderMiddlewareInterface {
+            use Configurable;
+
+            public function handleRequest(Request $request): Request
+            {
+                return $request;
+            }
+
+            public function handleResponse(Response $response): Response
+            {
+                return $response;
+            }
+        };
+
+        $class = DownloaderMiddlewareAdapter::fromMiddleware($middleware);
+
+        self::assertNotInstanceOf(DownloaderMiddlewareAdapter::class, $middleware);
+        self::assertSame($middleware, $class);
+    }
 
     /**
      * @dataProvider requestMiddlewareProvider
@@ -43,7 +66,7 @@ final class MiddlewareAdapterTest extends TestCase
                 return $request->withMeta('::key::', '::value::');
             }
         };
-        $adapter = new DownloaderMiddlewareAdapter($middleware);
+        $adapter = DownloaderMiddlewareAdapter::fromMiddleware($middleware);
 
         $testCase($adapter);
     }
@@ -80,7 +103,7 @@ final class MiddlewareAdapterTest extends TestCase
                 return $response->withMeta('::key::', '::value::');
             }
         };
-        $adapter = new DownloaderMiddlewareAdapter($middleware);
+        $adapter = DownloaderMiddlewareAdapter::fromMiddleware($middleware);
 
         $testCase($adapter);
     }

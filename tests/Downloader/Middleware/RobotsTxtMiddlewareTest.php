@@ -56,7 +56,7 @@ final class RobotsTxtMiddlewareTest extends IntegrationTest
 
         $middleware = new RobotsTxtMiddleware();
         $middleware->configure(['fileName' => 'robots']);
-        $this->middleware = new DownloaderMiddlewareAdapter($middleware);
+        $this->middleware = DownloaderMiddlewareAdapter::fromMiddleware($middleware);
     }
 
     public function testOnlyRequestsRobotsTxtOnceForRequestsToSameDomain(): void
