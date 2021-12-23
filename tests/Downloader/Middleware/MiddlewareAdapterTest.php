@@ -26,7 +26,7 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 /**
  * @internal
  */
-final class MiddlewareAdapaterTest extends TestCase
+final class MiddlewareAdapterTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
 
