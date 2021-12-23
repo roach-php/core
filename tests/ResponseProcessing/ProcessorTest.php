@@ -21,9 +21,9 @@ use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\ResponseDropped;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
-use RoachPHP\ResponseProcessing\Handlers\FakeHandler;
-use RoachPHP\ResponseProcessing\ParseResult;
-use RoachPHP\ResponseProcessing\Processor;
+use RoachPHP\Spider\Middleware\FakeHandler;
+use RoachPHP\Spider\ParseResult;
+use RoachPHP\Spider\Processor;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**

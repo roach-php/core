@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\ResponseProcessing\Handlers;
+namespace RoachPHP\Spider\Middleware;
 
 use RoachPHP\Support\ConfigurableInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

@@ -23,10 +23,10 @@ use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemPipeline;
 use RoachPHP\ItemPipeline\Processors\FakeProcessor;
-use RoachPHP\ResponseProcessing\ParseResult;
-use RoachPHP\ResponseProcessing\Processor;
 use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\Timing\FakeClock;
+use RoachPHP\Spider\ParseResult;
+use RoachPHP\Spider\Processor;
 use RoachPHP\Testing\FakeLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 

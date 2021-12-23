@@ -18,8 +18,8 @@ use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
-use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
-use RoachPHP\ResponseProcessing\MiddlewareInterface;
+use RoachPHP\Spider\Middleware\HandlerAdapter;
+use RoachPHP\Spider\Middleware\MiddlewareInterface;
 use RoachPHP\Spider\SpiderInterface;
 
 final class RunFactory

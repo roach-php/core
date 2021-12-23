@@ -17,7 +17,7 @@ use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\Http\Request;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
-use RoachPHP\ResponseProcessing\MiddlewareInterface;
+use RoachPHP\Spider\Middleware\MiddlewareInterface;
 
 /**
  * @psalm-immutable

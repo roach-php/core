@@ -11,12 +11,11 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\ResponseProcessing\Handlers;
+namespace RoachPHP\Spider\Middleware;
 
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\ResponseProcessing\MiddlewareInterface;
 
 final class HandlerAdapter implements MiddlewareInterface
 {

@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\ResponseProcessing\Handlers\FakeHandler;
+use RoachPHP\Spider\Middleware\FakeHandler;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**

@@ -23,10 +23,10 @@ use RoachPHP\Events\FakeDispatcher;
 use RoachPHP\Http\Client;
 use RoachPHP\Http\Request;
 use RoachPHP\ItemPipeline\ItemPipeline;
-use RoachPHP\ResponseProcessing\ParseResult;
-use RoachPHP\ResponseProcessing\Processor;
 use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\Timing\FakeClock;
+use RoachPHP\Spider\ParseResult;
+use RoachPHP\Spider\Processor;
 use RoachPHP\Tests\IntegrationTest;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 

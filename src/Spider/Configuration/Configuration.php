@@ -16,7 +16,7 @@ namespace RoachPHP\Spider\Configuration;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
-use RoachPHP\ResponseProcessing\MiddlewareInterface;
+use RoachPHP\Spider\Middleware\MiddlewareInterface;
 
 final class Configuration
 {

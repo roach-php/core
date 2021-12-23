@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\ResponseProcessing;
+namespace RoachPHP\Spider;
 
 use Generator;
 use RoachPHP\Events\ItemDropped;
@@ -20,6 +20,7 @@ use RoachPHP\Events\ResponseDropped;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
+use RoachPHP\Spider\Middleware\MiddlewareInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Processor

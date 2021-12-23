@@ -16,7 +16,7 @@ namespace RoachPHP\Tests\ResponseProcessing;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\Request;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\ResponseProcessing\ParseResult;
+use RoachPHP\Spider\ParseResult;
 
 /**
  * @internal

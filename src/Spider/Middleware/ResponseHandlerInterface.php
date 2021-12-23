@@ -11,19 +11,16 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\ResponseProcessing\Handlers;
+namespace RoachPHP\Spider\Middleware;
 
 use RoachPHP\Http\Response;
-use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\Support\ConfigurableInterface;
 
-interface ItemHandlerInterface extends ConfigurableInterface
+interface ResponseHandlerInterface extends ConfigurableInterface
 {
     /**
-     * Handles an item that got emitted while parsing $response.
+     * Handles a response before the parse callback gets
+     * invoked.
      */
-    public function handleItem(
-        ItemInterface $item,
-        Response $response,
-    ): ItemInterface;
+    public function handleResponse(Response $response): Response;
 }

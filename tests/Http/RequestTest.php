@@ -17,7 +17,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\Response;
-use RoachPHP\ResponseProcessing\ParseResult;
+use RoachPHP\Spider\ParseResult;
 use RoachPHP\Support\DroppableInterface;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 use RoachPHP\Tests\Support\DroppableTest;

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\ResponseProcessing;
+namespace RoachPHP\Spider;
 
 use Closure;
 use Generator;

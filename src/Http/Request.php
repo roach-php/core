@@ -16,7 +16,7 @@ namespace RoachPHP\Http;
 use Closure;
 use Generator;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
-use RoachPHP\ResponseProcessing\ParseResult;
+use RoachPHP\Spider\ParseResult;
 use RoachPHP\Support\Droppable;
 use RoachPHP\Support\DroppableInterface;
 use RoachPHP\Support\HasMetaData;

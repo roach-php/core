@@ -22,9 +22,9 @@ use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\ItemPipeline\ItemPipelineInterface;
-use RoachPHP\ResponseProcessing\ParseResult;
-use RoachPHP\ResponseProcessing\Processor;
 use RoachPHP\Scheduling\RequestSchedulerInterface;
+use RoachPHP\Spider\ParseResult;
+use RoachPHP\Spider\Processor;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Engine

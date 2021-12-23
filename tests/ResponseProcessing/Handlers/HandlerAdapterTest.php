@@ -19,11 +19,11 @@ use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\ResponseProcessing\Handlers\Handler;
-use RoachPHP\ResponseProcessing\Handlers\HandlerAdapter;
-use RoachPHP\ResponseProcessing\Handlers\ItemHandlerInterface;
-use RoachPHP\ResponseProcessing\Handlers\RequestHandlerInterface;
-use RoachPHP\ResponseProcessing\Handlers\ResponseHandlerInterface;
+use RoachPHP\Spider\Middleware\Handler;
+use RoachPHP\Spider\Middleware\HandlerAdapter;
+use RoachPHP\Spider\Middleware\ItemHandlerInterface;
+use RoachPHP\Spider\Middleware\RequestHandlerInterface;
+use RoachPHP\Spider\Middleware\ResponseHandlerInterface;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**

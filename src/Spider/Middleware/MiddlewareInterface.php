@@ -11,11 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\ResponseProcessing;
-
-use RoachPHP\ResponseProcessing\Handlers\ItemHandlerInterface;
-use RoachPHP\ResponseProcessing\Handlers\RequestHandlerInterface;
-use RoachPHP\ResponseProcessing\Handlers\ResponseHandlerInterface;
+namespace RoachPHP\Spider\Middleware;
 
 interface MiddlewareInterface extends ItemHandlerInterface, RequestHandlerInterface, ResponseHandlerInterface
 {

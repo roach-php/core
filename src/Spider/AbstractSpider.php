@@ -16,7 +16,6 @@ namespace RoachPHP\Spider;
 use Generator;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
-use RoachPHP\ResponseProcessing\ParseResult;
 use RoachPHP\Spider\Configuration\Configuration;
 
 abstract class AbstractSpider implements SpiderInterface
