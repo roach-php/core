@@ -29,10 +29,14 @@ trait InteractsWithRequestsAndResponses
         return new Request($url, $callback);
     }
 
-    private function makeResponse(?Request $request = null): Response
-    {
+    private function makeResponse(
+        ?Request $request = null,
+        int $status = 200,
+        ?string $body = null,
+        array $headers = [],
+    ): Response {
         return new Response(
-            new \GuzzleHttp\Psr7\Response(),
+            new \GuzzleHttp\Psr7\Response($status, $headers, $body),
             $request ?: $this->makeRequest(),
         );
     }

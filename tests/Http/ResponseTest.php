@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Http;
 
+use Generator;
+use GuzzleHttp\Psr7\Stream;
 use PHPUnit\Framework\TestCase;
+use RoachPHP\Http\Response;
 use RoachPHP\Support\DroppableInterface;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 use RoachPHP\Tests\Support\DroppableTest;
@@ -25,6 +28,75 @@ final class ResponseTest extends TestCase
 {
     use DroppableTest;
     use InteractsWithRequestsAndResponses;
+
+    public function testCanAccessDomCrawlerDirectlyFromResponse(): void
+    {
+        $response = $this->makeResponse(body: '<html lang="en"><body><a href="https://roach-php.dev">Docs</a></body></html>');
+
+        $links = $response->filter('a')->links();
+
+        self::assertCount(1, $links);
+    }
+
+    /**
+     * @dataProvider responseCodeProvider
+     */
+    public function testCanRetrieveStatusCodeOfOriginalResponse(int $statusCode): void
+    {
+        $response = new Response(new \GuzzleHttp\Psr7\Response($statusCode), $this->makeRequest());
+
+        self::assertSame($statusCode, $response->getStatus());
+    }
+
+    /**
+     * @dataProvider responseBodyProvider
+     */
+    public function testCanRetrieveHtmlBodyOfOriginalResponse(callable $getBody): void
+    {
+        $body = '<html lang="en"><body><p>Hello, world!</p></body>';
+        $response = new Response(
+            new \GuzzleHttp\Psr7\Response(body: $getBody($body)),
+            $this->makeRequest(),
+        );
+
+        self::assertSame($body, $response->getBody());
+    }
+
+    public function responseCodeProvider(): Generator
+    {
+        yield from [
+            [200],
+            [300],
+            [301],
+            [302],
+            [400],
+            [404],
+            [500],
+        ];
+    }
+
+    public function responseBodyProvider(): Generator
+    {
+        yield from [
+            'string' => [static fn (string $body) => $body],
+
+            'stream' => [static function (string $body) {
+                $stream = \fopen('php://memory', 'r+b');
+                \fwrite($stream, $body);
+                \rewind($stream);
+
+                return $stream;
+            }],
+
+            'StreamInterface' => [static function (string $body) {
+                $stream = \fopen('php://memory', 'r+b');
+                \fwrite($stream, $body);
+                \rewind($stream);
+
+                return new Stream($stream);
+            }],
+        ];
+    }
 
     protected function createDroppable(): DroppableInterface
     {
