@@ -17,19 +17,30 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 trait Configurable
 {
+    private bool $optionsResolved = false;
+
     private array $resolvedOptions = [];
 
     final public function configure(array $options): void
     {
+        if ($this->optionsResolved) {
+            return;
+        }
+
         $resolver = new OptionsResolver();
 
         $resolver->setDefaults($this->defaultOptions());
 
         $this->resolvedOptions = $resolver->resolve($options);
+        $this->optionsResolved = true;
     }
 
     public function option(string $key): mixed
     {
+        if (!$this->optionsResolved) {
+            $this->configure([]);
+        }
+
         return $this->resolvedOptions[$key] ?? null;
     }
 
