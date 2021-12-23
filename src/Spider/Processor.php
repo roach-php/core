@@ -20,7 +20,6 @@ use RoachPHP\Events\ResponseDropped;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\Spider\SpiderMiddlewareInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 final class Processor

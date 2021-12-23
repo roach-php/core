@@ -33,7 +33,7 @@ final class DownloaderMiddlewareAdapterTest extends TestCase
 
     public function testDontWrapMiddlewareIfItAlreadyImplementsFullInterface(): void
     {
-        $middleware = new class implements DownloaderMiddlewareInterface {
+        $middleware = new class() implements DownloaderMiddlewareInterface {
             use Configurable;
 
             public function handleRequest(Request $request): Request

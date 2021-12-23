@@ -19,24 +19,24 @@ use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
-use RoachPHP\Spider\Middleware\SpiderMiddlewareAdapter;
 use RoachPHP\Spider\Middleware\ItemMiddlewareInterface;
-use RoachPHP\Spider\SpiderMiddlewareInterface;
 use RoachPHP\Spider\Middleware\RequestMiddlewareInterface;
 use RoachPHP\Spider\Middleware\ResponseMiddlewareInterface;
+use RoachPHP\Spider\Middleware\SpiderMiddlewareAdapter;
+use RoachPHP\Spider\SpiderMiddlewareInterface;
 use RoachPHP\Support\Configurable;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal
  */
-final class MiddlewareAdapterTest extends TestCase
+final class SpiderMiddlewareAdapterTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
 
     public function testDontDecorateClassIfItAlreadyImplementsTheFullInterface(): void
     {
-        $middleware = new class implements SpiderMiddlewareInterface {
+        $middleware = new class() implements SpiderMiddlewareInterface {
             use Configurable;
 
             public function handleItem(ItemInterface $item, Response $response): ItemInterface

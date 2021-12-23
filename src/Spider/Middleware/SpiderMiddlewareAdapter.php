@@ -29,7 +29,7 @@ final class SpiderMiddlewareAdapter implements SpiderMiddlewareInterface
     }
 
     public static function fromMiddleware(
-        RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $middleware
+        RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $middleware,
     ): SpiderMiddlewareInterface {
         if ($middleware instanceof SpiderMiddlewareInterface) {
             return $middleware;

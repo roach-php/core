@@ -28,7 +28,7 @@ final class Run
      * @param Request[]                       $startRequests
      * @param DownloaderMiddlewareInterface[] $downloaderMiddleware
      * @param ItemProcessorInterface[]        $itemProcessors
-     * @param SpiderMiddlewareInterface[]           $responseMiddleware
+     * @param SpiderMiddlewareInterface[]     $responseMiddleware
      * @param ExtensionInterface[]            $extensions
      */
     public function __construct(

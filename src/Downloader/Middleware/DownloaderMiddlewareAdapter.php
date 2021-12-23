@@ -28,7 +28,7 @@ final class DownloaderMiddlewareAdapter implements DownloaderMiddlewareInterface
     }
 
     public static function fromMiddleware(
-        RequestMiddlewareInterface|ResponseMiddlewareInterface $middleware
+        RequestMiddlewareInterface|ResponseMiddlewareInterface $middleware,
     ): DownloaderMiddlewareInterface {
         if ($middleware instanceof DownloaderMiddlewareInterface) {
             return $middleware;
