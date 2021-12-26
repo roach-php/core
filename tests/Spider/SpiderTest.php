@@ -33,6 +33,9 @@ final class SpiderTest extends IntegrationTest
                 'http://localhost:8000/test2',
             ];
 
+            // Don't want logging in this test
+            public array $extensions = [];
+
             public function parse(Response $response): Generator
             {
                 yield from [];
@@ -48,6 +51,9 @@ final class SpiderTest extends IntegrationTest
     public function testOverrideInitialRequests(): void
     {
         $spider = new class() extends BasicSpider {
+            // Don't want logging in this test
+            public array $extensions = [];
+
             public function parse(Response $response): Generator
             {
                 yield from [];

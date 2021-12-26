@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace RoachPHP\Spider;
 
 use RoachPHP\Downloader\Middleware\RequestDeduplicationMiddleware;
+use RoachPHP\Extensions\LoggerExtension;
+use RoachPHP\Extensions\StatsCollectorExtension;
 use RoachPHP\Spider\Configuration\ArrayLoader;
 
 abstract class BasicSpider extends AbstractSpider
@@ -43,7 +45,10 @@ abstract class BasicSpider extends AbstractSpider
     /**
      * @var class-string[]
      */
-    public array $extensions = [];
+    public array $extensions = [
+        LoggerExtension::class,
+        StatsCollectorExtension::class,
+    ];
 
     public int $concurrency = 5;
 
