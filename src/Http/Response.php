@@ -52,4 +52,9 @@ final class Response implements DroppableInterface
     {
         return (string) $this->response->getBody();
     }
+
+    public function getResponse(): ResponseInterface
+    {
+        return $this->response;
+    }
 }
