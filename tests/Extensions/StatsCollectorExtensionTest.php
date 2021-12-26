@@ -35,7 +35,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class StatsCollectorExtensionTest extends ExtensionTestCase
 {
     use InteractsWithRequestsAndResponses;
-
     private FakeLogger $logger;
 
     private FakeClock $clock;

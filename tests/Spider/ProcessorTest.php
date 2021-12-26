@@ -32,7 +32,6 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 final class ProcessorTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
-
     private Processor $processor;
 
     private FakeDispatcher $dispatcher;

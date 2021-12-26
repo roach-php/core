@@ -32,7 +32,6 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 final class LoggerExtensionTest extends ExtensionTestCase
 {
     use InteractsWithRequestsAndResponses;
-
     /**
      * @psalm-suppress PropertyNotSetInConstructor
      */

@@ -23,7 +23,6 @@ use const HTTP_URL_STRIP_QUERY;
 final class RequestDeduplicationMiddleware implements RequestMiddlewareInterface
 {
     use Configurable;
-
     /**
      * @var string[]
      */

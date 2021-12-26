@@ -27,7 +27,6 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 final class ArrayRequestSchedulerTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
-
     private ArrayRequestScheduler $scheduler;
 
     private FakeClock $clock;

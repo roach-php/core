@@ -24,7 +24,7 @@ use RoachPHP\Spider\SpiderMiddlewareInterface;
 final class SpiderMiddlewareAdapter implements SpiderMiddlewareInterface
 {
     private function __construct(
-        private RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $middleware,
+        private RequestMiddlewareInterface | ItemMiddlewareInterface | ResponseMiddlewareInterface $middleware,
     ) {
     }
 

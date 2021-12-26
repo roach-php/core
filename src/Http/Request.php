@@ -25,7 +25,6 @@ final class Request implements DroppableInterface
 {
     use HasMetaData;
     use Droppable;
-
     /**
      * @var Closure(Response): Generator<ParseResult>
      */

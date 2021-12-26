@@ -24,7 +24,6 @@ use RoachPHP\Support\Configurable;
 final class FakeHandler implements SpiderMiddlewareInterface
 {
     use Configurable;
-
     private array $responseCalls = [];
 
     private array $itemCalls = [];

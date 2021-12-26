@@ -20,7 +20,6 @@ use RoachPHP\Support\Configurable;
 final class MaxRequestExtension implements ExtensionInterface
 {
     use Configurable;
-
     private int $sentRequests = 0;
 
     public static function getSubscribedEvents(): array

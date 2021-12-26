@@ -23,7 +23,6 @@ use const PHP_URL_SCHEME;
 final class RobotsTxtMiddleware implements RequestMiddlewareInterface
 {
     use Configurable;
-
     /**
      * @var array<string, Robots>
      */

@@ -30,7 +30,6 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 final class DownloaderTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
-
     private Downloader $downloader;
 
     private FakeClient $client;

@@ -20,7 +20,6 @@ use RoachPHP\Support\Configurable;
 final class FakeProcessor implements ItemProcessorInterface
 {
     use Configurable;
-
     private array $calls = [];
 
     public function processItem(ItemInterface $item): ItemInterface

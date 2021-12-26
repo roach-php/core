@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2021 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/roach-php/roach
+ */
 
 namespace RoachPHP\Tests\Spider;
 
@@ -9,11 +20,14 @@ use RoachPHP\Roach;
 use RoachPHP\Spider\BasicSpider;
 use RoachPHP\Tests\IntegrationTest;
 
-class SpiderTest extends IntegrationTest
+/**
+ * @internal
+ */
+final class SpiderTest extends IntegrationTest
 {
     public function testCreateInitialRequestFromStartUrlsByDefault(): void
     {
-        $spider = new class extends BasicSpider {
+        $spider = new class() extends BasicSpider {
             public array $startUrls = [
                 'http://localhost:8000/test1',
                 'http://localhost:8000/test2',
@@ -33,7 +47,7 @@ class SpiderTest extends IntegrationTest
 
     public function testOverrideInitialRequests(): void
     {
-        $spider = new class extends BasicSpider {
+        $spider = new class() extends BasicSpider {
             public function parse(Response $response): Generator
             {
                 yield from [];

@@ -26,7 +26,6 @@ use RoachPHP\Support\Configurable;
 final class FakeMiddleware implements DownloaderMiddlewareInterface
 {
     use Configurable;
-
     /**
      * @var array Request[]
      */

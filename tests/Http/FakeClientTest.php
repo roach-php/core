@@ -25,7 +25,6 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 final class FakeClientTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
-
     private FakeClient $client;
 
     protected function setUp(): void

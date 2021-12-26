@@ -37,7 +37,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 final class EngineTest extends IntegrationTest
 {
     use InteractsWithRequestsAndResponses;
-
     private Engine $engine;
 
     protected function setUp(): void

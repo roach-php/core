@@ -22,7 +22,7 @@ use RoachPHP\ItemPipeline\ItemInterface;
 
 final class ParseResult
 {
-    private function __construct(private Request|ItemInterface $value)
+    private function __construct(private Request | ItemInterface $value)
     {
     }
 

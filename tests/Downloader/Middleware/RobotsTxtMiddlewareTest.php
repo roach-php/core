@@ -36,7 +36,6 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 final class RobotsTxtMiddlewareTest extends IntegrationTest
 {
     use InteractsWithRequestsAndResponses;
-
     private Engine $engine;
 
     private DownloaderMiddlewareInterface $middleware;
