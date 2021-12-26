@@ -37,9 +37,7 @@ abstract class AbstractSpider implements SpiderInterface
      */
     final public function getInitialRequests(): array
     {
-        return \array_map(function (string $url) {
-            return new Request($url, [$this, 'parse']);
-        }, $this->getStartUrls());
+        return $this->initialRequests();
     }
 
     final public function loadConfiguration(): Configuration
@@ -58,10 +56,12 @@ abstract class AbstractSpider implements SpiderInterface
     }
 
     /**
-     * @return string[]
+     * @return Request[]
      */
-    protected function getStartUrls(): array
+    protected function initialRequests(): array
     {
-        return $this->configuration->startUrls;
+        return \array_map(function (string $url) {
+            return new Request($url, [$this, 'parse']);
+        }, $this->configuration->startUrls);
     }
 }
