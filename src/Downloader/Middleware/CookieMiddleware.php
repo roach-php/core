@@ -15,13 +15,10 @@ namespace RoachPHP\Downloader\Middleware;
 
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\CookieJarInterface;
-use GuzzleHttp\Psr7\Request as GuzzleRequest;
-use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Http\Request;
-use RoachPHP\Http\Response;
 use RoachPHP\Support\Configurable;
 
-final class CookieMiddleware implements DownloaderMiddlewareInterface
+final class CookieMiddleware implements RequestMiddlewareInterface
 {
     use Configurable;
     private CookieJarInterface $cookieJar;
@@ -33,19 +30,6 @@ final class CookieMiddleware implements DownloaderMiddlewareInterface
 
     public function handleRequest(Request $request): Request
     {
-        /** @psalm-suppress ArgumentTypeCoercion */
-        return $request->withPsrRequest(
-            fn (GuzzleRequest $guzzleRequest) => $this->cookieJar->withCookieHeader($guzzleRequest),
-        );
-    }
-
-    public function handleResponse(Response $response): Response
-    {
-        $this->cookieJar->extractCookies(
-            $response->getRequest()->getPsrRequest(),
-            $response->getResponse(),
-        );
-
-        return $response;
+        return $request->addOption('cookies', $this->cookieJar);
     }
 }

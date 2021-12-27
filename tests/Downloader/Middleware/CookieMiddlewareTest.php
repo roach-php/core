@@ -25,51 +25,14 @@ final class CookieMiddlewareTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
 
-    public function testAddCookiesForDomainToOutgoingRequests(): void
+    public function testAddCookieJarToRequestOptions(): void
     {
-        $jar = CookieJar::fromArray([
-            'cookie-key' => '::cookie-value::',
-        ], 'example.com');
-        $middleware = new CookieMiddleware($jar);
-        $request = $this->makeRequest('http://example.com');
-
-        $processedRequest = $middleware->handleRequest($request);
-
-        self::assertTrue($processedRequest->getPsrRequest()->hasHeader('Cookie'));
-        self::assertSame(
-            'cookie-key=::cookie-value::',
-            $processedRequest->getPsrRequest()->getHeaderLine('Cookie'),
-        );
-    }
-
-    public function testDontAddCookiesForDifferentDomain(): void
-    {
-        $jar = CookieJar::fromArray([
-            'cookie-key' => '::cookie-value::',
-        ], 'different-domain.com');
-        $middleware = new CookieMiddleware($jar);
-        $request = $this->makeRequest('http://example.com');
-
-        $processedRequest = $middleware->handleRequest($request);
-
-        self::assertFalse($processedRequest->getPsrRequest()->hasHeader('Cookie'));
-    }
-
-    public function testStoreResponseCookiesInCookieJar(): void
-    {
-        $request = $this->makeRequest('http://example.com');
-        $response = $this->makeResponse(
-            $request,
-            headers: ['Set-Cookie' => ['cookie-name=::cookie-value::; Domain=example.com']],
-        );
         $jar = new CookieJar();
         $middleware = new CookieMiddleware($jar);
+        $request = $this->makeRequest();
 
-        $middleware->handleResponse($response);
+        $processedRequest = $middleware->handleRequest($request);
 
-        self::assertSame(1, $jar->count());
-        self::assertSame('example.com', $jar->toArray()[0]['Domain']);
-        self::assertSame('cookie-name', $jar->toArray()[0]['Name']);
-        self::assertSame('::cookie-value::', $jar->toArray()[0]['Value']);
+        self::assertSame($jar, $processedRequest->getOptions()['cookies']);
     }
 }
