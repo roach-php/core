@@ -27,13 +27,16 @@ final class Client implements ClientInterface
         $this->client = $client ?? new GuzzleClient();
     }
 
+    /**
+     * @param Request[] $requests
+     */
     public function pool(array $requests, ?callable $onFulfilled = null): void
     {
         $makeRequests = function () use ($requests): Generator {
             foreach ($requests as $request) {
                 yield function () use ($request) {
                     return $this->client
-                        ->sendAsync($request->getGuzzleRequest())
+                        ->sendAsync($request->getPsrRequest(), $request->getOptions())
                         ->then(static fn (ResponseInterface $response) => new Response($response, $request));
                 };
             }

@@ -35,10 +35,10 @@ final class CookieMiddlewareTest extends TestCase
 
         $processedRequest = $middleware->handleRequest($request);
 
-        self::assertTrue($processedRequest->getGuzzleRequest()->hasHeader('Cookie'));
+        self::assertTrue($processedRequest->getPsrRequest()->hasHeader('Cookie'));
         self::assertSame(
             'cookie-key=::cookie-value::',
-            $processedRequest->getGuzzleRequest()->getHeaderLine('Cookie'),
+            $processedRequest->getPsrRequest()->getHeaderLine('Cookie'),
         );
     }
 
@@ -52,7 +52,7 @@ final class CookieMiddlewareTest extends TestCase
 
         $processedRequest = $middleware->handleRequest($request);
 
-        self::assertFalse($processedRequest->getGuzzleRequest()->hasHeader('Cookie'));
+        self::assertFalse($processedRequest->getPsrRequest()->hasHeader('Cookie'));
     }
 
     public function testStoreResponseCookiesInCookieJar(): void

@@ -26,7 +26,7 @@ trait InteractsWithRequestsAndResponses
             yield from [];
         };
 
-        return new Request($url, $callback);
+        return new Request('GET', $url, $callback);
     }
 
     private function makeResponse(

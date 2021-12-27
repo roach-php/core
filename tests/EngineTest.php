@@ -73,7 +73,7 @@ final class EngineTest extends IntegrationTest
     {
         $parseFunction = static function (Response $response) {
             foreach ($response->filter('a')->links() as $link) {
-                yield ParseResult::request($link->getUri(), static fn (Response $response) => yield from []);
+                yield ParseResult::request('GET', $link->getUri(), static fn (Response $response) => yield from []);
             }
         };
         $run = new Run(
@@ -89,7 +89,7 @@ final class EngineTest extends IntegrationTest
     public function testCallCorrectParseCallbackForRequest(): void
     {
         $parseCallback = static function () {
-            yield ParseResult::request('http://localhost:8000/test2', static function () {
+            yield ParseResult::request('GET', 'http://localhost:8000/test2', static function () {
                 ++$_SERVER['__parse.called'];
 
                 yield from [];

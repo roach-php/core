@@ -61,7 +61,7 @@ final class SpiderTest extends IntegrationTest
 
             protected function initialRequests(): array
             {
-                return [new Request('http://localhost:8000/test1', [$this, 'parse'])];
+                return [new Request('GET', 'http://localhost:8000/test1', [$this, 'parse'])];
             }
         };
 

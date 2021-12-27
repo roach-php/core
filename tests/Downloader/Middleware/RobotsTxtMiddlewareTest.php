@@ -62,7 +62,7 @@ final class RobotsTxtMiddlewareTest extends IntegrationTest
     {
         $parseCallback = fn () => yield ParseResult::fromValue($this->makeRequest('http://localhost:8000/test2'));
         $run = new Run(
-            [new Request('http://localhost:8000/test1', $parseCallback)],
+            [new Request('GET', 'http://localhost:8000/test1', $parseCallback)],
             downloaderMiddleware: [$this->middleware],
         );
 

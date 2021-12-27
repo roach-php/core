@@ -40,9 +40,9 @@ final class FetchCommand extends Command
          * @var string
          */
         $url = $input->getArgument('url');
-        $request = new Request($url, static fn () => yield from []);
+        $request = new Request('GET', $url, static fn () => yield from []);
         $response = new Response(
-            $client->send($request->getGuzzleRequest()),
+            $client->send($request->getPsrRequest()),
             $request,
         );
 

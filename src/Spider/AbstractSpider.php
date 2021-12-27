@@ -45,9 +45,13 @@ abstract class AbstractSpider implements SpiderInterface
         return $this->configuration;
     }
 
-    protected function request(string $url, string $parseMethod = 'parse'): ParseResult
-    {
-        return ParseResult::request($url, [$this, $parseMethod]);
+    protected function request(
+        string $method,
+        string $url,
+        string $parseMethod = 'parse',
+        array $options = []
+    ): ParseResult {
+        return ParseResult::request($method, $url, [$this, $parseMethod], $options);
     }
 
     protected function item(array $item): ParseResult
@@ -61,7 +65,7 @@ abstract class AbstractSpider implements SpiderInterface
     protected function initialRequests(): array
     {
         return \array_map(function (string $url) {
-            return new Request($url, [$this, 'parse']);
+            return new Request('GET', $url, [$this, 'parse']);
         }, $this->configuration->startUrls);
     }
 }

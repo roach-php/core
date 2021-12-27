@@ -65,7 +65,7 @@ final class RequestTest extends TestCase
 
         self::assertFalse($request->hasHeader('X-Custom-Header'));
 
-        $request->withGuzzleRequest(static function (Request $guzzleRequest) {
+        $request->withPsrRequest(static function (Request $guzzleRequest) {
             return $guzzleRequest->withHeader('X-Custom-Header', '::value::');
         });
 
@@ -103,7 +103,7 @@ final class RequestTest extends TestCase
     {
         $request = $this->makeRequest('::request-uri::');
 
-        self::assertSame('::request-uri::', (string) $request->getGuzzleRequest()->getUri());
+        self::assertSame('::request-uri::', (string) $request->getPsrRequest()->getUri());
     }
 
     protected function createDroppable(): DroppableInterface

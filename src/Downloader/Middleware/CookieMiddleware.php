@@ -34,7 +34,7 @@ final class CookieMiddleware implements DownloaderMiddlewareInterface
     public function handleRequest(Request $request): Request
     {
         /** @psalm-suppress ArgumentTypeCoercion */
-        return $request->withGuzzleRequest(
+        return $request->withPsrRequest(
             fn (GuzzleRequest $guzzleRequest) => $this->cookieJar->withCookieHeader($guzzleRequest),
         );
     }
@@ -42,7 +42,7 @@ final class CookieMiddleware implements DownloaderMiddlewareInterface
     public function handleResponse(Response $response): Response
     {
         $this->cookieJar->extractCookies(
-            $response->getRequest()->getGuzzleRequest(),
+            $response->getRequest()->getPsrRequest(),
             $response->getResponse(),
         );
 

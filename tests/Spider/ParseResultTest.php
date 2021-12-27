@@ -25,7 +25,7 @@ final class ParseResultTest extends TestCase
 {
     public function testPassesRequestToCallbackIfResultIsRequest(): void
     {
-        $result = ParseResult::request('::url::', static fn () => null);
+        $result = ParseResult::request('GET', '::url::', static fn () => null);
 
         $result->apply(
             static fn (Request $request) => self::assertEquals('::url::', (string) $request->getUri()),

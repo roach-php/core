@@ -44,9 +44,13 @@ final class ParseResult
     /**
      * @param callable(Response): Generator<ParseResult> $parseCallback
      */
-    public static function request(string $url, callable $parseCallback): self
-    {
-        return new self(new Request($url, $parseCallback));
+    public static function request(
+        string $method,
+        string $url,
+        callable $parseCallback,
+        array $options = []
+    ): self {
+        return new self(new Request($method, $url, $parseCallback, $options));
     }
 
     /**

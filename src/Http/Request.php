@@ -16,6 +16,7 @@ namespace RoachPHP\Http;
 use Closure;
 use Generator;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
+use Psr\Http\Message\RequestInterface;
 use RoachPHP\Spider\ParseResult;
 use RoachPHP\Support\Droppable;
 use RoachPHP\Support\DroppableInterface;
@@ -30,35 +31,42 @@ final class Request implements DroppableInterface
      */
     private Closure $parseCallback;
 
-    private GuzzleRequest $guzzleRequest;
+    private RequestInterface $psrRequest;
+
+    /**
+     * An array of Guzzle request options.
+     * See https://docs.guzzlephp.org/en/stable/request-options.html
+     */
+    private array $options;
 
     /**
      * @param callable(Response): Generator<ParseResult> $parseMethod
      */
-    public function __construct(string $uri, callable $parseMethod, string $method = 'GET')
+    public function __construct(string $method, string $uri, callable $parseMethod, array $options = [])
     {
-        $this->guzzleRequest = new GuzzleRequest($method, $uri);
+        $this->options = $options;
+        $this->psrRequest = new GuzzleRequest($method, $uri);
         $this->parseCallback = Closure::fromCallable($parseMethod);
     }
 
     public function getUri(): string
     {
-        return (string) $this->guzzleRequest->getUri();
+        return (string) $this->psrRequest->getUri();
     }
 
     public function hasHeader(string $name): bool
     {
-        return $this->guzzleRequest->hasHeader($name);
+        return $this->psrRequest->hasHeader($name);
     }
 
     public function getHeader(string $name): array
     {
-        return $this->guzzleRequest->getHeader($name);
+        return $this->psrRequest->getHeader($name);
     }
 
     public function getPath(): string
     {
-        return $this->guzzleRequest->getUri()->getPath();
+        return $this->psrRequest->getUri()->getPath();
     }
 
     /**
@@ -67,20 +75,25 @@ final class Request implements DroppableInterface
     public function addHeader(string $name, mixed $value): self
     {
         /** @var GuzzleRequest $request */
-        $request = $this->guzzleRequest->withHeader($name, $value);
+        $request = $this->psrRequest->withHeader($name, $value);
 
         $clone = clone $this;
-        $clone->guzzleRequest = $request;
+        $clone->psrRequest = $request;
 
         return $clone;
     }
 
-    /**
-     * @param callable(GuzzleRequest): GuzzleRequest $callback
-     */
-    public function withGuzzleRequest(callable $callback): self
+    public function getOptions(): array
     {
-        $this->guzzleRequest = $callback($this->guzzleRequest);
+        return $this->options;
+    }
+
+    /**
+     * @param Closure(RequestInterface): RequestInterface $callback
+     */
+    public function withPsrRequest(Closure $callback): self
+    {
+        $this->psrRequest = $callback($this->psrRequest);
 
         return $this;
     }
@@ -90,8 +103,8 @@ final class Request implements DroppableInterface
         return ($this->parseCallback)($response);
     }
 
-    public function getGuzzleRequest(): GuzzleRequest
+    public function getPsrRequest(): RequestInterface
     {
-        return $this->guzzleRequest;
+        return $this->psrRequest;
     }
 }
