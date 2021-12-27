@@ -88,6 +88,13 @@ final class Request implements DroppableInterface
         return $this->options;
     }
 
+    public function addOption(string $option, mixed $value): self
+    {
+        $this->options[$option] = $value;
+
+        return $this;
+    }
+
     /**
      * @param Closure(RequestInterface): RequestInterface $callback
      */
