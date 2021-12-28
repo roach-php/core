@@ -18,6 +18,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install Puppeteer
+        run: npm install puppeteer
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
