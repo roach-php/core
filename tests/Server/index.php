@@ -93,4 +93,18 @@ $app->get('/test3', static function (Request $request, Response $response, $args
     return $response;
 });
 
+$app->get('/javascript', static function (Request $request, Response $response, $args) {
+    $body = <<<HTML
+<div id="content">Loading...</div>
+<script>
+    const content = document.getElementById('content');
+    content.innerHTML = '<h1>Headline</h1><p>I was loaded via Javascript!</p>'
+</script>
+HTML;
+
+    $response->getBody()->write($body);
+
+    return $response;
+});
+
 $app->run();
