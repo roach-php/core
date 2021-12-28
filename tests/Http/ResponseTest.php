@@ -62,6 +62,34 @@ final class ResponseTest extends TestCase
         self::assertSame($body, $response->getBody());
     }
 
+    public function testCanUpdateResponseBody(): void
+    {
+        $originalBody = '<html lang="en"><body><p>Old</p></body></html>';
+        $newBody = '<html lang="en"><body><p>New</p></body></html>';
+        $response = new Response(
+            new \GuzzleHttp\Psr7\Response(body: $originalBody),
+            $this->makeRequest(),
+        );
+
+        $response = $response->withBody($newBody);
+
+        self::assertSame($newBody, $response->getBody());
+    }
+
+    public function testUpdatingResponseBodyUpdatesCrawler(): void
+    {
+        $originalBody = '<html lang="en"><body><p>Old</p></body></html>';
+        $newBody = '<html lang="en"><body><p>New</p></body></html>';
+        $response = new Response(
+            new \GuzzleHttp\Psr7\Response(body: $originalBody),
+            $this->makeRequest(),
+        );
+
+        $response = $response->withBody($newBody);
+
+        self::assertSame('New', $response->filter('p')->text(''));
+    }
+
     public function responseCodeProvider(): Generator
     {
         yield from [

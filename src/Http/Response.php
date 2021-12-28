@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace RoachPHP\Http;
 
+use GuzzleHttp\Psr7\Utils;
 use Psr\Http\Message\ResponseInterface;
 use RoachPHP\Support\Droppable;
 use RoachPHP\Support\DroppableInterface;
@@ -51,6 +52,14 @@ final class Response implements DroppableInterface
     public function getBody(): string
     {
         return (string) $this->response->getBody();
+    }
+
+    public function withBody(string $body): self
+    {
+        $this->response = $this->response->withBody(Utils::streamFor($body));
+        $this->crawler = new Crawler($body, $this->request->getUri());
+
+        return $this;
     }
 
     public function getResponse(): ResponseInterface
