@@ -17,10 +17,12 @@ use Generator;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
 use PHPUnit\Framework\TestCase;
+use RoachPHP\Core\Run;
 use RoachPHP\Core\RunFactory;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Http\Response;
 use RoachPHP\Spider\BasicSpider;
+use RoachPHP\Spider\Configuration\Overrides;
 use RoachPHP\Spider\SpiderMiddlewareInterface;
 use RoachPHP\Tests\Fixtures\Extension;
 use RoachPHP\Tests\Fixtures\ItemProcessor;
@@ -230,6 +232,104 @@ final class RunFactoryTest extends TestCase
             [3],
             [4],
             [5],
+        ];
+    }
+
+    /**
+     * @dataProvider configurationOverrideProvider
+     */
+    public function testMergeSpiderConfigurationWithRunOverrides(array $overrides, callable $verifyRun): void
+    {
+        $defaults = [
+            'startUrls' => [
+                '::default-url::',
+            ],
+            'itemProcessors' => [
+                ItemProcessor::class,
+            ],
+            'spiderMiddleware' => [
+                RequestSpiderMiddleware::class,
+                ResponseSpiderMiddleware::class,
+                ItemSpiderMiddleware::class,
+            ],
+            'downloaderMiddleware' => [
+                ResponseDownloaderMiddleware::class,
+                RequestDownloaderMiddleware::class,
+            ],
+            'extensions' => [
+                Extension::class,
+            ],
+            'requestDelay' => 5,
+            'concurrency' => 2,
+        ];
+        $spider = $this->createSpider(...$defaults);
+
+        $run = $this->factory->fromSpider($spider, new Overrides(...$overrides));
+
+        $verifyRun($run);
+    }
+
+    public function configurationOverrideProvider(): Generator
+    {
+        yield from [
+            'override start urls' => [
+                ['startUrls' => ['::override-url-1::', '::override-url-2::']],
+                static function (Run $run): void {
+                    self::assertCount(2, $run->startRequests);
+                    self::assertSame('::override-url-1::', $run->startRequests[0]->getUri());
+                    self::assertSame('::override-url-2::', $run->startRequests[1]->getUri());
+                },
+            ],
+
+            'override itemProcessors' => [
+                ['itemProcessors' => []],
+                static function (Run $run): void {
+                    self::assertEmpty($run->itemProcessors);
+                },
+            ],
+
+            'override spiderMiddleware' => [
+                ['spiderMiddleware' => [ItemSpiderMiddleware::class]],
+                static function (Run $run): void {
+                    self::assertCount(1, $run->responseMiddleware);
+                    self::assertInstanceOf(
+                        ItemSpiderMiddleware::class,
+                        $run->responseMiddleware[0]->getMiddleware(),
+                    );
+                },
+            ],
+
+            'override downloaderMiddleware' => [
+                ['downloaderMiddleware' => [ResponseDownloaderMiddleware::class]],
+                static function (Run $run): void {
+                    self::assertCount(1, $run->downloaderMiddleware);
+                    self::assertInstanceOf(
+                        ResponseDownloaderMiddleware::class,
+                        $run->downloaderMiddleware[0]->getMiddleware(),
+                    );
+                },
+            ],
+
+            'override extensions' => [
+                ['extensions' => []],
+                static function (Run $run): void {
+                    self::assertEmpty($run->extensions);
+                },
+            ],
+
+            'override concurrency' => [
+                ['concurrency' => 25],
+                static function (Run $run): void {
+                    self::assertSame(25, $run->concurrency);
+                },
+            ],
+
+            'override requestDelay' => [
+                ['requestDelay' => 150],
+                static function (Run $run): void {
+                    self::assertSame(150, $run->requestDelay);
+                },
+            ],
         ];
     }
 

@@ -21,6 +21,13 @@ interface SpiderInterface
     public function loadConfiguration(): Configuration;
 
     /**
+     * Provides an override configuration the spider is supposed to
+     * use instead of its own configuration. This should modify the
+     * existing instance.
+     */
+    public function withConfiguration(Configuration $configuration): void;
+
+    /**
      * @return Request[]
      */
     public function getInitialRequests(): array;

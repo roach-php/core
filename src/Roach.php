@@ -29,6 +29,7 @@ use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\RequestSchedulerInterface;
 use RoachPHP\Scheduling\Timing\ClockInterface;
 use RoachPHP\Scheduling\Timing\SystemClock;
+use RoachPHP\Spider\Configuration\Overrides;
 use RoachPHP\Spider\SpiderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -45,7 +46,7 @@ final class Roach
     /**
      * @psalm-param class-string<SpiderInterface> $spiderClass
      */
-    public static function startSpider(string $spiderClass): void
+    public static function startSpider(string $spiderClass, ?Overrides $overrides = null): void
     {
         self::$container ??= self::defaultContainer();
 
@@ -53,7 +54,7 @@ final class Roach
         $runFactory = new RunFactory(self::$container);
 
         $engine = self::resolve(Engine::class);
-        $run = $runFactory->fromSpider($spider);
+        $run = $runFactory->fromSpider($spider, $overrides);
 
         $engine->start($run);
     }
