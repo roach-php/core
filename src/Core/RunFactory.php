@@ -18,6 +18,7 @@ use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
+use RoachPHP\Spider\Configuration\Overrides;
 use RoachPHP\Spider\Middleware\SpiderMiddlewareAdapter;
 use RoachPHP\Spider\SpiderInterface;
 use RoachPHP\Spider\SpiderMiddlewareInterface;
@@ -28,9 +29,14 @@ final class RunFactory
     {
     }
 
-    public function fromSpider(SpiderInterface $spider): Run
+    public function fromSpider(SpiderInterface $spider, ?Overrides $overrides = null): Run
     {
         $configuration = $spider->loadConfiguration();
+
+        if (null !== $overrides) {
+            $configuration = $configuration->withOverrides($overrides);
+            $spider->withConfiguration($configuration);
+        }
 
         return new Run(
             $spider->getInitialRequests(),

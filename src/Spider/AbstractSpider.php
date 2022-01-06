@@ -40,6 +40,11 @@ abstract class AbstractSpider implements SpiderInterface
         return $this->initialRequests();
     }
 
+    final public function withConfiguration(Configuration $configuration): void
+    {
+        $this->configuration = $configuration;
+    }
+
     final public function loadConfiguration(): Configuration
     {
         return $this->configuration;
@@ -49,7 +54,7 @@ abstract class AbstractSpider implements SpiderInterface
         string $method,
         string $url,
         string $parseMethod = 'parse',
-        array $options = []
+        array $options = [],
     ): ParseResult {
         return ParseResult::request($method, $url, [$this, $parseMethod], $options);
     }

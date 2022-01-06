@@ -21,7 +21,7 @@ use RoachPHP\Spider\SpiderMiddlewareInterface;
 final class Configuration
 {
     /**
-     * @param string[]                                      $startUrls
+     * @param string[] $startUrls
      * @param class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
      * @param class-string<ItemProcessorInterface>[]        $itemProcessors
      * @param class-string<SpiderMiddlewareInterface>[]     $spiderMiddleware
@@ -36,5 +36,20 @@ final class Configuration
         public int $concurrency,
         public int $requestDelay,
     ) {
+    }
+
+    public function withOverrides(Overrides $overrides): self
+    {
+        $newValues = \array_merge([
+            'startUrls' => $this->startUrls,
+            'downloaderMiddleware' => $this->downloaderMiddleware,
+            'spiderMiddleware' => $this->spiderMiddleware,
+            'extensions' => $this->extensions,
+            'itemProcessors' => $this->itemProcessors,
+            'concurrency' => $this->concurrency,
+            'requestDelay' => $this->requestDelay,
+        ], $overrides->toArray());
+
+        return new self(...$newValues);
     }
 }
