@@ -59,4 +59,9 @@ final class DownloaderMiddlewareAdapter implements DownloaderMiddlewareInterface
     {
         $this->middleware->configure($options);
     }
+
+    public function getMiddleware(): RequestMiddlewareInterface|ResponseMiddlewareInterface
+    {
+        return $this->middleware;
+    }
 }

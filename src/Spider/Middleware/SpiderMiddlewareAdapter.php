@@ -69,4 +69,9 @@ final class SpiderMiddlewareAdapter implements SpiderMiddlewareInterface
     {
         $this->middleware->configure($options);
     }
+
+    public function getMiddleware(): ResponseMiddlewareInterface|RequestMiddlewareInterface|ItemMiddlewareInterface
+    {
+        return $this->middleware;
+    }
 }

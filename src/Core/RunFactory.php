@@ -91,7 +91,7 @@ final class RunFactory
 
     /**
      * @template T of \RoachPHP\Support\ConfigurableInterface
-     * @psalm-param class-string<T>|array{class-string<T>, array} $configurable
+     * @psalm-param class-string<T>|array{0: class-string<T>, 1: array<string, mixed>} $configurable
      *
      * @return T
      */
