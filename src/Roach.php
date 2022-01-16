@@ -70,7 +70,7 @@ final class Roach
         $container->share(EventDispatcher::class, EventDispatcher::class);
         $container->share(EventDispatcherInterface::class, EventDispatcher::class);
         $container->add(ClockInterface::class, SystemClock::class);
-        $container->add(
+        $container->share(
             RequestSchedulerInterface::class,
             /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
             static fn (): RequestSchedulerInterface => $container->get(ArrayRequestScheduler::class),
