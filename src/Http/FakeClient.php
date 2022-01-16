@@ -26,7 +26,7 @@ final class FakeClient implements ClientInterface
      */
     private array $sentRequestUrls = [];
 
-    public function pool(array $requests, ?callable $onFulfilled = null): void
+    public function pool(array $requests, ?callable $onFulfilled = null, ?callable $onRejected = null): void
     {
         foreach ($requests as $request) {
             $this->sentRequestUrls[] = $request->getUri();

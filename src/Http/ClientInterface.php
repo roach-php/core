@@ -18,6 +18,7 @@ interface ClientInterface
     /**
      * @param Request[]                 $requests
      * @param ?callable(Response): void $onFulfilled
+     * @param ?callable(Response): void $onRejected
      */
-    public function pool(array $requests, ?callable $onFulfilled = null): void;
+    public function pool(array $requests, ?callable $onFulfilled = null, ?callable $onRejected = null): void;
 }

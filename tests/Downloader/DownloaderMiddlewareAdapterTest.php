@@ -19,6 +19,7 @@ use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
 use RoachPHP\Downloader\Middleware\RequestMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\ResponseMiddlewareInterface;
+use RoachPHP\Exception\Exception;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\Configurable;
@@ -44,6 +45,11 @@ final class DownloaderMiddlewareAdapterTest extends TestCase
             public function handleResponse(Response $response): Response
             {
                 return $response;
+            }
+
+            public function handleException(Exception $exception): Exception
+            {
+                return $exception;
             }
         };
 

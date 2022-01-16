@@ -16,6 +16,7 @@ namespace RoachPHP\Downloader\Middleware;
 use Closure;
 use PHPUnit\Framework\Assert;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\Exception\Exception;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\Configurable;
@@ -37,11 +38,19 @@ final class FakeMiddleware implements DownloaderMiddlewareInterface
     private array $responsesHandled = [];
 
     /**
+     * @var array|Exception[]
+     */
+    private array $exceptionsHandled = [];
+
+    /**
      * @param ?Closure(Request): Request   $requestHandler
      * @param ?Closure(Response): Response $responseHandler
      */
-    public function __construct(private ?Closure $requestHandler = null, private ?Closure $responseHandler = null)
-    {
+    public function __construct(
+        private ?Closure $requestHandler = null,
+        private ?Closure $responseHandler = null,
+        private ?Closure $exceptionHandler = null
+    ) {
     }
 
     public function handleRequest(Request $request): Request
@@ -64,6 +73,17 @@ final class FakeMiddleware implements DownloaderMiddlewareInterface
         }
 
         return $response;
+    }
+
+    public function handleException(Exception $exception): Exception
+    {
+        $this->exceptionsHandled[] = $exception;
+
+        if (null !== $this->exceptionHandler) {
+            return ($this->exceptionHandler)($exception);
+        }
+
+        return $exception;
     }
 
     public function assertRequestHandled(Request $request): void

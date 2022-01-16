@@ -15,8 +15,10 @@ namespace RoachPHP\Http;
 
 use Generator;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Pool;
 use Psr\Http\Message\ResponseInterface;
+use RoachPHP\Exception\Exception;
 
 final class Client implements ClientInterface
 {
@@ -30,14 +32,22 @@ final class Client implements ClientInterface
     /**
      * @param Request[] $requests
      */
-    public function pool(array $requests, ?callable $onFulfilled = null): void
+    public function pool(array $requests, ?callable $onFulfilled = null, ?callable $onRejected = null): void
     {
         $makeRequests = function () use ($requests): Generator {
             foreach ($requests as $request) {
                 yield function () use ($request) {
                     return $this->client
                         ->sendAsync($request->getPsrRequest(), $request->getOptions())
-                        ->then(static fn (ResponseInterface $response) => new Response($response, $request));
+                        ->then(
+                            static fn (ResponseInterface $response) => new Response($response, $request),
+                            static fn (GuzzleException $e) => throw new Exception(
+                                $request,
+                                $e->getMessage(),
+                                $e->getCode(),
+                                $e
+                            ),
+                        );
                 };
             }
         };
@@ -45,6 +55,7 @@ final class Client implements ClientInterface
         $pool = new Pool($this->client, $makeRequests(), [
             'concurrency' => 0,
             'fulfilled' => $onFulfilled,
+            'rejected'  => $onRejected,
         ]);
 
         $pool->promise()->wait();

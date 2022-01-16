@@ -13,8 +13,10 @@ declare(strict_types=1);
 
 namespace RoachPHP\Downloader;
 
+use RoachPHP\Downloader\Middleware\ExceptionMiddlewareInterface;
 use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\RequestSending;
+use RoachPHP\Exception\Exception;
 use RoachPHP\Http\ClientInterface;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
@@ -78,14 +80,16 @@ final class Downloader
         $this->requests[] = $event->request;
     }
 
-    public function flush(?callable $callback = null): void
+    public function flush(?callable $onFullfilled = null): void
     {
         $requests = $this->requests;
 
         $this->requests = [];
 
-        $this->client->pool($requests, function (Response $response) use ($callback): void {
-            $this->onResponseReceived($response, $callback);
+        $this->client->pool($requests, function (Response $response) use ($onFullfilled): void {
+            $this->onResponseReceived($response, $onFullfilled);
+        }, function (Exception $exception): void {
+            $this->onExceptionHandled($exception);
         });
     }
 
@@ -101,6 +105,13 @@ final class Downloader
 
         if (null !== $callback) {
             $callback($response);
+        }
+    }
+
+    private function onExceptionHandled(Exception $exception): void
+    {
+        foreach ($this->middleware as $middleware) {
+            $exception = $middleware->handleException($exception);
         }
     }
 }
