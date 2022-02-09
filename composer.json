@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "ext-exif": "*",
         "guzzlehttp/guzzle": "^7.3",
         "jakeasmith/http_build_url": "^1.0.1",
         "league/container": "^3.0",
