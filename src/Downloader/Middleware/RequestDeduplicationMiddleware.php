@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2021 Kai Sassnowski
+ * Copyright (c) 2022 Kai Sassnowski
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -23,6 +23,7 @@ use const HTTP_URL_STRIP_QUERY;
 final class RequestDeduplicationMiddleware implements RequestMiddlewareInterface
 {
     use Configurable;
+
     /**
      * @var string[]
      */

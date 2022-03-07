@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2021 Kai Sassnowski
+ * Copyright (c) 2022 Kai Sassnowski
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -27,6 +27,7 @@ final class Response implements DroppableInterface
 {
     use HasMetaData;
     use Droppable;
+
     private Crawler $crawler;
 
     public function __construct(private ResponseInterface $response, private Request $request)

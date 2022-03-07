@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2021 Kai Sassnowski
+ * Copyright (c) 2022 Kai Sassnowski
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -26,6 +26,7 @@ final class Request implements DroppableInterface
 {
     use HasMetaData;
     use Droppable;
+
     /**
      * @var Closure(Response): Generator<ParseResult>
      */
@@ -35,7 +36,7 @@ final class Request implements DroppableInterface
 
     /**
      * An array of Guzzle request options.
-     * See https://docs.guzzlephp.org/en/stable/request-options.html
+     * See https://docs.guzzlephp.org/en/stable/request-options.html.
      */
     private array $options;
 

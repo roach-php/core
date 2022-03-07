@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2021 Kai Sassnowski
+ * Copyright (c) 2022 Kai Sassnowski
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -37,6 +37,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 final class EngineTest extends IntegrationTest
 {
     use InteractsWithRequestsAndResponses;
+
     private Engine $engine;
 
     protected function setUp(): void

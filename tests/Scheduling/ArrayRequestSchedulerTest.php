@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Copyright (c) 2021 Kai Sassnowski
+ * Copyright (c) 2022 Kai Sassnowski
  *
  * For the full copyright and license information, please view
  * the LICENSE file that was distributed with this source code.
@@ -27,6 +27,7 @@ use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 final class ArrayRequestSchedulerTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
+
     private ArrayRequestScheduler $scheduler;
 
     private FakeClock $clock;
