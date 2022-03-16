@@ -21,6 +21,11 @@ trait Configurable
 
     private array $resolvedOptions = [];
 
+    public static function withOptions(array $options): array
+    {
+        return [static::class, $options];
+    }
+
     final public function configure(array $options): void
     {
         if ($this->optionsResolved) {
