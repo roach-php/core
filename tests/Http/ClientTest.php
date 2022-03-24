@@ -11,7 +11,7 @@ use Psr\Http\Message\RequestInterface;
 use RoachPHP\Http\Client;
 use RoachPHP\Http\RequestException;
 use RoachPHP\Http\Response;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 final class ClientTest extends TestCase
 {

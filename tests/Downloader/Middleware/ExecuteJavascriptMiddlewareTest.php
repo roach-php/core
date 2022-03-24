@@ -15,9 +15,9 @@ namespace RoachPHP\Tests\Downloader\Middleware;
 
 use Exception;
 use RoachPHP\Downloader\Middleware\ExecuteJavascriptMiddleware;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Testing\FakeLogger;
 use RoachPHP\Tests\IntegrationTest;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 use Spatie\Browsershot\Browsershot;
 
 /**

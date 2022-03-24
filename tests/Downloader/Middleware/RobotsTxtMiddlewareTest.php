@@ -27,8 +27,8 @@ use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\Timing\FakeClock;
 use RoachPHP\Spider\ParseResult;
 use RoachPHP\Spider\Processor;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Tests\IntegrationTest;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

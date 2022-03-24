@@ -22,7 +22,7 @@ use RoachPHP\Events\RequestSending;
 use RoachPHP\Http\FakeClient;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

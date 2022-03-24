@@ -18,7 +18,7 @@ use RoachPHP\Events\RequestScheduling;
 use RoachPHP\Events\RequestSending;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\Extensions\MaxRequestExtension;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

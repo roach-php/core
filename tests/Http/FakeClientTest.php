@@ -17,7 +17,7 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\FakeClient;
 use RoachPHP\Http\Response;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

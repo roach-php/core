@@ -25,7 +25,7 @@ use RoachPHP\Spider\Middleware\ResponseMiddlewareInterface;
 use RoachPHP\Spider\Middleware\SpiderMiddlewareAdapter;
 use RoachPHP\Spider\SpiderMiddlewareInterface;
 use RoachPHP\Support\Configurable;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

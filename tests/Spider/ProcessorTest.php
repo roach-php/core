@@ -24,7 +24,7 @@ use RoachPHP\ItemPipeline\Item;
 use RoachPHP\Spider\Middleware\FakeHandler;
 use RoachPHP\Spider\ParseResult;
 use RoachPHP\Spider\Processor;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

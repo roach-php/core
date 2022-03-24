@@ -23,8 +23,8 @@ use RoachPHP\Events\RunStarting;
 use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\Extensions\LoggerExtension;
 use RoachPHP\ItemPipeline\Item;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Testing\FakeLogger;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

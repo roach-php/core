@@ -17,7 +17,7 @@ use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\Timing\FakeClock;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @group queue

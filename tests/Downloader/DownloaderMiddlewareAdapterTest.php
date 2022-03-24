@@ -22,7 +22,7 @@ use RoachPHP\Downloader\Middleware\ResponseMiddlewareInterface;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\Configurable;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

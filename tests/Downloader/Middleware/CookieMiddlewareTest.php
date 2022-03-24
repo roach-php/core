@@ -16,7 +16,7 @@ namespace RoachPHP\Tests\Downloader\Middleware;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Downloader\Middleware\CookieMiddleware;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @internal
