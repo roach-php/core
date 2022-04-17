@@ -20,9 +20,11 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RoachPHP\Core\Engine;
+use RoachPHP\Core\Run;
 use RoachPHP\Core\RunFactory;
 use RoachPHP\Http\Client;
 use RoachPHP\Http\ClientInterface;
+use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\ItemPipeline\ItemPipeline;
 use RoachPHP\ItemPipeline\ItemPipelineInterface;
 use RoachPHP\Scheduling\ArrayRequestScheduler;
@@ -44,19 +46,31 @@ final class Roach
     }
 
     /**
+     * Start the spider run without collecting scraped items.
+     *
      * @psalm-param class-string<SpiderInterface> $spiderClass
      */
     public static function startSpider(string $spiderClass, ?Overrides $overrides = null): void
     {
-        self::$container ??= self::defaultContainer();
-
-        $spider = self::resolve($spiderClass);
-        $runFactory = new RunFactory(self::$container);
-
         $engine = self::resolve(Engine::class);
-        $run = $runFactory->fromSpider($spider, $overrides);
+        $run = self::createRun($spiderClass, $overrides);
 
         $engine->start($run);
+    }
+
+    /**
+     * Start the spider run and collect and return scraped items.
+     *
+     * @psalm-param class-string<SpiderInterface> $spiderClass
+     *
+     * @return ItemInterface[]
+     */
+    public static function collectSpider(string $spiderClass, ?Overrides $overrides = null): array
+    {
+        $engine = self::resolve(Engine::class);
+        $run = self::createRun($spiderClass, $overrides);
+
+        return $engine->collect($run);
     }
 
     private static function defaultContainer(): ContainerInterface
@@ -100,5 +114,18 @@ final class Roach
 
         /** @psalm-suppress MixedReturnStatement */
         return self::$container->get($class);
+    }
+
+    /**
+     * @psalm-param class-string<SpiderInterface> $spiderClass
+     */
+    private static function createRun(string $spiderClass, ?Overrides $overrides): Run
+    {
+        self::$container ??= self::defaultContainer();
+
+        $spider = self::resolve($spiderClass);
+        $runFactory = new RunFactory(self::$container);
+
+        return $runFactory->fromSpider($spider, $overrides);
     }
 }

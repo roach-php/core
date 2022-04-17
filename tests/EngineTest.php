@@ -178,4 +178,23 @@ final class EngineTest extends IntegrationTest
             'items.dropped' => 0,
         ]));
     }
+
+    /** @test */
+    public function testCollectAndReturnScrapedItems(): void
+    {
+        $parseCallback = function () {
+            yield ParseResult::item(['::key-1::' => '::value-1::']);
+            yield ParseResult::item(['::key-2::' => '::value-2::']);
+        };
+        $run = new Run(
+            [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
+        );
+
+        $result = $this->engine->collect($run);
+
+        self::assertEquals([
+            new Item(['::key-1::' => '::value-1::']),
+            new Item(['::key-2::' => '::value-2::']),
+        ], $result);
+    }
 }

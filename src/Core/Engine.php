@@ -18,6 +18,7 @@ use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\RequestScheduling;
 use RoachPHP\Events\RunFinished;
 use RoachPHP\Events\RunStarting;
+use RoachPHP\Extensions\ScrapedItemCollectorExtension;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
@@ -36,6 +37,19 @@ final class Engine
         private Processor $responseProcessor,
         private EventDispatcherInterface $eventDispatcher,
     ) {
+    }
+
+    /**
+     * @return array<int, ItemInterface>
+     */
+    public function collect(Run $run): array
+    {
+        $extension = new ScrapedItemCollectorExtension();
+        $this->eventDispatcher->addSubscriber($extension);
+
+        $this->start($run);
+
+        return $extension->getScrapedItems();
     }
 
     public function start(Run $run): void
