@@ -1,4 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Copyright (c) 2022 Kai Sassnowski
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ *
+ * @see https://github.com/roach-php/roach
+ */
 
 namespace RoachPHP\Tests\Http;
 
@@ -13,6 +24,9 @@ use RoachPHP\Http\RequestException;
 use RoachPHP\Http\Response;
 use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
+/**
+ * @internal
+ */
 final class ClientTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
@@ -31,7 +45,7 @@ final class ClientTest extends TestCase
             $request1 = $this->makeRequest('::uri-1::'),
             $request2 = $this->makeRequest('::uri-2::'),
             $request3 = $this->makeRequest('::uri-3::'),
-        ], function (Response $response) use (&$responses) {
+        ], static function (Response $response) use (&$responses): void {
             $responses[] = $response;
         });
 
@@ -54,7 +68,7 @@ final class ClientTest extends TestCase
         $responses = [];
         $client->pool(
             [$request = $this->makeRequest('::uri::')],
-            function (Response $response) use (&$responses) {
+            static function (Response $response) use (&$responses): void {
                 $responses[] = $response;
             },
         );
@@ -70,13 +84,13 @@ final class ClientTest extends TestCase
     public function testCallRejectCallbackOnRequestException(string $exceptionClass, callable $makeException): void
     {
         $client = new Client($this->withMockClient([
-            fn (RequestInterface $request) => throw $makeException($request),
+            static fn (RequestInterface $request) => throw $makeException($request),
         ]));
 
         $exception = null;
         $client->pool(
             [$request = $this->makeRequest('::uri::')],
-            onRejected: function (RequestException $reason) use (&$exception) {
+            onRejected: static function (RequestException $reason) use (&$exception): void {
                 $exception = $reason;
             },
         );
@@ -92,18 +106,18 @@ final class ClientTest extends TestCase
         yield from [
             'ConnectException' => [
                 GuzzleHttp\Exception\ConnectException::class,
-                fn (RequestInterface $request) => new GuzzleHttp\Exception\ConnectException(
+                static fn (RequestInterface $request) => new GuzzleHttp\Exception\ConnectException(
                     '::message::',
                     $request,
                 ),
             ],
             'TooManyRedirectsException' => [
                 GuzzleHttp\Exception\TooManyRedirectsException::class,
-                fn (RequestInterface $request) => new GuzzleHttp\Exception\TooManyRedirectsException(
+                static fn (RequestInterface $request) => new GuzzleHttp\Exception\TooManyRedirectsException(
                     '::message::',
                     $request,
                 ),
-            ]
+            ],
         ];
     }
 
@@ -111,7 +125,7 @@ final class ClientTest extends TestCase
     {
         return new GuzzleHttp\Client([
             'handler' => HandlerStack::create(
-                new MockHandler($handlers)
+                new MockHandler($handlers),
             ),
         ]);
     }

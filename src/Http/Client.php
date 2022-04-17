@@ -35,7 +35,7 @@ final class Client implements ClientInterface
     public function pool(
         array $requests,
         ?callable $onFulfilled = null,
-        ?callable $onRejected = null
+        ?callable $onRejected = null,
     ): void {
         $makeRequests = function () use ($requests): Generator {
             foreach ($requests as $request) {
