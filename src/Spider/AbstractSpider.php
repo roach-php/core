@@ -22,6 +22,8 @@ abstract class AbstractSpider implements SpiderInterface
 {
     protected Configuration $configuration;
 
+    protected array $context = [];
+
     public function __construct(ConfigurationLoaderStrategy $loaderStrategy)
     {
         $this->configuration = $loaderStrategy->load();
@@ -43,6 +45,11 @@ abstract class AbstractSpider implements SpiderInterface
     final public function withConfiguration(Configuration $configuration): void
     {
         $this->configuration = $configuration;
+    }
+
+    final public function withContext(array $context): void
+    {
+        $this->context = $context;
     }
 
     final public function loadConfiguration(): Configuration

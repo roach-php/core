@@ -69,4 +69,32 @@ final class SpiderTest extends IntegrationTest
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
     }
+
+    public function testCanAccessRunContextFromWithinSpider(): void
+    {
+        $spider = new class() extends BasicSpider {
+            public array $extensions = [];
+
+            public function parse(Response $response): Generator
+            {
+                yield from [];
+            }
+
+            protected function initialRequests(): array
+            {
+                return [
+                    new Request(
+                        'GET',
+                        // Use initialRequest from passed request context as a heuristic
+                        // if context can be accessed.
+                        $this->context['initialRequest'],
+                        [$this, 'parse'],
+                    ), ];
+            }
+        };
+
+        Roach::startSpider($spider::class, context: ['initialRequest' => 'http://localhost:8000/test1']);
+
+        $this->assertRouteWasCrawledTimes('/test1', 1);
+    }
 }

@@ -28,6 +28,12 @@ interface SpiderInterface
     public function withConfiguration(Configuration $configuration): void;
 
     /**
+     * Sets the context for the current run for the spider. This should
+     * modify the existing instance.
+     */
+    public function withContext(array $context): void;
+
+    /**
      * @return Request[]
      */
     public function getInitialRequests(): array;

@@ -50,10 +50,11 @@ final class Roach
      *
      * @psalm-param class-string<SpiderInterface> $spiderClass
      */
-    public static function startSpider(string $spiderClass, ?Overrides $overrides = null): void
+    public static function startSpider(string $spiderClass, ?Overrides $overrides = null, array $context = []): void
     {
         $engine = self::resolve(Engine::class);
-        $run = self::createRun($spiderClass, $overrides);
+
+        $run = self::createRun($spiderClass, $overrides, $context);
 
         $engine->start($run);
     }
@@ -65,10 +66,11 @@ final class Roach
      *
      * @return ItemInterface[]
      */
-    public static function collectSpider(string $spiderClass, ?Overrides $overrides = null): array
+    public static function collectSpider(string $spiderClass, ?Overrides $overrides = null, array $context = []): array
     {
         $engine = self::resolve(Engine::class);
-        $run = self::createRun($spiderClass, $overrides);
+
+        $run = self::createRun($spiderClass, $overrides, $context);
 
         return $engine->collect($run);
     }
@@ -100,6 +102,20 @@ final class Roach
     }
 
     /**
+     * @psalm-param class-string<SpiderInterface> $spiderClass
+     */
+    private static function createRun(string $spiderClass, ?Overrides $overrides, array $context): Run
+    {
+        self::$container ??= self::defaultContainer();
+
+        $spider = self::resolve($spiderClass);
+        $spider->withContext($context);
+        $runFactory = new RunFactory(self::$container);
+
+        return $runFactory->fromSpider($spider, $overrides);
+    }
+
+    /**
      * @template T
      * @psalm-param class-string<T> $class
      * @psalm-suppress MixedInferredReturnType
@@ -114,18 +130,5 @@ final class Roach
 
         /** @psalm-suppress MixedReturnStatement */
         return self::$container->get($class);
-    }
-
-    /**
-     * @psalm-param class-string<SpiderInterface> $spiderClass
-     */
-    private static function createRun(string $spiderClass, ?Overrides $overrides): Run
-    {
-        self::$container ??= self::defaultContainer();
-
-        $spider = self::resolve($spiderClass);
-        $runFactory = new RunFactory(self::$container);
-
-        return $runFactory->fromSpider($spider, $overrides);
     }
 }
