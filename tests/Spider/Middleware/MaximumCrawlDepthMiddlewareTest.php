@@ -16,7 +16,7 @@ namespace RoachPHP\Tests\Spider\Middleware;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Spider\Middleware\MaximumCrawlDepthMiddleware;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

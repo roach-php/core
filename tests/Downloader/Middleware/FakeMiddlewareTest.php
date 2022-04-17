@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 use RoachPHP\Downloader\Middleware\FakeMiddleware;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @internal

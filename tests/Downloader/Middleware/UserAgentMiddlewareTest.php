@@ -15,7 +15,7 @@ namespace RoachPHP\Tests\Downloader\Middleware;
 
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Downloader\Middleware\UserAgentMiddleware;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
 /**
  * @group downloader

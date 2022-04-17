@@ -15,8 +15,8 @@ namespace RoachPHP\Tests\Downloader\Middleware;
 
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Downloader\Middleware\RequestDeduplicationMiddleware;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Testing\FakeLogger;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 
 /**
  * @group downloader

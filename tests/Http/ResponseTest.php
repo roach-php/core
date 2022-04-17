@@ -18,7 +18,7 @@ use GuzzleHttp\Psr7\Stream;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\DroppableInterface;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Tests\Support\DroppableTest;
 
 /**

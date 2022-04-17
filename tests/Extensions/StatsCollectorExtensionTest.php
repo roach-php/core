@@ -25,8 +25,8 @@ use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\Extensions\StatsCollectorExtension;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\Scheduling\Timing\FakeClock;
+use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Testing\FakeLogger;
-use RoachPHP\Tests\InteractsWithRequestsAndResponses;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
