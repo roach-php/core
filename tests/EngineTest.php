@@ -179,11 +179,11 @@ final class EngineTest extends IntegrationTest
         ]));
     }
 
-    /** @test */
     public function testCollectAndReturnScrapedItems(): void
     {
-        $parseCallback = function () {
+        $parseCallback = static function () {
             yield ParseResult::item(['::key-1::' => '::value-1::']);
+
             yield ParseResult::item(['::key-2::' => '::value-2::']);
         };
         $run = new Run(
