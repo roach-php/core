@@ -16,9 +16,12 @@ namespace RoachPHP\Tests;
 use RoachPHP\Core\Engine;
 use RoachPHP\Core\Run;
 use RoachPHP\Downloader\Downloader;
+use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
+use RoachPHP\Downloader\Middleware\RequestMiddlewareInterface;
 use RoachPHP\Extensions\LoggerExtension;
 use RoachPHP\Extensions\StatsCollectorExtension;
 use RoachPHP\Http\Client;
+use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemPipeline;
@@ -27,6 +30,7 @@ use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\Timing\FakeClock;
 use RoachPHP\Spider\ParseResult;
 use RoachPHP\Spider\Processor;
+use RoachPHP\Support\Configurable;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Testing\FakeLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -41,13 +45,16 @@ final class EngineTest extends IntegrationTest
 
     private Engine $engine;
 
+    private FakeClock $clock;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $dispatcher = new EventDispatcher();
+        $this->clock = new FakeClock();
         $this->engine = new Engine(
-            new ArrayRequestScheduler(new FakeClock()),
+            new ArrayRequestScheduler($this->clock),
             new Downloader(new Client(), $dispatcher),
             new ItemPipeline($dispatcher),
             new Processor($dispatcher),
@@ -196,5 +203,57 @@ final class EngineTest extends IntegrationTest
             new Item(['::key-1::' => '::value-1::']),
             new Item(['::key-2::' => '::value-2::']),
         ], $result);
+    }
+
+    public function testReplaceDroppedRequestsWithoutWaitingForConfiguredDelay(): void
+    {
+        $middleware = new class() implements RequestMiddlewareInterface {
+            use Configurable;
+
+            public function handleRequest(Request $request): Request
+            {
+                if (\in_array($request->getUri(), ['http://localhost:8000/test1', 'http://localhost:8000/test2'], true)) {
+                    return $request->drop('dropping');
+                }
+
+                return $request;
+            }
+        };
+        $run = new Run(
+            [
+                $this->makeRequest('http://localhost:8000/test1'),
+                $this->makeRequest('http://localhost:8000/test2'),
+                $this->makeRequest('http://localhost:8000/test3'),
+                $this->makeRequest('http://localhost:8000/robots'),
+            ],
+            downloaderMiddleware: [DownloaderMiddlewareAdapter::fromMiddleware($middleware)],
+            concurrency: 1,
+            requestDelay: 5,
+        );
+
+        $this->engine->start($run);
+
+        $this->assertRouteWasNotCrawled('/test1');
+        $this->assertRouteWasNotCrawled('/test2');
+        $this->assertRouteWasCrawledTimes('/test3', 1);
+        $this->assertRouteWasCrawledTimes('/robots', 1);
+
+        // 1) Request to `/test1` gets dropped by middleware
+        // 2) Immediately request next request since configured `concurrency`
+        //    has not been reached yet -> 0s passed
+        // 3) Request to `/test2` gets dropped by middleware
+        // 4) Immediately request next request since configured `concurrency`
+        //    has not been reached yet -> 0s passed
+        // 5) Request to `/test3` gets scheduled successfully.
+        // 6) Send requests as maximum number of concurrent requests (1) have
+        //    been scheduled successfully.
+        // 7) Request next requests. Should wait configured delay between
+        //    batches -> 5s passed
+        // 8) Send requests as maximum number of concurrent requests (1) have
+        //    been scheduled successfully.
+        // 9) No more requests exist in scheduler. Run ends.
+        //
+        // Total wait time => 5s
+        self::assertEquals(5, $this->clock->timePassed());
     }
 }

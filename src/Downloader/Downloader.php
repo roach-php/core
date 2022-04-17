@@ -45,6 +45,11 @@ final class Downloader
         return $this;
     }
 
+    public function scheduledRequests(): int
+    {
+        return \count($this->requests);
+    }
+
     public function prepare(Request $request): void
     {
         foreach ($this->middleware as $middleware) {

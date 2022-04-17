@@ -71,8 +71,31 @@ final class Engine
     private function work(Run $run): void
     {
         while (!$this->scheduler->empty()) {
-            foreach ($this->scheduler->nextRequests() as $request) {
+            foreach ($this->scheduler->nextRequests($run->concurrency) as $request) {
                 $this->downloader->prepare($request);
+            }
+
+            // It's possible that requests were dropped while sending them through the
+            // downloader middleware pipeline. In this case, we want to keep requesting
+            // new requests from the scheduler until either:
+            //
+            //      a) the scheduler is empty
+            //      b) the same number of requests as the run's concurrency option
+            //         got scheduled successfully.
+            //
+            // This is to avoid the request delay from affecting dropped requests which
+            // could slow down the run significantly even though very few request
+            // actually got sent.
+            $scheduledRequests = $this->downloader->scheduledRequests();
+
+            while ($scheduledRequests < $run->concurrency && !$this->scheduler->empty()) {
+                $difference = $run->concurrency - $scheduledRequests;
+
+                foreach ($this->scheduler->forceNextRequests($difference) as $request) {
+                    $this->downloader->prepare($request);
+                }
+
+                $scheduledRequests = $this->downloader->scheduledRequests();
             }
 
             $this->downloader->flush(
@@ -120,7 +143,6 @@ final class Engine
 
     private function configure(Run $run): void
     {
-        $this->scheduler->setBatchSize($run->concurrency);
         $this->scheduler->setDelay($run->requestDelay);
         $this->itemPipeline->setProcessors(...$run->itemProcessors);
         $this->downloader->withMiddleware(...$run->downloaderMiddleware);

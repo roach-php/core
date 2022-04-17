@@ -20,8 +20,6 @@ use RoachPHP\Scheduling\Timing\ClockInterface;
 
 final class ArrayRequestScheduler implements RequestSchedulerInterface
 {
-    private int $batchSize = 25;
-
     private int $delay = 0;
 
     /**
@@ -49,20 +47,18 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
     /**
      * @return Request[]
      */
-    public function nextRequests(): array
+    public function nextRequests(int $batchSize): array
     {
         $this->clock->sleepUntil($this->nextBatchReadyAt);
 
         $this->updateNextBatchTime();
 
-        return \array_splice($this->requests, 0, $this->batchSize);
+        return $this->getNextRequests($batchSize);
     }
 
-    public function setBatchSize(int $batchSize): RequestSchedulerInterface
+    public function forceNextRequests(int $batchSize): array
     {
-        $this->batchSize = $batchSize;
-
-        return $this;
+        return $this->getNextRequests($batchSize);
     }
 
     public function setDelay(int $delay): RequestSchedulerInterface
@@ -75,5 +71,13 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
     private function updateNextBatchTime(): void
     {
         $this->nextBatchReadyAt = $this->clock->now()->add(new DateInterval("PT{$this->delay}S"));
+    }
+
+    /**
+     * @return Request[]
+     */
+    private function getNextRequests(int $batchSize): array
+    {
+        return \array_splice($this->requests, 0, $batchSize);
     }
 }
