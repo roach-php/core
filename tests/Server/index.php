@@ -58,18 +58,16 @@ $app->get('/ping', static function (Request $request, Response $response, $args)
 });
 
 $app->get('/crawled-routes', static function (Request $request, Response $response, $args): Response {
-    try {
-        $stats = \file_get_contents(LOG_PATH);
+    $stats = \file_get_contents(LOG_PATH);
 
-        $response->getBody()->write($stats);
-
-        return $response
-            ->withHeader('Content-Type', 'application/json');
-    } catch (Throwable $e) {
-        $response->getBody()->write($e->getMessage());
-
-        return $response;
+    if ($stats === false) {
+        $stats = '{}';
     }
+
+    $response->getBody()->write($stats);
+
+    return $response
+        ->withHeader('Content-Type', 'application/json');
 });
 
 $app->get('/robots', static function (Request $request, Response $response, $args): Response {
