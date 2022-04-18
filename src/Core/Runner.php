@@ -39,9 +39,9 @@ final class Runner implements RunnerInterface
     {
         /** @var SpiderInterface $spider */
         $spider = $this->container->get($spiderClass);
-        $spider->withContext($context);
-        $runFactory = new RunFactory($this->container);
 
-        return $runFactory->fromSpider($spider, $overrides);
+        $spider->withContext($context);
+
+        return (new RunFactory($this->container))->fromSpider($spider, $overrides);
     }
 }
