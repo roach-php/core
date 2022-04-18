@@ -70,7 +70,6 @@ $app->get('/crawled-routes', static function (Request $request, Response $respon
 
         return $response;
     }
-
 });
 
 $app->get('/robots', static function (Request $request, Response $response, $args): Response {
