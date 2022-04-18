@@ -52,4 +52,4 @@ jobs:
         run: (php -S localhost:8000 -t ./tests/Server &) || /bin/true
 
       - name: Execute tests
-        run: vendor/bin/phpunit --filter SpiderTest
+        run: vendor/bin/phpunit
