@@ -60,8 +60,6 @@ $app->get('/ping', static function (Request $request, Response $response, $args)
 $app->get('/crawled-routes', static function (Request $request, Response $response, $args): Response {
     $stats = \file_get_contents(LOG_PATH);
 
-    dump($stats);
-
     $response->getBody()->write($stats);
 
     return $response
