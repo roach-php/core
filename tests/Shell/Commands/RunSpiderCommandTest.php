@@ -25,6 +25,11 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 final class RunSpiderCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        Roach::restore();
+    }
+
     public function testStartRunForProvidedSpider(): void
     {
         $runner = Roach::fake();

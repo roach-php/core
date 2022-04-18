@@ -41,6 +41,11 @@ final class Roach
         return self::$runnerFake;
     }
 
+    public static function restore(): void
+    {
+        self::$runnerFake = null;
+    }
+
     /**
      * Start the spider run without collecting scraped items.
      *
