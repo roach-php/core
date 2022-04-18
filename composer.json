@@ -66,7 +66,7 @@
             "composer normalize"
         ],
         "analyze": [
-            "vendor/bin/psalm"
+            "vendor/bin/psalm --no-cache"
         ],
         "coding-standards": [
             "mkdir -p .build/php-cs-fixer",
