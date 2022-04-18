@@ -65,7 +65,7 @@ abstract class IntegrationTest extends TestCase
     {
         $response = \file_get_contents("{$this->serverUrl}/crawled-routes");
 
-        dump($response);
+        var_dump($response);
 
         if (!$response) {
             return [];
