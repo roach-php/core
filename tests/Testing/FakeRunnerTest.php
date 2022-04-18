@@ -68,7 +68,7 @@ final class FakeRunnerTest extends TestCase
     {
         $this->runner->{$method}(TestSpider::class);
 
-        $this->runner->assertRunWasStarted(TestSpider::class, fn () => true);
+        $this->runner->assertRunWasStarted(TestSpider::class, static fn () => true);
     }
 
     /**
@@ -82,7 +82,7 @@ final class FakeRunnerTest extends TestCase
 
         $this->runner->assertRunWasStarted(
             TestSpider::class,
-            static fn (?Overrides $_, array $context): bool => $context['foo'] === 'qux',
+            static fn (?Overrides $_, array $context): bool => 'qux' === $context['foo'],
         );
     }
 
@@ -94,7 +94,7 @@ final class FakeRunnerTest extends TestCase
         $this->runner->{$method}(TestSpider::class);
 
         $this->expectException(AssertionFailedError::class);
-        $this->runner->assertRunWasStarted(TestSpider::class, fn () => false);
+        $this->runner->assertRunWasStarted(TestSpider::class, static fn () => false);
     }
 
     /**

@@ -48,14 +48,14 @@ final class FakeRunner implements RunnerInterface
             "Expected run for spider {$spider} to exist but no runs were started instead.",
         );
 
-        if ($callback !== null) {
+        if (null !== $callback) {
             foreach ($this->runs[$spider] as $run) {
                 if ($callback($run['overrides'], $run['context'])) {
                     return;
                 }
             }
 
-            Assert::fail("Found run for spider $spider, but passed callback returned false");
+            Assert::fail("Found run for spider {$spider}, but passed callback returned false");
         }
     }
 
@@ -67,7 +67,7 @@ final class FakeRunner implements RunnerInterface
         Assert::assertArrayNotHasKey(
             $spider,
             $this->runs,
-            "Unexpected run for spider $spider was started",
+            "Unexpected run for spider {$spider} was started",
         );
     }
 
