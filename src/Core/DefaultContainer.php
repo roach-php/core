@@ -51,19 +51,19 @@ final class DefaultContainer implements ContainerInterface
         return $this->container->get($id);
     }
 
-    public function has(string $id)
+    public function has(string $id): bool
     {
         return $this->container->has($id);
     }
 
     private function registerDefaultBindings(): void
     {
-        $this->container->share(
+        $this->container->addShared(
             LoggerInterface::class,
             static fn () => (new Logger('roach'))->pushHandler(new StreamHandler('php://stdout')),
         );
-        $this->container->share(EventDispatcher::class, EventDispatcher::class);
-        $this->container->share(EventDispatcherInterface::class, EventDispatcher::class);
+        $this->container->addShared(EventDispatcher::class, EventDispatcher::class);
+        $this->container->addShared(EventDispatcherInterface::class, EventDispatcher::class);
         $this->container->add(ClockInterface::class, SystemClock::class);
         $this->container->add(
             RequestSchedulerInterface::class,

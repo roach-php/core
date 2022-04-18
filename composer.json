@@ -1,8 +1,8 @@
 {
     "name": "roach-php/core",
+    "type": "library",
     "description": "A complete web scraping toolkit for PHP",
     "license": "MIT",
-    "type": "library",
     "authors": [
         {
             "name": "Kai Sassnowski",
@@ -13,16 +13,17 @@
         "php": "^8.0",
         "guzzlehttp/guzzle": "^7.3",
         "jakeasmith/http_build_url": "^1.0.1",
-        "league/container": "^3.4",
+        "league/container": "^4.2",
         "monolog/monolog": "^2.3",
-        "psy/psysh": "^0.10.8 || ^0.11.1",
+        "psr/container": "^2.0",
+        "psy/psysh": "^0.11.1",
         "sebastian/version": "^3.0",
         "spatie/robots-txt": "^2.0",
-        "symfony/console": "^5.3 || ^6.0",
-        "symfony/css-selector": "^5.3 || ^6.0",
-        "symfony/dom-crawler": "^5.3 || ^6.0",
-        "symfony/event-dispatcher": "^5.3 || ^6.0",
-        "symfony/options-resolver": "^5.3 || ^6.0"
+        "symfony/console": "^6.0",
+        "symfony/css-selector": "^6.0",
+        "symfony/dom-crawler": "^6.0",
+        "symfony/event-dispatcher": "^6.0",
+        "symfony/options-resolver": "^6.0"
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",
@@ -31,13 +32,19 @@
         "phpunit/phpunit": "^9.5",
         "psr/http-message": "^1.0.1",
         "roave/security-advisories": "dev-latest",
-        "slim/slim": "4.*",
+        "slim/slim": "^4.8",
         "spatie/browsershot": "^3.52",
         "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^4.22"
     },
     "suggest": {
         "spatie/browsershot": "Required to execute Javascript in spiders"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "ergebnis/composer-normalize": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -52,12 +59,6 @@
     "bin": [
         "roach"
     ],
-    "config": {
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "ergebnis/composer-normalize": true
-        }
-    },
     "scripts": {
         "post-install-cmd": [
             "composer normalize"
