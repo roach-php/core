@@ -1,8 +1,8 @@
 {
     "name": "roach-php/core",
-    "type": "library",
     "description": "A complete web scraping toolkit for PHP",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Kai Sassnowski",
@@ -40,12 +40,6 @@
     "suggest": {
         "spatie/browsershot": "Required to execute Javascript in spiders"
     },
-    "config": {
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "ergebnis/composer-normalize": true
-        }
-    },
     "autoload": {
         "psr-4": {
             "RoachPHP\\": "src/"
@@ -59,6 +53,12 @@
     "bin": [
         "roach"
     ],
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "ergebnis/composer-normalize": true
+        }
+    },
     "scripts": {
         "post-install-cmd": [
             "composer normalize"
