@@ -32,6 +32,9 @@ use RoachPHP\Shell\Resolver\StaticNamespaceResolver;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @internal
+ */
 final class DefaultContainer implements ContainerInterface
 {
     private Container $container;
