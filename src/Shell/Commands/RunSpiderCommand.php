@@ -37,7 +37,8 @@ final class RunSpiderCommand extends Command
         $resolver = Roach::resolve(NamespaceResolverInterface::class);
 
         try {
-            $spiderClass = $resolver->resolveSpiderNamespace((string) $input->getArgument('spider'));
+            /** @psalm-suppress MixedArgument */
+            $spiderClass = $resolver->resolveSpiderNamespace($input->getArgument('spider'));
         } catch (InvalidSpiderException $exception) {
             $output->writeln(\sprintf('<error>Invalid spider: %s</error>', $exception->getMessage()));
 
