@@ -23,6 +23,11 @@ use RoachPHP\Tests\Fixtures\TestSpider;
  */
 final class RoachTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        Roach::restore();
+    }
+
     public function testFakingRunnerReturnsRunnerFake(): void
     {
         $runner = Roach::fake();
