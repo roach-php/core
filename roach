@@ -21,14 +21,14 @@ foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/../autoload.php', __DIR__
 }
 
 use RoachPHP\Core\Version;
+use RoachPHP\Shell\Commands\RunSpiderCommand;
 use RoachPHP\Shell\Repl;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 $application->setName(Version::getVersionString());
 
-$replCommand = new Repl();
-$application->add($replCommand);
-$application->setDefaultCommand($replCommand->getName(), true);
+$application->add(new Repl());
+$application->add(new RunSpiderCommand());
 
 $application->run();
