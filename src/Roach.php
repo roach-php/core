@@ -31,6 +31,8 @@ use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\RequestSchedulerInterface;
 use RoachPHP\Scheduling\Timing\ClockInterface;
 use RoachPHP\Scheduling\Timing\SystemClock;
+use RoachPHP\Shell\Resolver\NamespaceResolverInterface;
+use RoachPHP\Shell\Resolver\StaticNamespaceResolver;
 use RoachPHP\Spider\Configuration\Overrides;
 use RoachPHP\Spider\SpiderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -75,6 +77,23 @@ final class Roach
         return $engine->collect($run);
     }
 
+    /**
+     * @template T
+     * @psalm-param class-string<T> $class
+     * @psalm-suppress MixedInferredReturnType
+     *
+     * @return T
+     */
+    public static function resolve(string $class): mixed
+    {
+        if (null === self::$container) {
+            self::$container = self::defaultContainer();
+        }
+
+        /** @psalm-suppress MixedReturnStatement */
+        return self::$container->get($class);
+    }
+
     private static function defaultContainer(): ContainerInterface
     {
         $container = (new Container())->delegate(new ReflectionContainer());
@@ -97,6 +116,7 @@ final class Roach
             /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
             static fn (): ItemPipelineInterface => $container->get(ItemPipeline::class),
         );
+        $container->add(NamespaceResolverInterface::class, StaticNamespaceResolver::class);
 
         return $container;
     }
@@ -113,22 +133,5 @@ final class Roach
         $runFactory = new RunFactory(self::$container);
 
         return $runFactory->fromSpider($spider, $overrides);
-    }
-
-    /**
-     * @template T
-     * @psalm-param class-string<T> $class
-     * @psalm-suppress MixedInferredReturnType
-     *
-     * @return T
-     */
-    private static function resolve(string $class): mixed
-    {
-        if (null === self::$container) {
-            self::$container = self::defaultContainer();
-        }
-
-        /** @psalm-suppress MixedReturnStatement */
-        return self::$container->get($class);
     }
 }

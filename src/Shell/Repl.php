@@ -27,7 +27,7 @@ use Symfony\Component\DomCrawler\Link;
 
 final class Repl extends Command
 {
-    protected static $defaultName = 'roach:shell';
+    protected static $defaultName = 'shell';
 
     protected static $defaultDescription = 'Launch an interactive roach shell';
 
