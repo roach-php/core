@@ -28,7 +28,7 @@ use RoachPHP\Spider\ParseResult;
 use RoachPHP\Spider\Processor;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-final class Engine
+final class Engine implements EngineInterface
 {
     public function __construct(
         private RequestSchedulerInterface $scheduler,
