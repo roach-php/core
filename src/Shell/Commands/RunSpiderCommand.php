@@ -23,7 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class RunSpiderCommand extends Command
 {
-    protected static $defaultName = 'run';
+    protected static $defaultName = 'roach:run';
 
     protected static $defaultDescription = 'Start a spider run for the provided spider class';
 
