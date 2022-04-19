@@ -65,7 +65,7 @@ final class Roach
      */
     public static function collectSpider(string $spiderClass, ?Overrides $overrides = null, array $context = []): array
     {
-        return self::getRunner()->collectSpider('derp', $overrides, $context);
+        return self::getRunner()->collectSpider($spiderClass, $overrides, $context);
     }
 
     /**
