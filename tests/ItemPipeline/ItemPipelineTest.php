@@ -21,6 +21,7 @@ use RoachPHP\Events\ItemScraped;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\ItemPipeline\ItemPipeline;
+use RoachPHP\ItemPipeline\Processors\ConditionalItemProcessor;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\Support\Configurable;
 
@@ -116,6 +117,28 @@ final class ItemPipelineTest extends TestCase
         $this->dispatcher->assertNotDispatched(ItemScraped::NAME);
     }
 
+    public function testRunsConditionalItemProcessorIfItHandlesItem(): void
+    {
+        $processor = $this->makeConditionalProcessor(true, static fn (ItemInterface $item) => $item->drop('::reason::'));
+
+        $result = $this->pipeline
+            ->setProcessors($processor)
+            ->sendItem(new Item([]));
+
+        self::assertTrue($result->wasDropped());
+    }
+
+    public function testDoesNotRunConditionalItemProcessorIfItDoesNotHandleItem(): void
+    {
+        $processor = $this->makeConditionalProcessor(false, static fn (ItemInterface $item) => $item->drop('::reason::'));
+
+        $result = $this->pipeline
+            ->setProcessors($processor)
+            ->sendItem(new Item([]));
+
+        self::assertFalse($result->wasDropped());
+    }
+
     private function makeProcessor(Closure $processItem): ItemProcessorInterface
     {
         return new class($processItem) implements ItemProcessorInterface {
@@ -123,6 +146,31 @@ final class ItemPipelineTest extends TestCase
 
             public function __construct(private Closure $processItem)
             {
+            }
+
+            public function processItem(ItemInterface $item): ItemInterface
+            {
+                return ($this->processItem)($item);
+            }
+        };
+    }
+
+    private function makeConditionalProcessor(
+        bool $handlesItem,
+        Closure $processItem,
+    ): ConditionalItemProcessor {
+        return new class($handlesItem, $processItem) implements ConditionalItemProcessor {
+            use Configurable;
+
+            public function __construct(
+                private bool $handlesItem,
+                private Closure $processItem,
+            ) {
+            }
+
+            public function shouldHandle(ItemInterface $item): bool
+            {
+                return $this->handlesItem;
             }
 
             public function processItem(ItemInterface $item): ItemInterface

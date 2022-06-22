@@ -15,6 +15,7 @@ namespace RoachPHP\ItemPipeline;
 
 use RoachPHP\Events\ItemDropped;
 use RoachPHP\Events\ItemScraped;
+use RoachPHP\ItemPipeline\Processors\ConditionalItemProcessor;
 use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -39,6 +40,10 @@ final class ItemPipeline implements ItemPipelineInterface
     public function sendItem(ItemInterface $item): ItemInterface
     {
         foreach ($this->processors as $processor) {
+            if ($processor instanceof ConditionalItemProcessor && !$processor->shouldHandle($item)) {
+                continue;
+            }
+
             $item = $processor->processItem($item);
 
             if ($item->wasDropped()) {
