@@ -67,6 +67,7 @@ final class Downloader
 
         /**
          * @psalm-suppress UnnecessaryVarAnnotation
+         *
          * @var RequestSending $event
          */
         $event = $this->eventDispatcher->dispatch(
