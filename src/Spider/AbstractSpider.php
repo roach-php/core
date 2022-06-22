@@ -16,6 +16,7 @@ namespace RoachPHP\Spider;
 use Generator;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
+use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\Spider\Configuration\Configuration;
 
 abstract class AbstractSpider implements SpiderInterface
@@ -66,8 +67,12 @@ abstract class AbstractSpider implements SpiderInterface
         return ParseResult::request($method, $url, [$this, $parseMethod], $options);
     }
 
-    protected function item(array $item): ParseResult
+    protected function item(ItemInterface|array $item): ParseResult
     {
+        if ($item instanceof ItemInterface) {
+            return ParseResult::fromValue($item);
+        }
+
         return ParseResult::item($item);
     }
 
