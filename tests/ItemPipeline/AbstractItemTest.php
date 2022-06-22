@@ -135,6 +135,16 @@ final class AbstractItemTest extends TestCase
         self::assertNull($item['does-not-exist']);
     }
 
+    public function testOffsetGetThrowsExceptionIfOffsetIsNotAString(): void
+    {
+        $item = new TestItem(foo: '::value-1::', bar: '::value-2::');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Offset needs to be a string');
+
+        $item[0];
+    }
+
     public function testOffsetSetCanSetPublicProperties(): void
     {
         $item = new TestItem(foo: '::old-value-1::', bar: '::old-value-2::');
@@ -166,6 +176,16 @@ final class AbstractItemTest extends TestCase
             'private property' => ['qux'],
             'non-existent property' => ['does-not-exist'],
         ];
+    }
+
+    public function testOffsetSetThrowsExceptionIfOffsetIsNotAString(): void
+    {
+        $item = new TestItem(foo: '::value-1::', bar: '::value-2::');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Offset needs to be a string');
+
+        $item[0] = '::value::';
     }
 
     public function testDoesNotSupportUnsettingProperties(): void
