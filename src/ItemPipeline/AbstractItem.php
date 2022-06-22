@@ -101,12 +101,21 @@ abstract class AbstractItem implements ItemInterface
 
     final public function offsetGet(mixed $offset): mixed
     {
+        /** @psalm-suppress DocblockTypeContradiction */
+        if (!\is_string($offset)) {
+            throw new InvalidArgumentException('Offset needs to be a string');
+        }
+
         /** @psalm-suppress MixedReturnStatement */
         return $this->get($offset);
     }
 
     final public function offsetSet(mixed $offset, mixed $value): void
     {
+        if (!\is_string($offset)) {
+            throw new InvalidArgumentException('Offset needs to be a string');
+        }
+
         $this->set($offset, $value);
     }
 

@@ -45,23 +45,24 @@ final class Item implements ItemInterface
         return isset($this->data[$key]);
     }
 
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->data[$offset]);
     }
 
-    public function offsetGet($offset): mixed
+    public function offsetGet(mixed $offset): mixed
     {
         /** @psalm-suppress MixedReturnStatement */
         return $this->data[$offset];
     }
 
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
+        /** @psalm-suppress PossiblyNullArrayOffset */
         $this->data[$offset] = $value;
     }
 
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->data[$offset]);
     }
