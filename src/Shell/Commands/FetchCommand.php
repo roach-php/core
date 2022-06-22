@@ -18,10 +18,12 @@ use Psy\Command\Command;
 use Psy\Shell;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'fetch')]
 final class FetchCommand extends Command
 {
     protected static $defaultName = 'fetch';
