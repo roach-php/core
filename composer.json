@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "guzzlehttp/guzzle": "^7.3",
+        "guzzlehttp/guzzle": "^7.4.5",
         "jakeasmith/http_build_url": "^1.0.1",
         "league/container": "^4.2",
         "monolog/monolog": "^2.3",
