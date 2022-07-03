@@ -35,7 +35,7 @@
         "slim/slim": "^4.8",
         "spatie/browsershot": "^3.52",
         "spatie/phpunit-watcher": "^1.23",
-        "vimeo/psalm": "^4.23"
+        "vimeo/psalm": "^4.24"
     },
     "suggest": {
         "spatie/browsershot": "Required to execute Javascript in spiders"
