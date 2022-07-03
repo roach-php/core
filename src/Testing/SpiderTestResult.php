@@ -173,7 +173,7 @@ final class SpiderTestResult
 
     public function assertNoItemsScraped(): void
     {
-        Assert::assertEmpty($this->items, 'Unexpected items were scraped');
+        Assert::assertEmpty($this->getAllScrapedItems(), 'Unexpected items were scraped');
     }
 
     /**
