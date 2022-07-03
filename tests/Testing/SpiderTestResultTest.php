@@ -220,7 +220,7 @@ final class SpiderTestResultTest extends TestCase
             ParseResult::fromValue($this->makeRequest()),
         ]);
 
-        $testResult->assertNoItemsWereScraped();
+        $testResult->assertNoItemsScraped();
     }
 
     public function testAssertNoItemsScrapedFailsIfAtLeastOneItemWasScraped(): void
@@ -231,6 +231,6 @@ final class SpiderTestResultTest extends TestCase
 
         $this->expectException(AssertionFailedError::class);
         $this->expectExceptionMessage('Unexpected items were scraped');
-        $testResult->assertNoItemsWereScraped();
+        $testResult->assertNoItemsScraped();
     }
 }
