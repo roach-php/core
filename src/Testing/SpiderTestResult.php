@@ -67,7 +67,7 @@ final class SpiderTestResult
      *
      * @param array<string, mixed> ...$items
      */
-    public function assertItemsScraped(array ...$items): void
+    public function assertItemsScraped(array ...$items): self
     {
         $scrapedItems = $this->getAllScrapedItems();
         Assert::assertNotEmpty($scrapedItems, 'No items were scraped');
@@ -82,20 +82,22 @@ final class SpiderTestResult
                 ),
             );
         }
+
+        return $this;
     }
 
     /**
      * @param class-string<AbstractItem> $itemClass
      * @param array<array-key, mixed>    ...$values
      */
-    public function assertCustomItemsScraped(string $itemClass, array ...$values): void
+    public function assertCustomItemsScraped(string $itemClass, array ...$values): self
     {
         $scrapedItems = $this->items[$itemClass] ?? [];
 
         Assert::assertNotEmpty($scrapedItems, "No items of type {$itemClass} were scraped");
 
         if (\count($values) === 0) {
-            return;
+            return $this;
         }
 
         foreach ($values as $value) {
@@ -109,6 +111,8 @@ final class SpiderTestResult
                 ),
             );
         }
+
+        return $this;
     }
 
     /**
@@ -118,7 +122,7 @@ final class SpiderTestResult
         string $url,
         string $method = 'GET',
         ?array $meta = null,
-    ): void {
+    ): self {
         Assert::assertNotEmpty($this->requests, 'No requests were dispatched');
 
         $method = \mb_strtoupper($method);
@@ -143,7 +147,7 @@ final class SpiderTestResult
         );
 
         if (null === $meta) {
-            return;
+            return $this;
         }
 
         $matchingRequest = \array_filter(
@@ -164,16 +168,22 @@ final class SpiderTestResult
             $matchingRequest,
             \sprintf('Got matching request for URL "%s" but with wrong context', $url),
         );
+
+        return $this;
     }
 
-    public function assertNoRequestsDispatched(): void
+    public function assertNoRequestsDispatched(): self
     {
         Assert::assertEmpty($this->requests, 'Unexpected requests were dispatched');
+
+        return $this;
     }
 
-    public function assertNoItemsScraped(): void
+    public function assertNoItemsScraped(): self
     {
         Assert::assertEmpty($this->getAllScrapedItems(), 'Unexpected items were scraped');
+
+        return $this;
     }
 
     /**
