@@ -30,6 +30,8 @@ final class SpiderTester
      */
     private array $requestMeta = [];
 
+    private string $baseURL = 'https://example.com';
+
     public function __construct(private SpiderInterface $spider)
     {
     }
@@ -40,6 +42,13 @@ final class SpiderTester
     public function withRequestMeta(array $meta): self
     {
         $this->requestMeta = $meta;
+
+        return $this;
+    }
+
+    public function withBaseURL(string $baseURL): self
+    {
+        $this->baseURL = $baseURL;
 
         return $this;
     }
@@ -82,7 +91,7 @@ final class SpiderTester
 
         /** @var Closure(Response): Generator<int, ParseResult> $callback */
         $callback = Closure::fromCallable([$this->spider, $parseMethod]);
-        $request = new Request('GET', 'https://example.com', $callback);
+        $request = new Request('GET', $this->baseURL, $callback);
 
         /** @psalm-suppress MixedAssignment */
         foreach ($this->requestMeta as $key => $value) {
