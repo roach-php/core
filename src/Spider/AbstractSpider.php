@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace RoachPHP\Spider;
 
+use Closure;
 use Generator;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
@@ -64,7 +65,12 @@ abstract class AbstractSpider implements SpiderInterface
         string $parseMethod = 'parse',
         array $options = [],
     ): ParseResult {
-        return ParseResult::request($method, $url, [$this, $parseMethod], $options);
+        return ParseResult::request(
+            $method,
+            $url,
+            $this->getCallback($parseMethod),
+            $options,
+        );
     }
 
     protected function item(ItemInterface|array $item): ParseResult
@@ -82,7 +88,16 @@ abstract class AbstractSpider implements SpiderInterface
     protected function initialRequests(): array
     {
         return \array_map(function (string $url) {
-            return new Request('GET', $url, [$this, 'parse']);
+            return new Request('GET', $url, $this->getCallback('parse'));
         }, $this->configuration->startUrls);
+    }
+
+    /**
+     * @return Closure(Response): Generator<int, ParseResult>
+     * @psalm-suppress MixedReturnTypeCoercion
+     */
+    private function getCallback(string $parseMethod): Closure
+    {
+        return Closure::fromCallable([$this, $parseMethod]);
     }
 }

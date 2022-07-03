@@ -42,7 +42,7 @@ final class ParseResult
     }
 
     /**
-     * @param callable(Response): Generator<ParseResult> $parseCallback
+     * @param callable(Response): Generator<int, ParseResult> $parseCallback
      */
     public static function request(
         string $method,

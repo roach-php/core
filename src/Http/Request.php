@@ -28,7 +28,7 @@ final class Request implements DroppableInterface
     use Droppable;
 
     /**
-     * @var Closure(Response): Generator<ParseResult>
+     * @var Closure(Response): Generator<int, ParseResult>
      */
     private Closure $parseCallback;
 
@@ -41,7 +41,7 @@ final class Request implements DroppableInterface
     private array $options;
 
     /**
-     * @param callable(Response): Generator<ParseResult> $parseMethod
+     * @param callable(Response): Generator<int, ParseResult> $parseMethod
      */
     public function __construct(string $method, string $uri, callable $parseMethod, array $options = [])
     {
@@ -106,6 +106,9 @@ final class Request implements DroppableInterface
         return $this;
     }
 
+    /**
+     * @return Generator<int, ParseResult>
+     */
     public function callback(Response $response): Generator
     {
         return ($this->parseCallback)($response);

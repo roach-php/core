@@ -24,6 +24,9 @@ abstract class AbstractItem implements ItemInterface
 {
     use Droppable;
 
+    /**
+     * @return array<array-key, mixed>
+     */
     final public function all(): array
     {
         $reflectionClass = new ReflectionClass($this);

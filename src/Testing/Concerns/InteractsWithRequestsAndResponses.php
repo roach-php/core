@@ -29,6 +29,9 @@ trait InteractsWithRequestsAndResponses
         return new Request('GET', $url, $callback);
     }
 
+    /**
+     * @param array<string, array<array-key, string>|string> $headers
+     */
     private function makeResponse(
         ?Request $request = null,
         int $status = 200,
