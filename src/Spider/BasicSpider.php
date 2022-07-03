@@ -17,6 +17,7 @@ use RoachPHP\Downloader\Middleware\RequestDeduplicationMiddleware;
 use RoachPHP\Extensions\LoggerExtension;
 use RoachPHP\Extensions\StatsCollectorExtension;
 use RoachPHP\Spider\Configuration\ArrayLoader;
+use RoachPHP\Testing\SpiderTester;
 
 abstract class BasicSpider extends AbstractSpider
 {
@@ -65,5 +66,11 @@ abstract class BasicSpider extends AbstractSpider
             'concurrency' => $this->concurrency,
             'requestDelay' => $this->requestDelay,
         ]));
+    }
+
+    final public static function test(): SpiderTester
+    {
+        /** @psalm-suppress UnsafeInstantiation, TooManyArguments */
+        return new SpiderTester(new static(...\func_get_args()));
     }
 }
