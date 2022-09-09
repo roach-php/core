@@ -234,7 +234,7 @@ final class SpiderTestResultTest extends TestCase
             ['::key::' => '::different-value::'],
         );
     }
-    
+
     public function testAssertRequestNotDispatchedFailsIfMatchingRequestWasDispatched(): void
     {
         $request = $this->makeRequest('::url::');

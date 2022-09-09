@@ -173,24 +173,24 @@ final class SpiderTestResult
     }
 
     /**
-     * @param array<string, mixed>|null $meta
+     * @param null|array<string, mixed> $meta
      */
     public function assertRequestNotDispatched(string $url, string $method = 'GET', ?array $meta = null): void
     {
         $method = \mb_strtoupper($method);
 
-        $matchingRequests = array_filter(
+        $matchingRequests = \array_filter(
             $this->requests,
-            function (Request $request) use ($url, $method): bool {
+            static function (Request $request) use ($url, $method): bool {
                 return $request->getUri() === $url
                     && \mb_strtoupper($request->getPsrRequest()->getMethod()) === $method;
-            }
+            },
         );
 
         if (null !== $meta) {
             $matchingRequests = \array_filter(
                 $matchingRequests,
-                function (Request $request) use ($meta) {
+                static function (Request $request) use ($meta) {
                     /** @psalm-suppress MixedAssignment */
                     foreach ($meta as $key => $value) {
                         if ($request->getMeta($key) !== $value) {
@@ -205,7 +205,7 @@ final class SpiderTestResult
 
         Assert::assertEmpty(
             $matchingRequests,
-            "Got unexpected request to url \"{$url}\""
+            "Got unexpected request to url \"{$url}\"",
         );
     }
 
