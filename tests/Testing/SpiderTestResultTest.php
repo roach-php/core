@@ -194,6 +194,60 @@ final class SpiderTestResultTest extends TestCase
         );
     }
 
+    public function testAssertRequestNotDispatchedPassesIfNoRequestWasDispatched(): void
+    {
+        $testResult = new SpiderTestResult([]);
+
+        $testResult->assertRequestNotDispatched('::url::', 'GET');
+    }
+
+    public function testAssertRequestNotDispatchedPassesIfRequestWasDispatchedToURLButWithDifferentMethod(): void
+    {
+        $request = $this->makeRequest('::url::');
+        $testResult = new SpiderTestResult([
+            ParseResult::fromValue($request),
+        ]);
+
+        $testResult->assertRequestNotDispatched('::url::', 'POST');
+    }
+
+    public function testAssertRequestNotDispatchedPassesIfRequestWasDispatchedButToDifferentURL(): void
+    {
+        $request = $this->makeRequest('::url-2::');
+        $testResult = new SpiderTestResult([
+            ParseResult::fromValue($request),
+        ]);
+
+        $testResult->assertRequestNotDispatched('::url-1::');
+    }
+
+    public function testAssertRequestNotDispatchedPassesIfMatchingRequestWasDispatchedButWithDifferentMetaInformation(): void
+    {
+        $request = $this->makeRequest('::url::')->withMeta('::key::', '::value::');
+        $testResult = new SpiderTestResult([
+            ParseResult::fromValue($request),
+        ]);
+
+        $testResult->assertRequestNotDispatched(
+            '::url::',
+            'GET',
+            ['::key::' => '::different-value::'],
+        );
+    }
+    
+    public function testAssertRequestNotDispatchedFailsIfMatchingRequestWasDispatched(): void
+    {
+        $request = $this->makeRequest('::url::');
+        $testResult = new SpiderTestResult([
+            ParseResult::fromValue($request),
+        ]);
+
+        $this->expectException(AssertionFailedError::class);
+        $this->expectExceptionMessage('Got unexpected request to url "::url::');
+
+        $testResult->assertRequestNotDispatched('::url::', 'GET');
+    }
+
     public function testAssertNoRequestsDispatchedPassesIfNoRequestsWereDispatched(): void
     {
         $testResult = new SpiderTestResult([
