@@ -43,7 +43,7 @@ jobs:
           restore-keys: "php-${{ matrix.php }}-composer-${{ matrix.dependency-version }}-"
 
       - name: Install dependencies
-        run: composer update --${{ matrix.dependency-version }} --no-interaction --prefer-source
+        run: composer update --${{ matrix.dependency-version }} --no-interaction --prefer-dist
 
       - name: Run psalm
         run: composer analyze -- --php-version=${{ matrix.php }}
