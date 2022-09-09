@@ -35,7 +35,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
         private LoggerInterface $logger,
         ?callable $getBrowsershot = null,
     ) {
-        $this->getBrowsershot = $getBrowsershot ?: static fn (string $uri): Browsershot => Browsershot::url($uri);
+        $this->getBrowsershot = $getBrowsershot ?: static fn (string $uri): Browsershot => Browsershot::url($uri)->waitUntilNetworkIdle();
     }
 
     public function handleResponse(Response $response): Response
