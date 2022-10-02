@@ -144,9 +144,24 @@ final class Engine implements EngineInterface
     private function configure(Run $run): void
     {
         $this->scheduler->setDelay($run->requestDelay);
-        $this->itemPipeline->setProcessors(...$run->itemProcessors);
-        $this->downloader->withMiddleware(...$run->downloaderMiddleware);
-        $this->responseProcessor->withMiddleware(...$run->responseMiddleware);
+
+        if (null !== $run->itemPipeline) {
+            $this->itemPipeline = $run->itemPipeline;
+        } else {
+            $this->itemPipeline->setProcessors(...$run->itemProcessors);
+        }
+
+        if (null !== $run->downloader) {
+            $this->downloader = $run->downloader;
+        } else {
+            $this->downloader->withMiddleware(...$run->downloaderMiddleware);
+        }
+
+        if (null !== $run->responseProcessor) {
+            $this->responseProcessor = $run->responseProcessor;
+        } else {
+            $this->responseProcessor->withMiddleware(...$run->responseMiddleware);
+        }
 
         foreach ($run->extensions as $extension) {
             $this->eventDispatcher->addSubscriber($extension);
