@@ -94,6 +94,10 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
             $browsershot->setNpmBinary($npmBinary);
         }
 
+        if (!empty($delay = $this->option('delay'))) {
+            $browsershot->setDelay($delay);
+        }
+
         return $browsershot;
     }
 
@@ -107,6 +111,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
             'includePath' => null,
             'nodeBinary' => null,
             'npmBinary' => null,
+            'delay' => 0,
         ];
     }
 }
