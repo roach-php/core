@@ -94,6 +94,10 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
             $browsershot->setNpmBinary($npmBinary);
         }
 
+        if (null !== ($userAgent = $this->option('userAgent'))) {
+            $browsershot->userAgent($userAgent);
+        }
+
         if (!empty($delay = $this->option('delay'))) {
             $browsershot->setDelay($delay);
         }
@@ -111,6 +115,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
             'includePath' => null,
             'nodeBinary' => null,
             'npmBinary' => null,
+            'userAgent' => null,
             'delay' => 0,
         ];
     }
