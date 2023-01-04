@@ -81,4 +81,20 @@ final class ExecuteJavascriptMiddlewareTest extends IntegrationTest
             ),
         );
     }
+
+    public function testUsesTheProvidedUserAgentOption(): void
+    {
+        $mockBrowserShot = $this->createMock(Browsershot::class);
+        $response = $this->makeResponse(
+            $this->makeRequest('http://localhost:8000/javascript'),
+        );
+        $middleware = new ExecuteJavascriptMiddleware(new FakeLogger(), static fn (string $uri): Browsershot => $mockBrowserShot);
+        $middleware->configure(['userAgent' => 'custom']);
+
+        $mockBrowserShot->expects($this->once())
+            ->method('userAgent')
+            ->with($this->equalTo('custom'));
+
+        $middleware->handleResponse($response);
+    }
 }

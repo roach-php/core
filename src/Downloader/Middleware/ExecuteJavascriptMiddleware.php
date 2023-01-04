@@ -94,6 +94,10 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
             $browsershot->setNpmBinary($npmBinary);
         }
 
+        if (null !== ($userAgent = $this->option('userAgent'))) {
+            $browsershot->userAgent($userAgent);
+        }
+
         return $browsershot;
     }
 
@@ -107,6 +111,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
             'includePath' => null,
             'nodeBinary' => null,
             'npmBinary' => null,
+            'userAgent' => null,
         ];
     }
 }
