@@ -101,7 +101,7 @@ final class ClientTest extends TestCase
         self::assertSame($request, $exception->getRequest());
     }
 
-    public function exceptionProvider(): Generator
+    public static function exceptionProvider(): Generator
     {
         yield from [
             'ConnectException' => [

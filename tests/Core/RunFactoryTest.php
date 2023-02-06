@@ -224,7 +224,7 @@ final class RunFactoryTest extends TestCase
         self::assertSame($requestDelay, $run->requestDelay);
     }
 
-    public function numberProvider(): Generator
+    public static function numberProvider(): Generator
     {
         yield from [
             [1],
@@ -269,7 +269,7 @@ final class RunFactoryTest extends TestCase
         $verifyRun($run);
     }
 
-    public function configurationOverrideProvider(): Generator
+    public static function configurationOverrideProvider(): Generator
     {
         yield from [
             'override start urls' => [

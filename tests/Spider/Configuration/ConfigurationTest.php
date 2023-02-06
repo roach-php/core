@@ -57,7 +57,7 @@ final class ConfigurationTest extends TestCase
         $verifyConfig($overrideConfig);
     }
 
-    public function overridesProvider(): Generator
+    public static function overridesProvider(): Generator
     {
         yield from [
             'override startUrls' => [

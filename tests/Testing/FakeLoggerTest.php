@@ -52,7 +52,7 @@ final class FakeLoggerTest extends TestCase
         self::assertTrue($logger->messageWasLogged($level, $message, $context));
     }
 
-    public function logMessageProvider(): Generator
+    public static function logMessageProvider(): Generator
     {
         yield from [
             'debug' => [

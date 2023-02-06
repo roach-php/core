@@ -67,7 +67,7 @@ final class MaxRequestExtensionTest extends ExtensionTestCase
         self::assertTrue($event->request->wasDropped());
     }
 
-    public function thresholdProvider(): Generator
+    public static function thresholdProvider(): Generator
     {
         yield [1];
 

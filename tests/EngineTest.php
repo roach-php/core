@@ -37,6 +37,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @internal
+ *
  * @group integration
  */
 final class EngineTest extends IntegrationTest

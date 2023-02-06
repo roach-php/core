@@ -41,9 +41,9 @@ final class StatsCollectorExtensionTest extends ExtensionTestCase
     private FakeClock $clock;
 
     /**
-     * @param array{event: Event, eventName: string, stat: string} $scenario
-     *
      * @dataProvider statsScenarioProvider
+     *
+     * @param array{event: Event, eventName: string, stat: string} $scenario
      */
     public function testCountNumberOfEventOccurrence(array $scenario, int $eventCount): void
     {
@@ -105,7 +105,7 @@ final class StatsCollectorExtensionTest extends ExtensionTestCase
         }
     }
 
-    public function runtimeProvider(): Generator
+    public static function runtimeProvider(): Generator
     {
         yield from [
             ['seconds' => 10, 'expected' => '00:00:10'],

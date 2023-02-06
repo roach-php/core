@@ -20,7 +20,7 @@ use RoachPHP\Spider\SpiderInterface;
 final class FakeRunner implements RunnerInterface
 {
     /**
-     * @var array<class-string<SpiderInterface>, array<int, array{overrides: Overrides|null, context: array}>>
+     * @var array<class-string<SpiderInterface>, array<int, array{overrides: null|Overrides, context: array}>>
      */
     private array $runs = [];
 
@@ -38,6 +38,7 @@ final class FakeRunner implements RunnerInterface
 
     /**
      * @param class-string<SpiderInterface> $spider
+     *
      * @psalm-param (callable(Overrides|null, array): bool)|null $callback
      */
     public function assertRunWasStarted(string $spider, ?callable $callback = null): void

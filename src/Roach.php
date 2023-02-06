@@ -70,7 +70,9 @@ final class Roach
 
     /**
      * @template T
+     *
      * @psalm-param class-string<T> $class
+     *
      * @psalm-suppress MixedInferredReturnType
      *
      * @return T

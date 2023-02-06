@@ -90,7 +90,7 @@ final class ResponseTest extends TestCase
         self::assertSame('New', $response->filter('p')->text(''));
     }
 
-    public function responseCodeProvider(): Generator
+    public static function responseCodeProvider(): Generator
     {
         yield from [
             [200],
@@ -103,7 +103,7 @@ final class ResponseTest extends TestCase
         ];
     }
 
-    public function responseBodyProvider(): Generator
+    public static function responseBodyProvider(): Generator
     {
         yield from [
             'string' => [static fn (string $body) => $body],

@@ -101,7 +101,7 @@ final class AbstractItemTest extends TestCase
         self::assertSame($expected, isset($item[$property]));
     }
 
-    public function hasPropertyProvider(): Generator
+    public static function hasPropertyProvider(): Generator
     {
         yield from [
             'public property 1' => ['foo', true],
@@ -169,7 +169,7 @@ final class AbstractItemTest extends TestCase
         $item[$property] = '::new-value::';
     }
 
-    public function inaccessiblePropertiesProvider(): Generator
+    public static function inaccessiblePropertiesProvider(): Generator
     {
         yield from [
             'protected property' => ['baz'],

@@ -34,7 +34,7 @@ final class FakeNamespaceResolverTest extends TestCase
         self::assertSame($input, $result);
     }
 
-    public function inputStringProvider(): Generator
+    public static function inputStringProvider(): Generator
     {
         yield from [
             ['::string-1::'],

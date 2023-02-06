@@ -25,7 +25,7 @@ final class FakeDispatcher extends EventDispatcher
 
     public function dispatch(object $event, ?string $eventName = null): object
     {
-        $eventName ??= \get_class($event);
+        $eventName ??= $event::class;
 
         parent::dispatch($event, $eventName);
 

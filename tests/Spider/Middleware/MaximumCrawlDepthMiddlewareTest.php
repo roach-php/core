@@ -40,7 +40,7 @@ final class MaximumCrawlDepthMiddlewareTest extends TestCase
         self::assertSame($initialDepth + 1, $processedRequest->getMeta('depth'));
     }
 
-    public function initialDepthProvider(): Generator
+    public static function initialDepthProvider(): Generator
     {
         yield from [
             [0],
@@ -98,7 +98,7 @@ final class MaximumCrawlDepthMiddlewareTest extends TestCase
         self::assertFalse($processedRequest->wasDropped());
     }
 
-    public function maxCrawlDepthProvider(): Generator
+    public static function maxCrawlDepthProvider(): Generator
     {
         yield from [
             [2],

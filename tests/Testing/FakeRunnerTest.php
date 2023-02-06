@@ -124,7 +124,7 @@ final class FakeRunnerTest extends TestCase
         $this->runner->assertRunWasNotStarted(TestSpider::class);
     }
 
-    public function runnerMethodProvider(): Generator
+    public static function runnerMethodProvider(): Generator
     {
         yield from [
             'startSpider' => ['startSpider'],

@@ -61,7 +61,7 @@ final class ArrayRequestSchedulerTest extends TestCase
         }
     }
 
-    public function batchSizeProvider(): Generator
+    public static function batchSizeProvider(): Generator
     {
         yield 'batch size 1' => [
             'batchSize' => 1,
