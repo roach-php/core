@@ -91,9 +91,9 @@ final class ExecuteJavascriptMiddlewareTest extends IntegrationTest
         $middleware = new ExecuteJavascriptMiddleware(new FakeLogger(), static fn (string $uri): Browsershot => $mockBrowserShot);
         $middleware->configure(['userAgent' => 'custom']);
 
-        $mockBrowserShot->expects($this->once())
+        $mockBrowserShot->expects(self::once())
             ->method('userAgent')
-            ->with($this->equalTo('custom'));
+            ->with(self::equalTo('custom'));
 
         $middleware->handleResponse($response);
     }
