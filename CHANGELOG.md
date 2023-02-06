@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] – 2023-02-06
+
+### Added
+
+- Added `userAgent` option to `ExecuteJavascriptMiddleware` (#82)
+- Added `delay` option to `ExecuteJavascriptMiddleware` (#72)
+
+### Changed
+
+- Dropped PHP 8.0 support
+- Updated various dependencies
+
 ## [1.1.1] — 2022-09-09
 
 ### Changed
