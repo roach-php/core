@@ -10,13 +10,13 @@
         }
     ],
     "require": {
-        "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
+        "php": "~8.1.0 || ~8.2.0",
         "guzzlehttp/guzzle": "^7.4.5",
         "jakeasmith/http_build_url": "^1.0.1",
         "league/container": "^4.2",
-        "monolog/monolog": "^2.3",
+        "monolog/monolog": "^3.1",
         "psr/container": "^2.0",
-        "psy/psysh": "^0.11.1",
+        "psy/psysh": "^0.11.12",
         "sebastian/version": "^3.0",
         "spatie/robots-txt": "^2.0",
         "symfony/console": "^6.0",
@@ -34,7 +34,6 @@
         "roave/security-advisories": "dev-latest",
         "slim/slim": "^4.8",
         "spatie/browsershot": "^3.57.4",
-        "spatie/phpunit-watcher": "^1.23",
         "vimeo/psalm": "^5.6"
     },
     "suggest": {
