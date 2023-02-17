@@ -37,7 +37,7 @@ final class StaticNamespaceResolverTest extends TestCase
         $resolver = new StaticNamespaceResolver();
 
         $this->expectException(InvalidSpiderException::class);
-        $this->expectErrorMessage('The spider class ::spider-class:: does not exist');
+        $this->expectExceptionMessage('The spider class ::spider-class:: does not exist');
 
         $resolver->resolveSpiderNamespace('::spider-class::');
     }
@@ -47,7 +47,7 @@ final class StaticNamespaceResolverTest extends TestCase
         $resolver = new StaticNamespaceResolver();
 
         $this->expectException(InvalidSpiderException::class);
-        $this->expectErrorMessage(\sprintf('The class %s is not a spider', RequestSpiderMiddleware::class));
+        $this->expectExceptionMessage(\sprintf('The class %s is not a spider', RequestSpiderMiddleware::class));
 
         $resolver->resolveSpiderNamespace(RequestSpiderMiddleware::class);
     }
