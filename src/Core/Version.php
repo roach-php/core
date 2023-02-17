@@ -15,7 +15,7 @@ namespace RoachPHP\Core;
 
 final class Version
 {
-    private static string $version = '1.0.0';
+    private static string $version = '2.0.1';
 
     public static function id(): string
     {
