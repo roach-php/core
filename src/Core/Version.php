@@ -13,15 +13,13 @@ declare(strict_types=1);
 
 namespace RoachPHP\Core;
 
-use SebastianBergmann\Version as VersionID;
-
 final class Version
 {
     private static string $version = '1.0.0';
 
     public static function id(): string
     {
-        return (new VersionID(self::$version, \dirname(__DIR__, 2)))->getVersion();
+        return self::$version;
     }
 
     public static function getVersionString(): string
