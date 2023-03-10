@@ -28,12 +28,12 @@ use RoachPHP\Scheduling\Timing\FakeClock;
 use RoachPHP\Spider\ParseResult;
 use RoachPHP\Spider\Processor;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
-use RoachPHP\Tests\IntegrationTest;
+use RoachPHP\Tests\IntegrationTestCase;
 
 /**
  * @internal
  */
-final class RobotsTxtMiddlewareTest extends IntegrationTest
+final class RobotsTxtMiddlewareTestCase extends IntegrationTestCase
 {
     use InteractsWithRequestsAndResponses;
 
@@ -61,7 +61,7 @@ final class RobotsTxtMiddlewareTest extends IntegrationTest
 
     public function testOnlyRequestsRobotsTxtOnceForRequestsToSameDomain(): void
     {
-        $parseCallback = fn () => yield ParseResult::fromValue($this->makeRequest('http://localhost:8000/test2'));
+        $parseCallback = fn () => yield ParseResult::fromValue(self::makeRequest('http://localhost:8000/test2'));
         $run = new Run(
             [new Request('GET', 'http://localhost:8000/test1', $parseCallback)],
             downloaderMiddleware: [$this->middleware],
@@ -75,7 +75,7 @@ final class RobotsTxtMiddlewareTest extends IntegrationTest
     public function testAllowsRequestIfAllowedByRobotsTxt(): void
     {
         $run = new Run(
-            [$this->makeRequest('http://localhost:8000/test1')],
+            [self::makeRequest('http://localhost:8000/test1')],
             downloaderMiddleware: [$this->middleware],
         );
 
@@ -87,7 +87,7 @@ final class RobotsTxtMiddlewareTest extends IntegrationTest
     public function testDropRequestIfForbiddenByRobotsTxt(): void
     {
         $run = new Run(
-            [$this->makeRequest('http://localhost:8000/test2')],
+            [self::makeRequest('http://localhost:8000/test2')],
             downloaderMiddleware: [$this->middleware],
         );
 

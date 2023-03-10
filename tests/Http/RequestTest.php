@@ -20,7 +20,7 @@ use RoachPHP\Http\Response;
 use RoachPHP\Spider\ParseResult;
 use RoachPHP\Support\DroppableInterface;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
-use RoachPHP\Tests\Support\DroppableTest;
+use RoachPHP\Tests\Support\DroppableTestCase;
 
 /**
  * @group http
@@ -30,7 +30,7 @@ use RoachPHP\Tests\Support\DroppableTest;
 final class RequestTest extends TestCase
 {
     use InteractsWithRequestsAndResponses;
-    use DroppableTest;
+    use DroppableTestCase;
 
     public function testCanAccessTheRequestUri(): void
     {

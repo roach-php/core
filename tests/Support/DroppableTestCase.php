@@ -19,7 +19,7 @@ use RoachPHP\Support\DroppableInterface;
 /**
  * @mixin TestCase
  */
-trait DroppableTest
+trait DroppableTestCase
 {
     public function testWasDropped(): void
     {

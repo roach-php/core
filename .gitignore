@@ -1,4 +1,5 @@
 /vendor/
 /.build/
-.phpunit.cache
+.phpunit.result.cache
+.phpunit.cache/
 /coverage/
