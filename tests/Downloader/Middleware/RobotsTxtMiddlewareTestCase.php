@@ -61,7 +61,7 @@ final class RobotsTxtMiddlewareTestCase extends IntegrationTestCase
 
     public function testOnlyRequestsRobotsTxtOnceForRequestsToSameDomain(): void
     {
-        $parseCallback = fn () => yield ParseResult::fromValue(self::makeRequest('http://localhost:8000/test2'));
+        $parseCallback = static fn () => yield ParseResult::fromValue(self::makeRequest('http://localhost:8000/test2'));
         $run = new Run(
             [new Request('GET', 'http://localhost:8000/test1', $parseCallback)],
             downloaderMiddleware: [$this->middleware],
