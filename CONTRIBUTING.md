@@ -47,7 +47,7 @@ Roach follows [semantic versioning][semver].
    ```shell
    git checkout -b my-fix-branch main
    ```
-3. Update the code.
+3. Update the code. **Make sure that all your changes are covered by tests.**
 4. Commit your changes using a **descriptive commit message** that follows the
    [Angular Commit Message Conventions][commit-format].
    ```shell

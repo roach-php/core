@@ -35,6 +35,11 @@ composer require roach-php/core
 
 The full documentation can be found [here](https://roach-php.dev).
 
+## Contributing
+
+Please read our [Contribution Guide][contribution-guide] before opening issues 
+or pull requests.
+
 ## Credits
 
 - [Kai Sassnowski](https://github.com/ksassnowski)
@@ -43,3 +48,5 @@ The full documentation can be found [here](https://roach-php.dev).
 ## License
 
 MIT
+
+[contribution-guide]: https://github.com/roach-php/core/blob/main/CONTRIBUTING.md
