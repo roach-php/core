@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "composer"
+    directory: "/"
+    commit-message:
+      prefix: "chore: "
+      include: "scope"
+    schedule:
+      interval: "weekly"
