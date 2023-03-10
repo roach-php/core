@@ -16,14 +16,14 @@ namespace RoachPHP\Tests\ItemPipeline;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\ItemPipeline\Item;
 use RoachPHP\Support\DroppableInterface;
-use RoachPHP\Tests\Support\DroppableTest;
+use RoachPHP\Tests\Support\DroppableTestCase;
 
 /**
  * @internal
  */
 final class ItemTest extends TestCase
 {
-    use DroppableTest;
+    use DroppableTestCase;
 
     protected function createDroppable(): DroppableInterface
     {

@@ -18,12 +18,12 @@ use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\Roach;
 use RoachPHP\Spider\BasicSpider;
-use RoachPHP\Tests\IntegrationTest;
+use RoachPHP\Tests\IntegrationTestCase;
 
 /**
  * @internal
  */
-final class SpiderTest extends IntegrationTest
+final class SpiderTestCase extends IntegrationTestCase
 {
     public function testCreateInitialRequestFromStartUrlsByDefault(): void
     {

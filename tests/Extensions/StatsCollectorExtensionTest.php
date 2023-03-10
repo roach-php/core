@@ -70,7 +70,7 @@ final class StatsCollectorExtensionTest extends ExtensionTestCase
         $this->assertStatWasLogged('duration', $expected);
     }
 
-    public function statsScenarioProvider(): Generator
+    public static function statsScenarioProvider(): Generator
     {
         $scenarios = [
             'items.scraped' => [
@@ -86,13 +86,13 @@ final class StatsCollectorExtensionTest extends ExtensionTestCase
             ],
 
             'requests.sent' => [
-                'event' => new RequestSending($this->makeRequest()),
+                'event' => new RequestSending(self::makeRequest()),
                 'eventName' => RequestSending::NAME,
                 'stat' => 'requests.sent',
             ],
 
             'requests.dropped' => [
-                'event' => new RequestDropped($this->makeRequest()),
+                'event' => new RequestDropped(self::makeRequest()),
                 'eventName' => RequestDropped::NAME,
                 'stat' => 'requests.dropped',
             ],

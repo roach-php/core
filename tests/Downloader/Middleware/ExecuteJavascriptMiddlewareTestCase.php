@@ -17,13 +17,13 @@ use Exception;
 use RoachPHP\Downloader\Middleware\ExecuteJavascriptMiddleware;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Testing\FakeLogger;
-use RoachPHP\Tests\IntegrationTest;
+use RoachPHP\Tests\IntegrationTestCase;
 use Spatie\Browsershot\Browsershot;
 
 /**
  * @internal
  */
-final class ExecuteJavascriptMiddlewareTest extends IntegrationTest
+final class ExecuteJavascriptMiddlewareTestCase extends IntegrationTestCase
 {
     use InteractsWithRequestsAndResponses;
 
