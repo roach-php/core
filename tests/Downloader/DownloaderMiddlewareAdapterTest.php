@@ -73,7 +73,7 @@ final class DownloaderMiddlewareAdapterTest extends TestCase
 
     public static function requestMiddlewareProvider(): Generator
     {
-        yield 'return response unchanged' => [function (DownloaderMiddlewareAdapter $adapter): void {
+        yield 'return response unchanged' => [static function (DownloaderMiddlewareAdapter $adapter): void {
             $response = self::makeResponse();
 
             $result = $adapter->handleResponse($response);
@@ -81,7 +81,7 @@ final class DownloaderMiddlewareAdapterTest extends TestCase
             self::assertSame($response, $result);
         }];
 
-        yield 'call middleware for requests' => [function (DownloaderMiddlewareAdapter $adapter): void {
+        yield 'call middleware for requests' => [static function (DownloaderMiddlewareAdapter $adapter): void {
             $request = self::makeRequest();
 
             $result = $adapter->handleRequest($request);
@@ -110,7 +110,7 @@ final class DownloaderMiddlewareAdapterTest extends TestCase
 
     public static function responseMiddlewareProvider(): Generator
     {
-        yield 'return request unchanged' => [function (DownloaderMiddlewareAdapter $adapter): void {
+        yield 'return request unchanged' => [static function (DownloaderMiddlewareAdapter $adapter): void {
             $request = self::makeRequest();
 
             $result = $adapter->handleRequest($request);
@@ -118,7 +118,7 @@ final class DownloaderMiddlewareAdapterTest extends TestCase
             self::assertSame($request, $result);
         }];
 
-        yield 'call middleware for responses' => [function (DownloaderMiddlewareAdapter $adapter): void {
+        yield 'call middleware for responses' => [static function (DownloaderMiddlewareAdapter $adapter): void {
             $response = self::makeResponse();
 
             $result = $adapter->handleResponse($response);
