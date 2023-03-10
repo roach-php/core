@@ -19,14 +19,14 @@ use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\DroppableInterface;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
-use RoachPHP\Tests\Support\DroppableTest;
+use RoachPHP\Tests\Support\DroppableTestCase;
 
 /**
  * @internal
  */
 final class ResponseTest extends TestCase
 {
-    use DroppableTest;
+    use DroppableTestCase;
     use InteractsWithRequestsAndResponses;
 
     public function testCanAccessDomCrawlerDirectlyFromResponse(): void

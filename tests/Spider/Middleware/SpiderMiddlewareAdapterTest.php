@@ -79,27 +79,27 @@ final class SpiderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
-    public function itemMiddlewareProvider(): Generator
+    public static function itemMiddlewareProvider(): Generator
     {
-        yield 'return request unchanged' => [function (SpiderMiddlewareAdapter $adapter): void {
-            $response = $this->makeResponse($this->makeRequest('::url-a::'));
-            $request = $this->makeRequest('::url-b::');
+        yield 'return request unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
+            $response = self::makeResponse(self::makeRequest('::url-a::'));
+            $request = self::makeRequest('::url-b::');
 
             $result = $adapter->handleRequest($request, $response);
 
             self::assertEquals($request, $result);
         }];
 
-        yield 'return response unchanged' => [function (SpiderMiddlewareAdapter $adapter): void {
-            $response = $this->makeResponse($this->makeRequest('::url-a::'));
+        yield 'return response unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
+            $response = self::makeResponse(self::makeRequest('::url-a::'));
 
             $result = $adapter->handleResponse($response);
 
             self::assertEquals($response, $result);
         }];
 
-        yield 'call middleware function for items' => [function (SpiderMiddlewareAdapter $adapter): void {
-            $response = $this->makeResponse($this->makeRequest());
+        yield 'call middleware function for items' => [static function (SpiderMiddlewareAdapter $adapter): void {
+            $response = self::makeResponse(self::makeRequest());
             $item = new Item([]);
 
             $result = $adapter->handleItem($item, $response);
@@ -126,28 +126,28 @@ final class SpiderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
-    public function requestMiddlewareProvider(): Generator
+    public static function requestMiddlewareProvider(): Generator
     {
-        yield 'return response unchanged' => [function (SpiderMiddlewareAdapter $adapter): void {
-            $response = $this->makeResponse($this->makeRequest());
+        yield 'return response unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
+            $response = self::makeResponse(self::makeRequest());
 
             $result = $adapter->handleResponse($response);
 
             self::assertEquals($response, $result);
         }];
 
-        yield 'return item unchanged' => [function (SpiderMiddlewareAdapter $adapter): void {
+        yield 'return item unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
             $item = new Item(['::key::' => '::value::']);
-            $response = $this->makeResponse($this->makeRequest());
+            $response = self::makeResponse(self::makeRequest());
 
             $result = $adapter->handleItem($item, $response);
 
             self::assertSame(['::key::' => '::value::'], $result->all());
         }];
 
-        yield 'call middleware function for requests' => [function (SpiderMiddlewareAdapter $adapter): void {
-            $response = $this->makeResponse($this->makeRequest('::url-a::'));
-            $request = $this->makeRequest('::url-b::');
+        yield 'call middleware function for requests' => [static function (SpiderMiddlewareAdapter $adapter): void {
+            $response = self::makeResponse(self::makeRequest('::url-a::'));
+            $request = self::makeRequest('::url-b::');
 
             $result = $adapter->handleRequest($request, $response);
 
@@ -173,28 +173,28 @@ final class SpiderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
-    public function responseMiddlewareProvider(): Generator
+    public static function responseMiddlewareProvider(): Generator
     {
-        yield 'return item unchanged' => [function (SpiderMiddlewareAdapter $adapter): void {
+        yield 'return item unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
             $item = new Item(['::key::' => '::value::']);
-            $response = $this->makeResponse($this->makeRequest());
+            $response = self::makeResponse(self::makeRequest());
 
             $result = $adapter->handleItem($item, $response);
 
             self::assertSame(['::key::' => '::value::'], $result->all());
         }];
 
-        yield 'return request unchanged' => [function (SpiderMiddlewareAdapter $adapter): void {
-            $response = $this->makeResponse($this->makeRequest('::url-a::'));
-            $request = $this->makeRequest('::url-b::');
+        yield 'return request unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
+            $response = self::makeResponse(self::makeRequest('::url-a::'));
+            $request = self::makeRequest('::url-b::');
 
             $result = $adapter->handleRequest($request, $response);
 
             self::assertEquals($request, $result);
         }];
 
-        yield 'call middleware function for responses' => [function (SpiderMiddlewareAdapter $adapter): void {
-            $response = $this->makeResponse($this->makeRequest('::url-a::'));
+        yield 'call middleware function for responses' => [static function (SpiderMiddlewareAdapter $adapter): void {
+            $response = self::makeResponse(self::makeRequest('::url-a::'));
 
             $result = $adapter->handleResponse($response);
 

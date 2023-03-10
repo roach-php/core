@@ -20,7 +20,7 @@ use RoachPHP\Http\Response;
 
 trait InteractsWithRequestsAndResponses
 {
-    private function makeRequest(string $url = '::url::', ?Closure $callback = null): Request
+    private static function makeRequest(string $url = '::url::', ?Closure $callback = null): Request
     {
         $callback ??= static function (): Generator {
             yield from [];
@@ -29,7 +29,7 @@ trait InteractsWithRequestsAndResponses
         return new Request('GET', $url, $callback);
     }
 
-    private function makeResponse(
+    private static function makeResponse(
         ?Request $request = null,
         int $status = 200,
         ?string $body = null,
@@ -37,7 +37,7 @@ trait InteractsWithRequestsAndResponses
     ): Response {
         return new Response(
             new \GuzzleHttp\Psr7\Response($status, $headers, $body),
-            $request ?: $this->makeRequest(),
+            $request ?: static::makeRequest(),
         );
     }
 }

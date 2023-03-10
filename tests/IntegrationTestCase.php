@@ -20,7 +20,7 @@ use const JSON_THROW_ON_ERROR;
 /**
  * @internal
  */
-abstract class IntegrationTest extends TestCase
+abstract class IntegrationTestCase extends TestCase
 {
     protected string $serverUrl = 'http://localhost:8000';
 

@@ -40,7 +40,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  *
  * @group integration
  */
-final class EngineTest extends IntegrationTest
+final class EngineTestCase extends IntegrationTestCase
 {
     use InteractsWithRequestsAndResponses;
 

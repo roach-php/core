@@ -28,7 +28,7 @@
         "ergebnis/composer-normalize": "^2.15",
         "ergebnis/php-cs-fixer-config": "^5.3",
         "http-interop/http-factory-guzzle": "^1.2",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^10.0",
         "psr/http-message": "^1.0.1",
         "roave/security-advisories": "dev-latest",
         "slim/slim": "^4.8",
