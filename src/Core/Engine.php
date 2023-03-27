@@ -61,8 +61,10 @@ final class Engine implements EngineInterface
             RunStarting::NAME,
         );
 
-        foreach ($run->startRequests as $request) {
-            $this->scheduleRequest($request);
+        if ($this->scheduler->empty()) {
+            foreach ($run->startRequests as $request) {
+                $this->scheduleRequest($request);
+            }
         }
 
         $this->work($run);
@@ -144,6 +146,7 @@ final class Engine implements EngineInterface
     private function configure(Run $run): void
     {
         $this->scheduler->setDelay($run->requestDelay);
+        $this->scheduler->setNamespace($run->namespace);
         $this->itemPipeline->setProcessors(...$run->itemProcessors);
         $this->downloader->withMiddleware(...$run->downloaderMiddleware);
         $this->responseProcessor->withMiddleware(...$run->responseMiddleware);

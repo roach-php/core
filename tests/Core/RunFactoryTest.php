@@ -224,6 +224,15 @@ final class RunFactoryTest extends TestCase
         self::assertSame($requestDelay, $run->requestDelay);
     }
 
+    public function testConfigureRunNamespace(): void
+    {
+        $spider = $this->createSpider();
+
+        $run = $this->factory->fromSpider($spider);
+
+        self::assertSame($spider::class, $run->namespace);
+    }
+
     public static function numberProvider(): Generator
     {
         yield from [

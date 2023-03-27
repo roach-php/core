@@ -40,6 +40,7 @@ final class RunFactory
 
         return new Run(
             $spider->getInitialRequests(),
+            $spider::class,
             $this->buildDownloaderMiddleware($configuration->downloaderMiddleware),
             $this->buildItemPipeline($configuration->itemProcessors),
             $this->buildResponseMiddleware($configuration->spiderMiddleware),

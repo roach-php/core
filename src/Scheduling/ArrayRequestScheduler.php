@@ -68,6 +68,11 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
         return $this;
     }
 
+    public function setNamespace(string $namespace): RequestSchedulerInterface
+    {
+        return $this;
+    }
+
     private function updateNextBatchTime(): void
     {
         $this->nextBatchReadyAt = $this->clock->now()->add(new DateInterval("PT{$this->delay}S"));

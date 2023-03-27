@@ -115,4 +115,9 @@ final class Request implements DroppableInterface
     {
         return $this->psrRequest;
     }
+
+    public function getParseCallback(): Closure
+    {
+        return $this->parseCallback;
+    }
 }

@@ -72,7 +72,7 @@ final class EngineTest extends IntegrationTestCase
             $this->makeRequest('http://localhost:8000/test1'),
             $this->makeRequest('http://localhost:8000/test2'),
         ];
-        $run = new Run($startRequests);
+        $run = new Run($startRequests, 'DefaultSpider');
 
         $this->engine->start($run);
 
@@ -89,6 +89,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test2', $parseFunction)],
+            'DefaultSpider',
         );
 
         $this->engine->start($run);
@@ -108,6 +109,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
+            'DefaultSpider',
         );
 
         $this->engine->start($run);
@@ -127,6 +129,7 @@ final class EngineTest extends IntegrationTestCase
         ];
         $run = new Run(
             $startRequests,
+            'DefaultSpider',
             itemProcessors: [$processor],
         );
 
@@ -145,6 +148,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
+            'DefaultSpider',
             itemProcessors: [$processor],
         );
 
@@ -163,6 +167,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
+            'DefaultSpider',
             extensions: [
                 new StatsCollectorExtension($logger, new FakeClock()),
                 new LoggerExtension($logger),
@@ -197,6 +202,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
+            'DefaultSpider',
         );
 
         $result = $this->engine->collect($run);
@@ -228,6 +234,7 @@ final class EngineTest extends IntegrationTestCase
                 $this->makeRequest('http://localhost:8000/test3'),
                 $this->makeRequest('http://localhost:8000/robots'),
             ],
+            'DefaultSpider',
             downloaderMiddleware: [DownloaderMiddlewareAdapter::fromMiddleware($middleware)],
             concurrency: 1,
             requestDelay: 5,

@@ -38,4 +38,6 @@ interface RequestSchedulerInterface
     public function empty(): bool;
 
     public function setDelay(int $delay): self;
+
+    public function setNamespace(string $namespace): self;
 }
