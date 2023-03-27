@@ -23,7 +23,7 @@ use Spatie\Browsershot\Browsershot;
 /**
  * @internal
  */
-final class ExecuteJavascriptMiddlewareTestCase extends IntegrationTestCase
+final class ExecuteJavascriptMiddlewareTest extends IntegrationTestCase
 {
     use InteractsWithRequestsAndResponses;
 

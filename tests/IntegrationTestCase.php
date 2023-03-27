@@ -29,16 +29,14 @@ abstract class IntegrationTestCase extends TestCase
         $this->skipIfServerNotRunning();
 
         try {
-            \unlink(__DIR__ . '/Server/tmp/crawled.json');
+            @\unlink(__DIR__ . '/Server/tmp/crawled.json');
         } catch (Throwable) {
         }
     }
 
     protected function skipIfServerNotRunning(): void
     {
-        try {
-            \file_get_contents("{$this->serverUrl}/ping");
-        } catch (Throwable) {
+        if (false === @\file_get_contents("{$this->serverUrl}/ping")) {
             self::markTestSkipped('Skipping integration test. Server not running.');
         }
     }

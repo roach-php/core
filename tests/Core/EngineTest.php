@@ -11,7 +11,7 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\Tests;
+namespace RoachPHP\Tests\Core;
 
 use RoachPHP\Core\Engine;
 use RoachPHP\Core\Run;
@@ -33,6 +33,7 @@ use RoachPHP\Spider\Processor;
 use RoachPHP\Support\Configurable;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Testing\FakeLogger;
+use RoachPHP\Tests\IntegrationTestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -40,7 +41,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  *
  * @group integration
  */
-final class EngineTestCase extends IntegrationTestCase
+final class EngineTest extends IntegrationTestCase
 {
     use InteractsWithRequestsAndResponses;
 

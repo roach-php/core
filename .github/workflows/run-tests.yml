@@ -51,5 +51,8 @@ jobs:
       - name: Start server
         run: (php -S localhost:8000 -t ./tests/Server &) || /bin/true
 
+      - name: Wait for server bootup
+        run: sleep 3
+
       - name: Execute tests
         run: vendor/bin/phpunit

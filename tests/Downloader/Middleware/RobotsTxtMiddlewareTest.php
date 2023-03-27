@@ -33,7 +33,7 @@ use RoachPHP\Tests\IntegrationTestCase;
 /**
  * @internal
  */
-final class RobotsTxtMiddlewareTestCase extends IntegrationTestCase
+final class RobotsTxtMiddlewareTest extends IntegrationTestCase
 {
     use InteractsWithRequestsAndResponses;
 
