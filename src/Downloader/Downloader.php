@@ -15,6 +15,9 @@ namespace RoachPHP\Downloader;
 
 use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\RequestSending;
+use RoachPHP\Events\ResponseDropped;
+use RoachPHP\Events\ResponseReceived;
+use RoachPHP\Events\ResponseReceiving;
 use RoachPHP\Http\ClientInterface;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
@@ -100,12 +103,38 @@ final class Downloader
 
     private function onResponseReceived(Response $response, ?callable $callback): void
     {
+        $event = new ResponseReceiving($response);
+        $this->eventDispatcher->dispatch($event, ResponseReceiving::NAME);
+        $response = $event->response;
+
+        if ($response->wasDropped()) {
+            $this->eventDispatcher->dispatch(
+                new ResponseDropped($response),
+                ResponseDropped::NAME,
+            );
+
+            return;
+        }
+
         foreach ($this->middleware as $middleware) {
             $response = $middleware->handleResponse($response);
 
             if ($response->wasDropped()) {
                 return;
             }
+        }
+
+        $event = new ResponseReceived($response);
+        $this->eventDispatcher->dispatch($event, ResponseReceived::NAME);
+        $response = $event->response;
+
+        if ($response->wasDropped()) {
+            $this->eventDispatcher->dispatch(
+                new ResponseDropped($response),
+                ResponseDropped::NAME,
+            );
+
+            return;
         }
 
         if (null !== $callback) {
