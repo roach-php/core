@@ -64,6 +64,7 @@ final class RobotsTxtMiddlewareTest extends IntegrationTestCase
         $parseCallback = static fn () => yield ParseResult::fromValue(self::makeRequest('http://localhost:8000/test2'));
         $run = new Run(
             [new Request('GET', 'http://localhost:8000/test1', $parseCallback)],
+            '::namespace::',
             downloaderMiddleware: [$this->middleware],
         );
 
@@ -76,6 +77,7 @@ final class RobotsTxtMiddlewareTest extends IntegrationTestCase
     {
         $run = new Run(
             [self::makeRequest('http://localhost:8000/test1')],
+            '::namespace::',
             downloaderMiddleware: [$this->middleware],
         );
 
@@ -88,6 +90,7 @@ final class RobotsTxtMiddlewareTest extends IntegrationTestCase
     {
         $run = new Run(
             [self::makeRequest('http://localhost:8000/test2')],
+            '::namespace::',
             downloaderMiddleware: [$this->middleware],
         );
 

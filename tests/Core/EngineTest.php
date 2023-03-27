@@ -49,14 +49,17 @@ final class EngineTest extends IntegrationTestCase
 
     private FakeClock $clock;
 
+    private ArrayRequestScheduler $scheduler;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $dispatcher = new EventDispatcher();
         $this->clock = new FakeClock();
+        $this->scheduler = new ArrayRequestScheduler($this->clock);
         $this->engine = new Engine(
-            new ArrayRequestScheduler($this->clock),
+            $this->scheduler,
             new Downloader(new Client(), $dispatcher),
             new ItemPipeline($dispatcher),
             new Processor($dispatcher),
@@ -72,12 +75,30 @@ final class EngineTest extends IntegrationTestCase
             $this->makeRequest('http://localhost:8000/test1'),
             $this->makeRequest('http://localhost:8000/test2'),
         ];
-        $run = new Run($startRequests, 'DefaultSpider');
+        $run = new Run($startRequests, '::namespace::');
 
         $this->engine->start($run);
 
         $this->assertRouteWasCrawledTimes('/test1', 1);
         $this->assertRouteWasCrawledTimes('/test2', 1);
+    }
+
+    public function testDoesntCrawlStartUrlsWithExistingRequestsInScheduler(): void
+    {
+        $startRequests = [
+            $this->makeRequest('http://localhost:8000/test1'),
+            $this->makeRequest('http://localhost:8000/test2'),
+        ];
+
+        $run = new Run($startRequests, '::namespace::');
+
+        $this->scheduler->schedule($this->makeRequest('http://localhost:8000/test3'));
+
+        $this->engine->start($run);
+
+        $this->assertRouteWasNotCrawled('/test1');
+        $this->assertRouteWasNotCrawled('/test2');
+        $this->assertRouteWasCrawledTimes('/test3', 1);
     }
 
     public function testCrawlUrlsReturnedFromParseCallback(): void
@@ -89,7 +110,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test2', $parseFunction)],
-            'DefaultSpider',
+            '::namespace::',
         );
 
         $this->engine->start($run);
@@ -109,7 +130,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
-            'DefaultSpider',
+            '::namespace::',
         );
 
         $this->engine->start($run);
@@ -129,7 +150,7 @@ final class EngineTest extends IntegrationTestCase
         ];
         $run = new Run(
             $startRequests,
-            'DefaultSpider',
+            '::namespace::',
             itemProcessors: [$processor],
         );
 
@@ -148,7 +169,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
-            'DefaultSpider',
+            '::namespace::',
             itemProcessors: [$processor],
         );
 
@@ -167,7 +188,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
-            'DefaultSpider',
+            '::namespace::',
             extensions: [
                 new StatsCollectorExtension($logger, new FakeClock()),
                 new LoggerExtension($logger),
@@ -202,7 +223,7 @@ final class EngineTest extends IntegrationTestCase
         };
         $run = new Run(
             [$this->makeRequest('http://localhost:8000/test1', $parseCallback)],
-            'DefaultSpider',
+            '::namespace::',
         );
 
         $result = $this->engine->collect($run);
@@ -234,7 +255,7 @@ final class EngineTest extends IntegrationTestCase
                 $this->makeRequest('http://localhost:8000/test3'),
                 $this->makeRequest('http://localhost:8000/robots'),
             ],
-            'DefaultSpider',
+            '::namespace::',
             downloaderMiddleware: [DownloaderMiddlewareAdapter::fromMiddleware($middleware)],
             concurrency: 1,
             requestDelay: 5,
