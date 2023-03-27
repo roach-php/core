@@ -333,4 +333,46 @@ final class DownloaderTest extends TestCase
 
         self::assertFalse($called);
     }
+
+    public function testDontSendRequestIfHasResponse(): void
+    {
+        $request = $this->makeRequest();
+        $request = $request->withResponse($this->makeResponse($request));
+
+        $this->downloader->prepare($request);
+        $this->downloader->flush();
+
+        $this->client->assertRequestWasNotSent($request);
+    }
+
+    public function testResponseDispatchedWhenNotSent(): void
+    {
+        $request = $this->makeRequest();
+        $request = $request->withResponse($this->makeResponse($request));
+
+        $this->downloader->prepare($request);
+        $this->dispatcher->assertNotDispatched(ResponseReceiving::NAME);
+
+        $this->downloader->flush();
+        $this->dispatcher->assertDispatched(
+            ResponseReceiving::NAME,
+            static fn (ResponseReceiving $event) => $event->response->getRequest()->getUri() === $request->getUri(),
+        );
+
+        $this->client->assertRequestWasNotSent($request);
+    }
+
+    public function testPassRequestsThroughRequestHandlersWhenHasResponse(): void
+    {
+        $request = $this->makeRequest();
+        $request = $request->withResponse($this->makeResponse($request));
+
+        $middleware = new FakeMiddleware();
+
+        $this->downloader
+            ->withMiddleware($middleware)
+            ->prepare($request);
+
+        $middleware->assertRequestHandled($request);
+    }
 }

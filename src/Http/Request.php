@@ -122,4 +122,17 @@ final class Request implements DroppableInterface
     {
         return $this->parseCallback;
     }
+
+    public function getResponse(): ?Response
+    {
+        return $this->response;
+    }
+
+    public function withResponse(?Response $response): self
+    {
+        $clone = clone $this;
+        $clone->response = $response;
+
+        return $clone;
+    }
 }

@@ -104,7 +104,7 @@ final class Downloader
             }
         }
 
-        if (!\count($requests)) {
+        if (\count($requests) === 0) {
             return;
         }
 

@@ -106,6 +106,19 @@ final class RequestTest extends TestCase
         self::assertSame('::request-uri::', (string) $request->getPsrRequest()->getUri());
     }
 
+    public function testAddingResponseDoesntMutateRequest(): void
+    {
+        $requestA = $this->makeRequest('::request-uri::');
+
+        $response = $this->makeResponse($requestA);
+
+        $requestB = $requestA->withResponse($response);
+
+        self::assertNotSame($requestA, $requestB);
+        self::assertNull($requestA->getResponse());
+        self::assertSame($response, $requestB->getResponse());
+    }
+
     protected function createDroppable(): DroppableInterface
     {
         return $this->makeRequest();
