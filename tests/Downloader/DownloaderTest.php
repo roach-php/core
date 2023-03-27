@@ -19,6 +19,9 @@ use RoachPHP\Downloader\Middleware\FakeMiddleware;
 use RoachPHP\Events\FakeDispatcher;
 use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\RequestSending;
+use RoachPHP\Events\ResponseDropped;
+use RoachPHP\Events\ResponseReceived;
+use RoachPHP\Events\ResponseReceiving;
 use RoachPHP\Http\FakeClient;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
@@ -215,5 +218,119 @@ final class DownloaderTest extends TestCase
             RequestDropped::NAME,
             static fn (RequestDropped $event) => $event->request->getUri() === $request->getUri(),
         );
+    }
+
+    public function testDispatchEventWhenResponseWasReceived(): void
+    {
+        $request = $this->makeRequest();
+
+        $this->downloader->prepare($request);
+        $this->dispatcher->assertNotDispatched(ResponseReceiving::NAME);
+
+        $this->downloader->flush();
+        $this->dispatcher->assertDispatched(
+            ResponseReceiving::NAME,
+            static fn (ResponseReceiving $event) => $event->response->getRequest()->getUri() === $request->getUri(),
+        );
+    }
+
+    public function testDontPassResponseToMiddlewareIfDroppedByExtension(): void
+    {
+        $request = $this->makeRequest();
+        $this->dispatcher->listen(ResponseReceiving::NAME, static function (ResponseReceiving $event): void {
+            $event->response = $event->response->drop('::reason::');
+        });
+        $middleware = new FakeMiddleware();
+        $this->downloader->withMiddleware($middleware);
+
+        $this->downloader->prepare($request);
+        $this->downloader->flush();
+
+        $middleware->assertNoResponseHandled();
+    }
+
+    public function testFireEventIfReceivedResponseWasDroppedByExtension(): void
+    {
+        $request = $this->makeRequest();
+        $this->dispatcher->listen(ResponseReceiving::NAME, static function (ResponseReceiving $event): void {
+            $event->response = $event->response->drop('::reason::');
+        });
+
+        $this->downloader->prepare($request);
+        $this->downloader->flush();
+
+        $this->dispatcher->assertDispatched(
+            ResponseDropped::NAME,
+            static fn (ResponseDropped $event) => $event->response->getRequest()->getUri() === $request->getUri(),
+        );
+    }
+
+    public function testDontCallParseCallbackIfRequestWasDroppedByExtension(): void
+    {
+        $called = false;
+        $request = $this->makeRequest();
+        $this->dispatcher->listen(ResponseReceiving::NAME, static function (ResponseReceiving $event): void {
+            $event->response = $event->response->drop('::reason::');
+        });
+
+        $this->downloader->prepare($request);
+        $this->downloader->flush(static function () use (&$called): void {
+            $called = true;
+        });
+
+        self::assertFalse($called);
+    }
+
+    public function testDispatchEventWhenResponseWasProcessedByMiddleware(): void
+    {
+        $request = $this->makeRequest();
+        $middleware = new FakeMiddleware(
+            responseHandler: function (Response $response) {
+                $this->dispatcher->assertNotDispatched(ResponseReceived::NAME);
+
+                return $response;
+            },
+        );
+        $this->downloader->withMiddleware($middleware);
+
+        $this->downloader->prepare($request);
+        $this->downloader->flush();
+
+        $this->dispatcher->assertDispatched(
+            ResponseReceived::NAME,
+            static fn (ResponseReceived $event) => $event->response->getRequest()->getUri() === $request->getUri(),
+        );
+    }
+
+    public function testFireEventIfProcessedResponseWasDroppedByExtension(): void
+    {
+        $request = $this->makeRequest();
+        $this->dispatcher->listen(ResponseReceived::NAME, static function (ResponseReceived $event): void {
+            $event->response = $event->response->drop('::reason::');
+        });
+
+        $this->downloader->prepare($request);
+        $this->downloader->flush();
+
+        $this->dispatcher->assertDispatched(
+            ResponseDropped::NAME,
+            static fn (ResponseDropped $event) => $event->response->getRequest()->getUri() === $request->getUri(),
+        );
+    }
+
+    public function testDontCallParseCallbackIfProcessedResponseWasDroppedByExtension(): void
+    {
+        $called = false;
+        $request = $this->makeRequest();
+        $this->dispatcher->listen(ResponseReceived::NAME, static function (ResponseReceived $event): void {
+            $event->response = $event->response->drop('::reason::');
+        });
+
+        $this->downloader->prepare($request);
+        $this->downloader->flush(static function () use (&$called): void {
+            $called = true;
+        });
+
+        self::assertFalse($called);
     }
 }
