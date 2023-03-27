@@ -34,6 +34,8 @@ final class Request implements DroppableInterface
 
     private RequestInterface $psrRequest;
 
+    private ?Response $response = null;
+
     /**
      * An array of Guzzle request options.
      * See https://docs.guzzlephp.org/en/stable/request-options.html.

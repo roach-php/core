@@ -96,7 +96,19 @@ final class Downloader
 
         $this->requests = [];
 
-        $this->client->pool($requests, function (Response $response) use ($callback): void {
+        foreach ($requests as $key => $request) {
+            if ($request->getResponse() !== null) {
+                $this->onResponseReceived($request->getResponse(), $callback);
+
+                unset($requests[$key]);
+            }
+        }
+
+        if (!\count($requests)) {
+            return;
+        }
+
+        $this->client->pool(\array_values($requests), function (Response $response) use ($callback): void {
             $this->onResponseReceived($response, $callback);
         });
     }
