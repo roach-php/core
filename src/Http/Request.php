@@ -34,6 +34,8 @@ final class Request implements DroppableInterface
 
     private RequestInterface $psrRequest;
 
+    private ?Response $response = null;
+
     /**
      * An array of Guzzle request options.
      * See https://docs.guzzlephp.org/en/stable/request-options.html.
@@ -119,5 +121,18 @@ final class Request implements DroppableInterface
     public function getParseCallback(): Closure
     {
         return $this->parseCallback;
+    }
+
+    public function getResponse(): ?Response
+    {
+        return $this->response;
+    }
+
+    public function withResponse(?Response $response): self
+    {
+        $clone = clone $this;
+        $clone->response = $response;
+
+        return $clone;
     }
 }
