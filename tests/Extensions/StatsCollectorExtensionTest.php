@@ -130,7 +130,7 @@ final class StatsCollectorExtensionTest extends ExtensionTestCase
      */
     private function withRun(callable $callback): void
     {
-        $run = new Run([]);
+        $run = new Run([], '::namespace::');
 
         $this->dispatch(new RunStarting($run), RunStarting::NAME);
 

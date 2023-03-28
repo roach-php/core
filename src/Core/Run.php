@@ -33,6 +33,7 @@ final class Run
      */
     public function __construct(
         public array $startRequests,
+        public string $namespace,
         public array $downloaderMiddleware = [],
         public array $itemProcessors = [],
         public array $responseMiddleware = [],
