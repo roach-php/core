@@ -3303,16 +3303,16 @@
         },
         {
             "name": "ergebnis/php-cs-fixer-config",
-            "version": "5.4.0",
+            "version": "5.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/php-cs-fixer-config.git",
-                "reference": "cd00fe8857cc330e6292cc5ea75547152584e247"
+                "reference": "3558825e7249d9e355fea2decc26e41c696fa341"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/cd00fe8857cc330e6292cc5ea75547152584e247",
-                "reference": "cd00fe8857cc330e6292cc5ea75547152584e247",
+                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/3558825e7249d9e355fea2decc26e41c696fa341",
+                "reference": "3558825e7249d9e355fea2decc26e41c696fa341",
                 "shasum": ""
             },
             "require": {
@@ -3327,7 +3327,7 @@
                 "infection/infection": "~0.26.19",
                 "phpunit/phpunit": "^9.6.6",
                 "psalm/plugin-phpunit": "~0.18.4",
-                "rector/rector": "~0.15.23",
+                "rector/rector": "~0.15.24",
                 "symfony/filesystem": "^5.0.0 || ^6.0.0",
                 "symfony/process": "^5.0.0 || ^6.0.0",
                 "vimeo/psalm": "^5.9.0"
@@ -3360,7 +3360,7 @@
                 "issues": "https://github.com/ergebnis/php-cs-fixer-config/issues",
                 "source": "https://github.com/ergebnis/php-cs-fixer-config"
             },
-            "time": "2023-04-03T07:32:08+00:00"
+            "time": "2023-04-11T17:38:16+00:00"
         },
         {
             "name": "felixfbecker/advanced-json-rpc",
