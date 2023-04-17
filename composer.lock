@@ -1406,16 +1406,16 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v6.2.8",
+            "version": "v6.2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "0e0d0f709997ad1224ef22bb0a28287c44b7840f"
+                "reference": "328bc3795059651d2d4e462e8febdf7ec2d7a626"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/0e0d0f709997ad1224ef22bb0a28287c44b7840f",
-                "reference": "0e0d0f709997ad1224ef22bb0a28287c44b7840f",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/328bc3795059651d2d4e462e8febdf7ec2d7a626",
+                "reference": "328bc3795059651d2d4e462e8febdf7ec2d7a626",
                 "shasum": ""
             },
             "require": {
@@ -1456,7 +1456,7 @@
             "description": "Eases DOM navigation for HTML and XML documents",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dom-crawler/tree/v6.2.8"
+                "source": "https://github.com/symfony/dom-crawler/tree/v6.2.9"
             },
             "funding": [
                 {
@@ -1472,7 +1472,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-09T16:20:02+00:00"
+            "time": "2023-04-11T16:03:19+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
