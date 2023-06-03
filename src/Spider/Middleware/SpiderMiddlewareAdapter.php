@@ -24,12 +24,12 @@ use RoachPHP\Spider\SpiderMiddlewareInterface;
 final class SpiderMiddlewareAdapter implements SpiderMiddlewareInterface
 {
     private function __construct(
-        private RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $middleware,
+        private ItemMiddlewareInterface|RequestMiddlewareInterface|ResponseMiddlewareInterface $middleware,
     ) {
     }
 
     public static function fromMiddleware(
-        RequestMiddlewareInterface|ItemMiddlewareInterface|ResponseMiddlewareInterface $middleware,
+        ItemMiddlewareInterface|RequestMiddlewareInterface|ResponseMiddlewareInterface $middleware,
     ): SpiderMiddlewareInterface {
         if ($middleware instanceof SpiderMiddlewareInterface) {
             return $middleware;
@@ -70,7 +70,7 @@ final class SpiderMiddlewareAdapter implements SpiderMiddlewareInterface
         $this->middleware->configure($options);
     }
 
-    public function getMiddleware(): ResponseMiddlewareInterface|RequestMiddlewareInterface|ItemMiddlewareInterface
+    public function getMiddleware(): ItemMiddlewareInterface|RequestMiddlewareInterface|ResponseMiddlewareInterface
     {
         return $this->middleware;
     }

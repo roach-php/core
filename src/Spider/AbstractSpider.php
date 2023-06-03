@@ -67,7 +67,7 @@ abstract class AbstractSpider implements SpiderInterface
         return ParseResult::request($method, $url, [$this, $parseMethod], $options);
     }
 
-    protected function item(ItemInterface|array $item): ParseResult
+    protected function item(array|ItemInterface $item): ParseResult
     {
         if ($item instanceof ItemInterface) {
             return ParseResult::fromValue($item);

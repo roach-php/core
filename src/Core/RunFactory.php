@@ -57,7 +57,7 @@ final class RunFactory
      */
     private function buildDownloaderMiddleware(array $downloaderMiddleware): array
     {
-        return \array_map(function (string|array $middleware) {
+        return \array_map(function (array|string $middleware) {
             return DownloaderMiddlewareAdapter::fromMiddleware($this->buildConfigurable($middleware));
         }, $downloaderMiddleware);
     }
@@ -79,7 +79,7 @@ final class RunFactory
      */
     private function buildResponseMiddleware(array $handlers): array
     {
-        return \array_map(function (string|array $handler) {
+        return \array_map(function (array|string $handler) {
             return SpiderMiddlewareAdapter::fromMiddleware($this->buildConfigurable($handler));
         }, $handlers);
     }
@@ -91,7 +91,7 @@ final class RunFactory
      */
     private function buildExtensions(array $extensions): array
     {
-        return \array_map(function (string|array $extension) {
+        return \array_map(function (array|string $extension) {
             return $this->buildConfigurable($extension);
         }, $extensions);
     }
@@ -103,7 +103,7 @@ final class RunFactory
      *
      * @return T
      */
-    private function buildConfigurable(string|array $configurable): mixed
+    private function buildConfigurable(array|string $configurable): mixed
     {
         if (!\is_array($configurable)) {
             $configurable = [$configurable, []];
