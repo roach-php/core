@@ -24,7 +24,7 @@ use RoachPHP\Spider\SpiderMiddlewareInterface;
 final class Overrides
 {
     /**
-     * @param null|string[] $startUrls
+     * @param null|string[]                                      $startUrls
      * @param null|class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
      * @param null|class-string<SpiderMiddlewareInterface>[]     $spiderMiddleware
      * @param null|class-string<ItemProcessorInterface>[]        $itemProcessors
