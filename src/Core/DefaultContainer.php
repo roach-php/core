@@ -59,6 +59,10 @@ final class DefaultContainer implements ContainerInterface
     private function registerDefaultBindings(): void
     {
         $this->container->addShared(
+            ContainerInterface::class,
+            $this->container,
+        );
+        $this->container->addShared(
             LoggerInterface::class,
             static fn () => (new Logger('roach'))->pushHandler(new StreamHandler('php://stdout')),
         );

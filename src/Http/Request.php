@@ -27,6 +27,8 @@ final class Request implements DroppableInterface
     use HasMetaData;
     use Droppable;
 
+    public URL $url;
+
     /**
      * @var Closure(Response): Generator<ParseResult>
      */
@@ -50,6 +52,7 @@ final class Request implements DroppableInterface
         $this->options = $options;
         $this->psrRequest = new GuzzleRequest($method, $uri);
         $this->parseCallback = Closure::fromCallable($parseMethod);
+        $this->url = URL::parse($uri);
     }
 
     public function getUri(): string
@@ -91,7 +94,7 @@ final class Request implements DroppableInterface
         return $this->options;
     }
 
-    public function addOption(string $option, \GuzzleHttp\Cookie\CookieJarInterface $value): self
+    public function addOption(string $option, mixed $value): self
     {
         $this->options[$option] = $value;
 

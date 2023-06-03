@@ -119,6 +119,15 @@ final class RequestTest extends TestCase
         self::assertSame($response, $requestB->getResponse());
     }
 
+    public function testReturnParsedURL(): void
+    {
+        $request = $this->makeRequest('https://example.com/path#anchor');
+
+        self::assertTrue(
+            $request->url->equals('https://example.com/path#anchor'),
+        );
+    }
+
     protected function createDroppable(): DroppableInterface
     {
         return $this->makeRequest();
