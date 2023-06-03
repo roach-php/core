@@ -11,12 +11,9 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\Support;
+namespace RoachPHP\Downloader\Proxy;
 
-interface ConfigurableInterface
+interface ConfigurationLoaderInterface
 {
-    /**
-     * @param array<string, mixed> $options
-     */
-    public function configure(array $options): void;
+    public function loadProxyConfiguration(): Proxy;
 }

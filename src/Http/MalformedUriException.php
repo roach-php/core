@@ -11,12 +11,14 @@ declare(strict_types=1);
  * @see https://github.com/roach-php/roach
  */
 
-namespace RoachPHP\Support;
+namespace RoachPHP\Http;
 
-interface ConfigurableInterface
+use Exception;
+
+final class MalformedUriException extends Exception
 {
-    /**
-     * @param array<string, mixed> $options
-     */
-    public function configure(array $options): void;
+    public static function forUri(string $uri): self
+    {
+        return new self("Unable to parse URI [{$uri}]");
+    }
 }
