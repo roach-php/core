@@ -25,7 +25,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class Processor
 {
     /**
-     * @var SpiderMiddlewareInterface[]
+     * @var array<SpiderMiddlewareInterface>
      */
     private array $middleware = [];
 
@@ -55,7 +55,7 @@ final class Processor
             }
         }
 
-        /** @var ParseResult[] $results */
+        /** @var array<ParseResult> $results */
         $results = $response->getRequest()->callback($response);
 
         foreach ($results as $result) {

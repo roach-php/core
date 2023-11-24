@@ -25,7 +25,7 @@ final class RequestDeduplicationMiddleware implements RequestMiddlewareInterface
     use Configurable;
 
     /**
-     * @var string[]
+     * @var array<string>
      */
     private array $seenUris = [];
 

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Shell\Resolver;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Shell\Resolver\DefaultNamespaceResolverDecorator;
 use RoachPHP\Shell\Resolver\FakeNamespaceResolver;
@@ -41,7 +40,7 @@ final class DefaultNamespaceResolverDecoratorTest extends TestCase
         self::assertSame('RoachPHP\Tests\Fixtures\\' . $spiderName, $result);
     }
 
-    public static function prependNamespaceProvider(): Generator
+    public static function prependNamespaceProvider(): iterable
     {
         yield from [
             'only class name' => [
@@ -64,7 +63,7 @@ final class DefaultNamespaceResolverDecoratorTest extends TestCase
         self::assertSame('RoachPHP\Tests\Fixtures\TestSpider', $result);
     }
 
-    public static function defaultNamespaceProvider(): Generator
+    public static function defaultNamespaceProvider(): iterable
     {
         yield from [
             'leading backslashes' => [
@@ -95,7 +94,7 @@ final class DefaultNamespaceResolverDecoratorTest extends TestCase
         self::assertSame('RoachPHP\Tests\Fixtures\TestSpider', $result);
     }
 
-    public static function spiderNameProvider(): Generator
+    public static function spiderNameProvider(): iterable
     {
         yield from [
             'leading spaces' => [

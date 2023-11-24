@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Testing;
 
-use Generator;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Core\FakeRunner;
@@ -124,7 +123,7 @@ final class FakeRunnerTest extends TestCase
         $this->runner->assertRunWasNotStarted(TestSpider::class);
     }
 
-    public static function runnerMethodProvider(): Generator
+    public static function runnerMethodProvider(): iterable
     {
         yield from [
             'startSpider' => ['startSpider'],

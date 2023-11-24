@@ -22,7 +22,7 @@ use PHPUnit\Framework\Assert;
 final class FakeClient implements ClientInterface
 {
     /**
-     * @var string[]
+     * @var array<string>
      */
     private array $sentRequestUrls = [];
 

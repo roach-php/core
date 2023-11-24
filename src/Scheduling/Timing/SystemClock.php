@@ -39,6 +39,6 @@ final class SystemClock implements ClockInterface
         }
 
         /** @psalm-suppress UnusedFunctionCall */
-        @\time_sleep_until($date->getTimestamp());
+        \time_sleep_until($date->getTimestamp());
     }
 }

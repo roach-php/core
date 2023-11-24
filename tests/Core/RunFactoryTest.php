@@ -233,7 +233,7 @@ final class RunFactoryTest extends TestCase
         self::assertSame($spider::class, $run->namespace);
     }
 
-    public static function numberProvider(): Generator
+    public static function numberProvider(): iterable
     {
         yield from [
             [1],
@@ -278,7 +278,7 @@ final class RunFactoryTest extends TestCase
         $verifyRun($run);
     }
 
-    public static function configurationOverrideProvider(): Generator
+    public static function configurationOverrideProvider(): iterable
     {
         yield from [
             'override start urls' => [

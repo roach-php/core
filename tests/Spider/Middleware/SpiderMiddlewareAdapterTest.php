@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Spider\Middleware;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
@@ -79,7 +78,7 @@ final class SpiderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
-    public static function itemMiddlewareProvider(): Generator
+    public static function itemMiddlewareProvider(): iterable
     {
         yield 'return request unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
             $response = self::makeResponse(self::makeRequest('::url-a::'));
@@ -126,7 +125,7 @@ final class SpiderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
-    public static function requestMiddlewareProvider(): Generator
+    public static function requestMiddlewareProvider(): iterable
     {
         yield 'return response unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
             $response = self::makeResponse(self::makeRequest());
@@ -173,7 +172,7 @@ final class SpiderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
-    public static function responseMiddlewareProvider(): Generator
+    public static function responseMiddlewareProvider(): iterable
     {
         yield 'return item unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
             $item = new Item(['::key::' => '::value::']);

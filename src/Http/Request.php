@@ -73,7 +73,7 @@ final class Request implements DroppableInterface
     }
 
     /**
-     * @param string|string[] $value
+     * @param array<string>|string $value
      */
     public function addHeader(string $name, mixed $value): self
     {

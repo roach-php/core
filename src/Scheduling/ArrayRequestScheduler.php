@@ -23,7 +23,7 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
     private int $delay = 0;
 
     /**
-     * @var Request[]
+     * @var array<Request>
      */
     private array $requests = [];
 
@@ -45,7 +45,7 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
     }
 
     /**
-     * @return Request[]
+     * @return array<Request>
      */
     public function nextRequests(int $batchSize): array
     {
@@ -79,7 +79,7 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
     }
 
     /**
-     * @return Request[]
+     * @return array<Request>
      */
     private function getNextRequests(int $batchSize): array
     {

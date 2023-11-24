@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Spider\Middleware;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Spider\Middleware\MaximumCrawlDepthMiddleware;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
@@ -40,7 +39,7 @@ final class MaximumCrawlDepthMiddlewareTest extends TestCase
         self::assertSame($initialDepth + 1, $processedRequest->getMeta('depth'));
     }
 
-    public static function initialDepthProvider(): Generator
+    public static function initialDepthProvider(): iterable
     {
         yield from [
             [0],
@@ -98,7 +97,7 @@ final class MaximumCrawlDepthMiddlewareTest extends TestCase
         self::assertFalse($processedRequest->wasDropped());
     }
 
-    public static function maxCrawlDepthProvider(): Generator
+    public static function maxCrawlDepthProvider(): iterable
     {
         yield from [
             [2],

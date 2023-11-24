@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Spider\Configuration;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Spider\Configuration\Configuration;
 use RoachPHP\Spider\Configuration\Overrides;
@@ -57,7 +56,7 @@ final class ConfigurationTest extends TestCase
         $verifyConfig($overrideConfig);
     }
 
-    public static function overridesProvider(): Generator
+    public static function overridesProvider(): iterable
     {
         yield from [
             'override startUrls' => [

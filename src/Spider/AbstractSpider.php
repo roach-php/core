@@ -36,7 +36,7 @@ abstract class AbstractSpider implements SpiderInterface
     abstract public function parse(Response $response): Generator;
 
     /**
-     * @return Request[]
+     * @return array<Request>
      */
     final public function getInitialRequests(): array
     {
@@ -77,7 +77,7 @@ abstract class AbstractSpider implements SpiderInterface
     }
 
     /**
-     * @return Request[]
+     * @return array<Request>
      */
     protected function initialRequests(): array
     {

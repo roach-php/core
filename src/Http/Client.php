@@ -30,7 +30,7 @@ final class Client implements ClientInterface
     }
 
     /**
-     * @param Request[] $requests
+     * @param array<Request> $requests
      */
     public function pool(
         array $requests,

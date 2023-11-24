@@ -12,20 +12,24 @@ the LICENSE file that was distributed with this source code.
 @see https://github.com/roach-php/roach
 EOF;
 
-$config = Config\Factory::fromRuleSet(new Config\RuleSet\Php80($header), [
-    'php_unit_test_class_requires_covers' => false,
-    'class_attributes_separation' => [
-        'elements' => [
-            'const' => 'one',
-            'method' => 'one',
-            'property' => 'one',
-            'trait_import' => 'none',
+$ruleSet =  Config\RuleSet\Php80::create()
+    ->withHeader($header)
+    ->withRules(Config\Rules::fromArray([
+        'php_unit_test_class_requires_covers' => false,
+        'class_attributes_separation' => [
+            'elements' => [
+                'const' => 'one',
+                'method' => 'one',
+                'property' => 'one',
+                'trait_import' => 'none',
+            ],
         ],
-    ],
-    'error_suppression' => [
-        'noise_remaining_usages' => false,
-    ],
-]);
+        'error_suppression' => [
+            'noise_remaining_usages' => false,
+        ],
+    ]));
+
+$config = Config\Factory::fromRuleSet($ruleSet);
 
 $config->getFinder()->in(__DIR__);
 $config->setCacheFile(__DIR__ . '/.build/php-cs-fixer/.php-cs-fixer.cache');

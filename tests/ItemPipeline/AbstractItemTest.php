@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\ItemPipeline;
 
-use Generator;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Tests\Fixtures\TestItem;
@@ -101,7 +100,7 @@ final class AbstractItemTest extends TestCase
         self::assertSame($expected, isset($item[$property]));
     }
 
-    public static function hasPropertyProvider(): Generator
+    public static function hasPropertyProvider(): iterable
     {
         yield from [
             'public property 1' => ['foo', true],
@@ -169,7 +168,7 @@ final class AbstractItemTest extends TestCase
         $item[$property] = '::new-value::';
     }
 
-    public static function inaccessiblePropertiesProvider(): Generator
+    public static function inaccessiblePropertiesProvider(): iterable
     {
         yield from [
             'protected property' => ['baz'],

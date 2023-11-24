@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Shell\Resolver;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Shell\Resolver\FakeNamespaceResolver;
 use RoachPHP\Tests\Fixtures\RequestSpiderMiddleware;
@@ -34,7 +33,7 @@ final class FakeNamespaceResolverTest extends TestCase
         self::assertSame($input, $result);
     }
 
-    public static function inputStringProvider(): Generator
+    public static function inputStringProvider(): iterable
     {
         yield from [
             ['::string-1::'],
