@@ -1,7 +1,6 @@
 <?php
 
 use Ergebnis\PhpCsFixer\Config;
-use PhpCsFixer\RuleSet\RuleSet;
 
 $header = <<<EOF
 Copyright (c) 2023 Kai Sassnowski
