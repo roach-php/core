@@ -22,10 +22,10 @@ final class Configuration
 {
     /**
      * @param array<string>                                      $startUrls
-     * @param class-string<array<DownloaderMiddlewareInterface>> $downloaderMiddleware
-     * @param class-string<array<ItemProcessorInterface>>        $itemProcessors
-     * @param class-string<array<SpiderMiddlewareInterface>>     $spiderMiddleware
-     * @param class-string<array<ExtensionInterface>>            $extensions
+     * @param class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
+     * @param class-string<ItemProcessorInterface>[]       $itemProcessors
+     * @param class-string<SpiderMiddlewareInterface>[]    $spiderMiddleware
+     * @param class-string<ExtensionInterface>[]            $extensions
      */
     public function __construct(
         public array $startUrls,

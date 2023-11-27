@@ -91,7 +91,7 @@ final class Request implements DroppableInterface
         return $this->options;
     }
 
-    public function addOption(string $option, mixed $value): self
+    public function addOption(string $option, \GuzzleHttp\Cookie\CookieJarInterface $value): self
     {
         $this->options[$option] = $value;
 
