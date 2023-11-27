@@ -24,11 +24,11 @@ use RoachPHP\Spider\SpiderMiddlewareInterface;
 final class Overrides
 {
     /**
-     * @param null|array<string>                                 $startUrls
-     * @param null|class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
-     * @param null|class-string<SpiderMiddlewareInterface>[]     $spiderMiddleware
-     * @param null|class-string<ItemProcessorInterface>[]        $itemProcessors
-     * @param null|class-string<ExtensionInterface>[]            $extensions
+     * @param null|array<string>                                      $startUrls
+     * @param null|array<class-string<DownloaderMiddlewareInterface>> $downloaderMiddleware
+     * @param null|array<class-string<SpiderMiddlewareInterface>>     $spiderMiddleware
+     * @param null|array<class-string<ItemProcessorInterface>>        $itemProcessors
+     * @param null|array<class-string<ExtensionInterface>>            $extensions
      */
     public function __construct(
         public ?array $startUrls = null,

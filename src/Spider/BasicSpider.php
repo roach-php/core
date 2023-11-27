@@ -29,24 +29,24 @@ abstract class BasicSpider extends AbstractSpider
     public array $startUrls = [];
 
     /**
-     * @var class-string<SpiderMiddlewareInterface>[]
+     * @var array<class-string<SpiderMiddlewareInterface>>
      */
     public array $spiderMiddleware = [];
 
     /**
-     * @var class-string<RequestMiddlewareInterface>[]
+     * @var array<class-string<RequestMiddlewareInterface>>
      */
     public array $downloaderMiddleware = [
         RequestDeduplicationMiddleware::class,
     ];
 
     /**
-     * @var class-string<ItemProcessorInterface>[]
+     * @var array<class-string<ItemProcessorInterface>>
      */
     public array $itemProcessors = [];
 
     /**
-     * @var class-string<ExtensionInterface>[]
+     * @var array<class-string<ExtensionInterface>>
      */
     public array $extensions = [
         LoggerExtension::class,
