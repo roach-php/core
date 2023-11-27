@@ -15,6 +15,7 @@ $ruleSet =  Config\RuleSet\Php80::create()
     ->withHeader($header)
     ->withRules(Config\Rules::fromArray([
         'php_unit_test_class_requires_covers' => false,
+        'PhpCsFixerCustomFixers/phpdoc_array_style' => false,
         'class_attributes_separation' => [
             'elements' => [
                 'const' => 'one',
