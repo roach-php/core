@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace RoachPHP\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Throwable;
 use const JSON_THROW_ON_ERROR;
 
 /**
