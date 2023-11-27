@@ -28,9 +28,8 @@ abstract class IntegrationTestCase extends TestCase
     {
         $this->skipIfServerNotRunning();
 
-        try {
+        if (\file_exists(__DIR__ . '/Server/tmp/crawled.json')) {
             \unlink(__DIR__ . '/Server/tmp/crawled.json');
-        } catch (Throwable) {
         }
     }
 
