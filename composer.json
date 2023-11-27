@@ -15,6 +15,8 @@
         "jakeasmith/http_build_url": "^1.0.1",
         "league/container": "^4.2",
         "monolog/monolog": "^3.5",
+        "nyholm/psr7": "^1.8.1",
+        "nyholm/psr7-server": "^1.1",
         "psr/container": "^2.0.2",
         "psy/psysh": "^0.11.22",
         "spatie/robots-txt": "^2.0.3",

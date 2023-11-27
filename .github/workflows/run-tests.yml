@@ -33,12 +33,12 @@ jobs:
 
       - name: "Determine composer cache directory"
         id: "determine-composer-cache-directory"
-        run: "echo \"::set-output name=directory::$(composer config cache-dir)\""
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v3"
         with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.directory }}"
+          path: "${{ steps.determine-composer-cache-directory.outputs.dir }}"
           key: "php-${{ matrix.php }}-composer-${{ matrix.dependency-version }}-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php }}-composer-${{ matrix.dependency-version }}-"
 
