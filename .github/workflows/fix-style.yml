@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Get branch names
         id: branch-name
-        uses: tj-actions/branch-names@v5.1
+        uses: tj-actions/branch-names@v7.0.7
 
       - name: Checkout code
         uses: actions/checkout@v2
