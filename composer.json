@@ -26,7 +26,7 @@
     },
     "require-dev": {
         "ergebnis/composer-normalize": "^2.15",
-        "ergebnis/php-cs-fixer-config": "^5.3",
+        "ergebnis/php-cs-fixer-config": "^5.3 || ^6.0",
         "http-interop/http-factory-guzzle": "^1.2",
         "phpunit/phpunit": "^10.0",
         "psr/http-message": "^1.0.1",
