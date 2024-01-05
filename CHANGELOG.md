@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `ProxyMiddleware` (#185)
 - Added namespace to run and scheduler (#105) (167e824)
 - Added `ResponseReceiving` and `ResponseReceived` events (96c9332)
 - Allow request middleware to set a response to bypass downloader (#106) (d8ae43e)
