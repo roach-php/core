@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Extensions;
 
-use Generator;
 use RoachPHP\Events\RequestScheduling;
 use RoachPHP\Events\RequestSending;
 use RoachPHP\Extensions\ExtensionInterface;
@@ -67,7 +66,7 @@ final class MaxRequestExtensionTest extends ExtensionTestCase
         self::assertTrue($event->request->wasDropped());
     }
 
-    public static function thresholdProvider(): Generator
+    public static function thresholdProvider(): iterable
     {
         yield [1];
 

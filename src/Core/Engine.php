@@ -113,7 +113,7 @@ final class Engine implements EngineInterface
 
     private function onFulfilled(Response $response): void
     {
-        /** @var ParseResult[] $parseResults */
+        /** @var array<ParseResult> $parseResults */
         $parseResults = $this->responseProcessor->handle($response);
 
         foreach ($parseResults as $result) {

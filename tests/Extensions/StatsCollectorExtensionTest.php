@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Extensions;
 
-use Generator;
 use RoachPHP\Core\Run;
 use RoachPHP\Events\ItemDropped;
 use RoachPHP\Events\ItemScraped;
@@ -70,7 +69,7 @@ final class StatsCollectorExtensionTest extends ExtensionTestCase
         $this->assertStatWasLogged('duration', $expected);
     }
 
-    public static function statsScenarioProvider(): Generator
+    public static function statsScenarioProvider(): iterable
     {
         $scenarios = [
             'items.scraped' => [
@@ -105,7 +104,7 @@ final class StatsCollectorExtensionTest extends ExtensionTestCase
         }
     }
 
-    public static function runtimeProvider(): Generator
+    public static function runtimeProvider(): iterable
     {
         yield from [
             ['seconds' => 10, 'expected' => '00:00:10'],

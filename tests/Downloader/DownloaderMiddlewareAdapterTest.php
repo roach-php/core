@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Downloader;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
@@ -71,7 +70,7 @@ final class DownloaderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
-    public static function requestMiddlewareProvider(): Generator
+    public static function requestMiddlewareProvider(): iterable
     {
         yield 'return response unchanged' => [static function (DownloaderMiddlewareAdapter $adapter): void {
             $response = self::makeResponse();
@@ -108,7 +107,7 @@ final class DownloaderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
-    public static function responseMiddlewareProvider(): Generator
+    public static function responseMiddlewareProvider(): iterable
     {
         yield 'return request unchanged' => [static function (DownloaderMiddlewareAdapter $adapter): void {
             $request = self::makeRequest();

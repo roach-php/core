@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace RoachPHP\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Throwable;
 use const JSON_THROW_ON_ERROR;
 
 /**
@@ -28,15 +27,14 @@ abstract class IntegrationTestCase extends TestCase
     {
         $this->skipIfServerNotRunning();
 
-        try {
-            @\unlink(__DIR__ . '/Server/tmp/crawled.json');
-        } catch (Throwable) {
+        if (\file_exists(__DIR__ . '/Server/tmp/crawled.json')) {
+            \unlink(__DIR__ . '/Server/tmp/crawled.json');
         }
     }
 
     protected function skipIfServerNotRunning(): void
     {
-        if (false === @\file_get_contents("{$this->serverUrl}/ping")) {
+        if (false === \file_get_contents("{$this->serverUrl}/ping")) {
             self::markTestSkipped('Skipping integration test. Server not running.');
         }
     }

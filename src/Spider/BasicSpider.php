@@ -14,36 +14,39 @@ declare(strict_types=1);
 namespace RoachPHP\Spider;
 
 use RoachPHP\Downloader\Middleware\RequestDeduplicationMiddleware;
+use RoachPHP\Downloader\Middleware\RequestMiddlewareInterface;
+use RoachPHP\Extensions\ExtensionInterface;
 use RoachPHP\Extensions\LoggerExtension;
 use RoachPHP\Extensions\StatsCollectorExtension;
+use RoachPHP\ItemPipeline\Processors\ItemProcessorInterface;
 use RoachPHP\Spider\Configuration\ArrayLoader;
 
 abstract class BasicSpider extends AbstractSpider
 {
     /**
-     * @var string[]
+     * @var array<string>
      */
     public array $startUrls = [];
 
     /**
-     * @var class-string[]
+     * @var array<class-string<SpiderMiddlewareInterface>>
      */
     public array $spiderMiddleware = [];
 
     /**
-     * @var class-string[]
+     * @var array<class-string<RequestMiddlewareInterface>>
      */
     public array $downloaderMiddleware = [
         RequestDeduplicationMiddleware::class,
     ];
 
     /**
-     * @var class-string[]
+     * @var array<class-string<ItemProcessorInterface>>
      */
     public array $itemProcessors = [];
 
     /**
-     * @var class-string[]
+     * @var array<class-string<ExtensionInterface>>
      */
     public array $extensions = [
         LoggerExtension::class,

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Http;
 
-use Generator;
 use GuzzleHttp\Psr7\Stream;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\Response;
@@ -90,7 +89,7 @@ final class ResponseTest extends TestCase
         self::assertSame('New', $response->filter('p')->text(''));
     }
 
-    public static function responseCodeProvider(): Generator
+    public static function responseCodeProvider(): iterable
     {
         yield from [
             [200],
@@ -103,7 +102,7 @@ final class ResponseTest extends TestCase
         ];
     }
 
-    public static function responseBodyProvider(): Generator
+    public static function responseBodyProvider(): iterable
     {
         yield from [
             'string' => [static fn (string $body) => $body],

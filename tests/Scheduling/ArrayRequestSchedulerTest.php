@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Scheduling;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Scheduling\ArrayRequestScheduler;
 use RoachPHP\Scheduling\Timing\FakeClock;
@@ -61,7 +60,7 @@ final class ArrayRequestSchedulerTest extends TestCase
         }
     }
 
-    public static function batchSizeProvider(): Generator
+    public static function batchSizeProvider(): iterable
     {
         yield 'batch size 1' => [
             'batchSize' => 1,

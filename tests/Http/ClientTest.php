@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Http;
 
-use Generator;
 use GuzzleHttp;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -39,7 +38,7 @@ final class ClientTest extends TestCase
             $response3 = new GuzzleHttp\Psr7\Response(204),
         ]));
 
-        /** @var Response[] $responses */
+        /** @var array<Response> $responses */
         $responses = [];
         $client->pool([
             $request1 = $this->makeRequest('::uri-1::'),
@@ -64,7 +63,7 @@ final class ClientTest extends TestCase
             $response = new GuzzleHttp\Psr7\Response(400),
         ]));
 
-        /** @var Response[] $responses */
+        /** @var array<Response> $responses */
         $responses = [];
         $client->pool(
             [$request = $this->makeRequest('::uri::')],
@@ -101,7 +100,7 @@ final class ClientTest extends TestCase
         self::assertSame($request, $exception->getRequest());
     }
 
-    public static function exceptionProvider(): Generator
+    public static function exceptionProvider(): iterable
     {
         yield from [
             'ConnectException' => [

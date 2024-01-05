@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Testing;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Testing\FakeLogger;
 
@@ -52,7 +51,7 @@ final class FakeLoggerTest extends TestCase
         self::assertTrue($logger->messageWasLogged($level, $message, $context));
     }
 
-    public static function logMessageProvider(): Generator
+    public static function logMessageProvider(): iterable
     {
         yield from [
             'debug' => [
