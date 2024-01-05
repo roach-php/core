@@ -13,16 +13,14 @@ declare(strict_types=1);
 
 namespace RoachPHP\Scheduling\Timing;
 
-use DateTimeImmutable;
-
 interface ClockInterface
 {
-    public function now(): DateTimeImmutable;
+    public function now(): \DateTimeImmutable;
 
     /**
      * @param 0|positive-int $seconds
      */
     public function sleep(int $seconds): void;
 
-    public function sleepUntil(DateTimeImmutable $date): void;
+    public function sleepUntil(\DateTimeImmutable $date): void;
 }

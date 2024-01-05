@@ -13,21 +13,18 @@ declare(strict_types=1);
 
 namespace RoachPHP\Scheduling\Timing;
 
-use DateInterval;
-use DateTimeImmutable;
-
 final class FakeClock implements ClockInterface
 {
     private int $secondsPassed = 0;
 
-    private DateTimeImmutable $now;
+    private \DateTimeImmutable $now;
 
     public function __construct()
     {
-        $this->now = new DateTimeImmutable();
+        $this->now = new \DateTimeImmutable();
     }
 
-    public function now(): DateTimeImmutable
+    public function now(): \DateTimeImmutable
     {
         return $this->now;
     }
@@ -35,11 +32,11 @@ final class FakeClock implements ClockInterface
     public function sleep(int $seconds): void
     {
         $this->sleepUntil(
-            $this->now->add(new DateInterval("PT{$seconds}S")),
+            $this->now->add(new \DateInterval("PT{$seconds}S")),
         );
     }
 
-    public function sleepUntil(DateTimeImmutable $date): void
+    public function sleepUntil(\DateTimeImmutable $date): void
     {
         if ($date < $this->now) {
             return;

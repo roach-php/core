@@ -24,29 +24,29 @@ use RoachPHP\Spider\Configuration\ArrayLoader;
 abstract class BasicSpider extends AbstractSpider
 {
     /**
-     * @var array<string>
+     * @var list<string>
      */
     public array $startUrls = [];
 
     /**
-     * @var array<class-string<SpiderMiddlewareInterface>>
+     * @var list<class-string<SpiderMiddlewareInterface>>
      */
     public array $spiderMiddleware = [];
 
     /**
-     * @var array<class-string<RequestMiddlewareInterface>>
+     * @var list<class-string<RequestMiddlewareInterface>>
      */
     public array $downloaderMiddleware = [
         RequestDeduplicationMiddleware::class,
     ];
 
     /**
-     * @var array<class-string<ItemProcessorInterface>>
+     * @var list<class-string<ItemProcessorInterface>>
      */
     public array $itemProcessors = [];
 
     /**
-     * @var array<class-string<ExtensionInterface>>
+     * @var list<class-string<ExtensionInterface>>
      */
     public array $extensions = [
         LoggerExtension::class,

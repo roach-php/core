@@ -17,7 +17,6 @@ use Psr\Log\LoggerInterface;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\Configurable;
 use Spatie\Browsershot\Browsershot;
-use Throwable;
 
 final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
 {
@@ -47,7 +46,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
 
         try {
             $body = $browsershot->bodyHtml();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->info('[ExecuteJavascriptMiddleware] Error while executing javascript', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Downloader\Middleware;
 
-use Exception;
 use RoachPHP\Downloader\Middleware\ExecuteJavascriptMiddleware;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Testing\FakeLogger;
@@ -45,7 +44,7 @@ final class ExecuteJavascriptMiddlewareTest extends IntegrationTestCase
         $throwingBrowsershot = new class() extends Browsershot {
             public function bodyHtml(): string
             {
-                throw new Exception('::exception-message::');
+                throw new \Exception('::exception-message::');
             }
         };
         $middleware = new ExecuteJavascriptMiddleware(
@@ -63,7 +62,7 @@ final class ExecuteJavascriptMiddlewareTest extends IntegrationTestCase
         $throwingBrowsershot = new class() extends Browsershot {
             public function bodyHtml(): string
             {
-                throw new Exception('::exception-message::');
+                throw new \Exception('::exception-message::');
             }
         };
         $logger = new FakeLogger();

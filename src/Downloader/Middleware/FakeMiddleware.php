@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Downloader\Middleware;
 
-use Closure;
 use PHPUnit\Framework\Assert;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Http\Request;
@@ -38,11 +37,13 @@ final class FakeMiddleware implements DownloaderMiddlewareInterface
     private array $responsesHandled = [];
 
     /**
-     * @param ?Closure(Request): Request   $requestHandler
-     * @param ?Closure(Response): Response $responseHandler
+     * @param ?\Closure(Request): Request   $requestHandler
+     * @param ?\Closure(Response): Response $responseHandler
      */
-    public function __construct(private ?Closure $requestHandler = null, private ?Closure $responseHandler = null)
-    {
+    public function __construct(
+        private ?\Closure $requestHandler = null,
+        private ?\Closure $responseHandler = null,
+    ) {
     }
 
     public function handleRequest(Request $request): Request

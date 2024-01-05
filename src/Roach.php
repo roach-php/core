@@ -61,7 +61,7 @@ final class Roach
      *
      * @psalm-param class-string<SpiderInterface> $spiderClass
      *
-     * @return array<ItemInterface>
+     * @return list<ItemInterface>
      */
     public static function collectSpider(string $spiderClass, ?Overrides $overrides = null, array $context = []): array
     {

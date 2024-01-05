@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Spider;
 
-use Closure;
-use Generator;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\Item;
@@ -42,7 +40,7 @@ final class ParseResult
     }
 
     /**
-     * @param callable(Response): Generator<ParseResult> $parseCallback
+     * @param callable(Response): \Generator<ParseResult> $parseCallback
      */
     public static function request(
         string $method,
@@ -54,10 +52,10 @@ final class ParseResult
     }
 
     /**
-     * @param Closure(Request): void       $ifRequest
-     * @param Closure(ItemInterface): void $ifItem
+     * @param \Closure(Request): void       $ifRequest
+     * @param \Closure(ItemInterface): void $ifItem
      */
-    public function apply(Closure $ifRequest, Closure $ifItem): void
+    public function apply(\Closure $ifRequest, \Closure $ifItem): void
     {
         if ($this->value instanceof Request) {
             $ifRequest($this->value);

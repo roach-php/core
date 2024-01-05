@@ -69,20 +69,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * update copyright year ([321626f](https://github.com/roach-php/core/commit/321626f20cc1eccab407f0e594ed94b231240d15))
 * upgrade to phpunit 10 ([fd83095](https://github.com/roach-php/core/commit/fd830953f85f3ad7a06c04988ca39a24718c5e46))
 
-## [3.0.0] – 2024-01-05
-
-### Added
-
-- Added `ProxyMiddleware` (#185)
-- Added namespace to run and scheduler (#105) (167e824)
-- Added `ResponseReceiving` and `ResponseReceived` events (96c9332)
-- Allow request middleware to set a response to bypass downloader (#106) (d8ae43e)
-- Added PHP 8.3 support (02772af)
-
-### Fixed
-
-- Fixed bug where integration tests wouldn't get run (33eb25e)
-
 ## [2.0.1] – 2023-02-17
 
 ### Fixed
