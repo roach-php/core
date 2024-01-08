@@ -2886,22 +2886,22 @@
         },
         {
             "name": "ergebnis/composer-normalize",
-            "version": "2.39.0",
+            "version": "2.41.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "a878360bc8cb5cb440b9381f72b0aaa125f937c7"
+                "reference": "01eb2d9b8623828ec2264f54d7782a25558d27b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/a878360bc8cb5cb440b9381f72b0aaa125f937c7",
-                "reference": "a878360bc8cb5cb440b9381f72b0aaa125f937c7",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/01eb2d9b8623828ec2264f54d7782a25558d27b2",
+                "reference": "01eb2d9b8623828ec2264f54d7782a25558d27b2",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0.0",
                 "ergebnis/json": "^1.1.0",
-                "ergebnis/json-normalizer": "^4.3.0",
+                "ergebnis/json-normalizer": "^4.4.1",
                 "ergebnis/json-printer": "^3.4.0",
                 "ext-json": "*",
                 "justinrainbow/json-schema": "^5.2.12",
@@ -2909,17 +2909,18 @@
                 "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
             },
             "require-dev": {
-                "composer/composer": "^2.6.5",
-                "ergebnis/license": "^2.2.0",
-                "ergebnis/php-cs-fixer-config": "~6.7.0",
-                "ergebnis/phpunit-slow-test-detector": "^2.3.0",
+                "composer/composer": "^2.6.6",
+                "ergebnis/license": "^2.4.0",
+                "ergebnis/php-cs-fixer-config": "~6.14.0",
+                "ergebnis/phpunit-slow-test-detector": "^2.7.0",
                 "fakerphp/faker": "^1.23.0",
-                "infection/infection": "~0.27.4",
-                "phpunit/phpunit": "^10.4.1",
+                "infection/infection": "~0.27.9",
+                "phpunit/phpunit": "^10.5.3",
                 "psalm/plugin-phpunit": "~0.18.4",
-                "rector/rector": "~0.18.5",
-                "symfony/filesystem": "^6.0.13",
-                "vimeo/psalm": "^5.15.0"
+                "rector/rector": "~0.18.12",
+                "roave/backward-compatibility-check": "^8.4.0",
+                "symfony/filesystem": "^6.4.0",
+                "vimeo/psalm": "^5.17.0"
             },
             "type": "composer-plugin",
             "extra": {
@@ -2959,7 +2960,7 @@
                 "security": "https://github.com/ergebnis/composer-normalize/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/composer-normalize"
             },
-            "time": "2023-10-10T15:43:27+00:00"
+            "time": "2023-12-14T09:37:52+00:00"
         },
         {
             "name": "ergebnis/json",
@@ -3028,16 +3029,16 @@
         },
         {
             "name": "ergebnis/json-normalizer",
-            "version": "4.3.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/json-normalizer.git",
-                "reference": "716fa0a5dcc75fbcb2c1c2e0542b2f56732460bd"
+                "reference": "d28f36af9763ee6bc4e2a2390c0348963df7881b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/json-normalizer/zipball/716fa0a5dcc75fbcb2c1c2e0542b2f56732460bd",
-                "reference": "716fa0a5dcc75fbcb2c1c2e0542b2f56732460bd",
+                "url": "https://api.github.com/repos/ergebnis/json-normalizer/zipball/d28f36af9763ee6bc4e2a2390c0348963df7881b",
+                "reference": "d28f36af9763ee6bc4e2a2390c0348963df7881b",
                 "shasum": ""
             },
             "require": {
@@ -3051,18 +3052,19 @@
             },
             "require-dev": {
                 "composer/semver": "^3.4.0",
-                "ergebnis/data-provider": "^3.0.0",
-                "ergebnis/license": "^2.2.0",
-                "ergebnis/php-cs-fixer-config": "~6.7.0",
-                "ergebnis/phpunit-slow-test-detector": "^2.3.0",
+                "ergebnis/data-provider": "^3.2.0",
+                "ergebnis/license": "^2.4.0",
+                "ergebnis/php-cs-fixer-config": "~6.14.0",
+                "ergebnis/phpunit-slow-test-detector": "^2.7.0",
                 "fakerphp/faker": "^1.23.0",
-                "infection/infection": "~0.27.4",
-                "phpunit/phpunit": "^10.4.1",
+                "infection/infection": "~0.27.9",
+                "phpunit/phpunit": "^10.5.3",
                 "psalm/plugin-phpunit": "~0.18.4",
-                "rector/rector": "~0.18.5",
-                "symfony/filesystem": "^6.3.1",
-                "symfony/finder": "^6.3.5",
-                "vimeo/psalm": "^5.15.0"
+                "rector/rector": "~0.18.12",
+                "roave/backward-compatibility-check": "^8.4.0",
+                "symfony/filesystem": "^6.4.0",
+                "symfony/finder": "^6.4.0",
+                "vimeo/psalm": "^5.17.0"
             },
             "suggest": {
                 "composer/semver": "If you want to use ComposerJsonNormalizer or VersionConstraintNormalizer"
@@ -3095,7 +3097,7 @@
                 "security": "https://github.com/ergebnis/json-normalizer/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/json-normalizer"
             },
-            "time": "2023-10-10T15:15:03+00:00"
+            "time": "2023-12-14T09:30:24+00:00"
         },
         {
             "name": "ergebnis/json-pointer",
