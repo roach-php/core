@@ -32,13 +32,14 @@ final class SystemClock implements ClockInterface
 
     public function sleepUntil(DateTimeImmutable $date): void
     {
-        $now = $this->now();
+        $now = $this->now()->getTimestamp();
+        $target = $date->getTimestamp();
 
-        if ($now >= $date) {
+        if ($target <= $now) {
             return;
         }
 
         /** @psalm-suppress UnusedFunctionCall */
-        \time_sleep_until($date->getTimestamp());
+        \time_sleep_until($target);
     }
 }
