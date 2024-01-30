@@ -35,7 +35,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
         ?callable $getBrowsershot = null,
     ) {
         /** @psalm-suppress MixedInferredReturnType, MixedReturnStatement */
-        $this->getBrowsershot = $getBrowsershot ?? static fn (string $uri): Browsershot => Browsershot::url($uri)->waitUntilNetworkIdle();
+        $this->getBrowsershot = $getBrowsershot ?? static fn (string $uri): Browsershot => Browsershot::url($uri);
     }
 
     public function handleResponse(Response $response): Response
@@ -64,6 +64,10 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
     private function configureBrowsershot(string $uri): Browsershot
     {
         $browsershot = ($this->getBrowsershot)($uri);
+
+        if (null !== ($waitUntilNetworkIdle = $this->option('waitUntilNetworkIdle'))) {
+            $browsershot->waitUntilNetworkIdle($waitUntilNetworkIdle);
+        }
 
         if (!empty($this->option('chromiumArguments'))) {
             $browsershot->addChromiumArguments($this->option('chromiumArguments'));
@@ -107,6 +111,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
     private function defaultOptions(): array
     {
         return [
+            'waitUntilNetworkIdle' => true,
             'chromiumArguments' => [],
             'chromePath' => null,
             'binPath' => null,
