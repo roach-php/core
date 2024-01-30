@@ -53,7 +53,9 @@ final class RobotsTxtMiddleware implements RequestMiddlewareInterface
     {
         $robotsUrl = \parse_url($url, PHP_URL_SCHEME) . '://' . \parse_url($url, PHP_URL_HOST);
 
-        if ($port = \parse_url($url, PHP_URL_PORT)) {
+        $port = \parse_url($url, PHP_URL_PORT);
+
+        if (null !== $port && false !== $port) {
             $robotsUrl .= ":{$port}";
         }
 

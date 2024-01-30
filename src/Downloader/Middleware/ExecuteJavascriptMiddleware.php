@@ -36,7 +36,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
         ?callable $getBrowsershot = null,
     ) {
         /** @psalm-suppress MixedInferredReturnType, MixedReturnStatement */
-        $this->getBrowsershot = $getBrowsershot ?: static fn (string $uri): Browsershot => Browsershot::url($uri);
+        $this->getBrowsershot = $getBrowsershot ?? static fn (string $uri): Browsershot => Browsershot::url($uri);
     }
 
     public function handleResponse(Response $response): Response
