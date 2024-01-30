@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Spider;
 
-use Closure;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Events\FakeDispatcher;
 use RoachPHP\Events\ItemDropped;
@@ -258,9 +257,9 @@ final class ProcessorTest extends TestCase
     }
 
     private function makeHandler(
-        ?Closure $handleResponse = null,
-        ?Closure $handleItemCallback = null,
-        ?Closure $handleRequestCallback = null,
+        ?\Closure $handleResponse = null,
+        ?\Closure $handleItemCallback = null,
+        ?\Closure $handleRequestCallback = null,
     ): FakeHandler {
         return new FakeHandler($handleResponse, $handleItemCallback, $handleRequestCallback);
     }

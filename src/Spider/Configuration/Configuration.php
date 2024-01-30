@@ -21,11 +21,11 @@ use RoachPHP\Spider\SpiderMiddlewareInterface;
 final class Configuration
 {
     /**
-     * @param array<string>                                      $startUrls
-     * @param array<class-string<DownloaderMiddlewareInterface>> $downloaderMiddleware
-     * @param array<class-string<ItemProcessorInterface>>        $itemProcessors
-     * @param array<class-string<SpiderMiddlewareInterface>>     $spiderMiddleware
-     * @param array<class-string<ExtensionInterface>>            $extensions
+     * @param list<string>                                      $startUrls
+     * @param list<class-string<DownloaderMiddlewareInterface>> $downloaderMiddleware
+     * @param list<class-string<ItemProcessorInterface>>        $itemProcessors
+     * @param list<class-string<SpiderMiddlewareInterface>>     $spiderMiddleware
+     * @param list<class-string<ExtensionInterface>>            $extensions
      */
     public function __construct(
         public array $startUrls,

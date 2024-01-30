@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Http;
 
-use Generator;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
@@ -30,14 +29,14 @@ final class Client implements ClientInterface
     }
 
     /**
-     * @param array<Request> $requests
+     * @param list<Request> $requests
      */
     public function pool(
         array $requests,
         ?callable $onFulfilled = null,
         ?callable $onRejected = null,
     ): void {
-        $makeRequests = function () use ($requests): Generator {
+        $makeRequests = function () use ($requests): \Generator {
             foreach ($requests as $request) {
                 yield function () use ($request) {
                     return $this->client

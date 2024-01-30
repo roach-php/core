@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Spider\Middleware;
 
-use Closure;
 use PHPUnit\Framework\Assert;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
@@ -32,14 +31,14 @@ final class FakeHandler implements SpiderMiddlewareInterface
     private array $requestCalls = [];
 
     /**
-     * @param ?Closure(Response): Response                     $handleResponseCallback
-     * @param ?Closure(ItemInterface, Response): ItemInterface $handleItemCallback
-     * @param ?Closure(Request, Response): Request             $handleRequestCallback
+     * @param ?\Closure(Response): Response                     $handleResponseCallback
+     * @param ?\Closure(ItemInterface, Response): ItemInterface $handleItemCallback
+     * @param ?\Closure(Request, Response): Request             $handleRequestCallback
      */
     public function __construct(
-        private ?Closure $handleResponseCallback = null,
-        private ?Closure $handleItemCallback = null,
-        private ?Closure $handleRequestCallback = null,
+        private ?\Closure $handleResponseCallback = null,
+        private ?\Closure $handleItemCallback = null,
+        private ?\Closure $handleRequestCallback = null,
     ) {
     }
 

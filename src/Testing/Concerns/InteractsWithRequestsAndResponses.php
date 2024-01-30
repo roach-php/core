@@ -13,16 +13,14 @@ declare(strict_types=1);
 
 namespace RoachPHP\Testing\Concerns;
 
-use Closure;
-use Generator;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 
 trait InteractsWithRequestsAndResponses
 {
-    private static function makeRequest(string $url = '::url::', ?Closure $callback = null): Request
+    private static function makeRequest(string $url = '::url::', ?\Closure $callback = null): Request
     {
-        $callback ??= static function (): Generator {
+        $callback ??= static function (): \Generator {
             yield from [];
         };
 

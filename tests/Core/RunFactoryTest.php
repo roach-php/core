@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Core;
 
-use Generator;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
 use PHPUnit\Framework\TestCase;
@@ -364,7 +363,7 @@ final class RunFactoryTest extends TestCase
                 parent::__construct();
             }
 
-            public function parse(Response $response): Generator
+            public function parse(Response $response): \Generator
             {
                 yield from [];
             }

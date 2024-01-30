@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Spider;
 
-use Generator;
 use RoachPHP\Events\ItemDropped;
 use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\ResponseDropped;
@@ -25,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class Processor
 {
     /**
-     * @var array<SpiderMiddlewareInterface>
+     * @var list<SpiderMiddlewareInterface>
      */
     private array $middleware = [];
 
@@ -40,7 +39,7 @@ final class Processor
         return $this;
     }
 
-    public function handle(Response $response): Generator
+    public function handle(Response $response): \Generator
     {
         foreach ($this->middleware as $handler) {
             $response = $handler->handleResponse($response);
@@ -55,7 +54,7 @@ final class Processor
             }
         }
 
-        /** @var array<ParseResult> $results */
+        /** @var list<ParseResult> $results */
         $results = $response->getRequest()->callback($response);
 
         foreach ($results as $result) {

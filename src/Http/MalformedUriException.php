@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace RoachPHP\Http;
 
-use Exception;
-
-final class MalformedUriException extends Exception
+final class MalformedUriException extends \Exception
 {
     public static function forUri(string $uri): self
     {

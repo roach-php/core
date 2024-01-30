@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Http;
 
-use Closure;
-use Generator;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
 use Psr\Http\Message\RequestInterface;
 use RoachPHP\Spider\ParseResult;
@@ -30,9 +28,9 @@ final class Request implements DroppableInterface
     public URL $url;
 
     /**
-     * @var Closure(Response): Generator<ParseResult>
+     * @var \Closure(Response): \Generator<ParseResult>
      */
-    private Closure $parseCallback;
+    private \Closure $parseCallback;
 
     private RequestInterface $psrRequest;
 
@@ -45,13 +43,13 @@ final class Request implements DroppableInterface
     private array $options;
 
     /**
-     * @param callable(Response): Generator<ParseResult> $parseMethod
+     * @param callable(Response): \Generator<ParseResult> $parseMethod
      */
     public function __construct(string $method, string $uri, callable $parseMethod, array $options = [])
     {
         $this->options = $options;
         $this->psrRequest = new GuzzleRequest($method, $uri);
-        $this->parseCallback = Closure::fromCallable($parseMethod);
+        $this->parseCallback = \Closure::fromCallable($parseMethod);
         $this->url = URL::parse($uri);
     }
 
@@ -76,7 +74,7 @@ final class Request implements DroppableInterface
     }
 
     /**
-     * @param array<string>|string $value
+     * @param list<string>|string $value
      */
     public function addHeader(string $name, mixed $value): self
     {
@@ -102,16 +100,16 @@ final class Request implements DroppableInterface
     }
 
     /**
-     * @param Closure(RequestInterface): RequestInterface $callback
+     * @param \Closure(RequestInterface): RequestInterface $callback
      */
-    public function withPsrRequest(Closure $callback): self
+    public function withPsrRequest(\Closure $callback): self
     {
         $this->psrRequest = $callback($this->psrRequest);
 
         return $this;
     }
 
-    public function callback(Response $response): Generator
+    public function callback(Response $response): \Generator
     {
         return ($this->parseCallback)($response);
     }
@@ -121,7 +119,7 @@ final class Request implements DroppableInterface
         return $this->psrRequest;
     }
 
-    public function getParseCallback(): Closure
+    public function getParseCallback(): \Closure
     {
         return $this->parseCallback;
     }

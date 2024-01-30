@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Scheduling;
 
-use DateInterval;
-use DateTimeImmutable;
 use RoachPHP\Http\Request;
 use RoachPHP\Scheduling\Timing\ClockInterface;
 
@@ -23,11 +21,11 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
     private int $delay = 0;
 
     /**
-     * @var array<Request>
+     * @var list<Request>
      */
     private array $requests = [];
 
-    private DateTimeImmutable $nextBatchReadyAt;
+    private \DateTimeImmutable $nextBatchReadyAt;
 
     public function __construct(private ClockInterface $clock)
     {
@@ -45,7 +43,7 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
     }
 
     /**
-     * @return array<Request>
+     * @return list<Request>
      */
     public function nextRequests(int $batchSize): array
     {
@@ -75,11 +73,11 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
 
     private function updateNextBatchTime(): void
     {
-        $this->nextBatchReadyAt = $this->clock->now()->add(new DateInterval("PT{$this->delay}S"));
+        $this->nextBatchReadyAt = $this->clock->now()->add(new \DateInterval("PT{$this->delay}S"));
     }
 
     /**
-     * @return array<Request>
+     * @return list<Request>
      */
     private function getNextRequests(int $batchSize): array
     {

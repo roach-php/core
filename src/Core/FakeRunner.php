@@ -20,7 +20,7 @@ use RoachPHP\Spider\SpiderInterface;
 final class FakeRunner implements RunnerInterface
 {
     /**
-     * @var array<class-string<SpiderInterface>, array<int, array{overrides: null|Overrides, context: array}>>
+     * @var list<class-string<SpiderInterface>, array<int, array{overrides: null|Overrides, context: array}>>
      */
     private array $runs = [];
 
