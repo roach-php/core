@@ -26,7 +26,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class Downloader
 {
     /**
-     * @var list<DownloaderMiddlewareInterface>
+     * @var array<array-key, DownloaderMiddlewareInterface>
      */
     private array $middleware = [];
 

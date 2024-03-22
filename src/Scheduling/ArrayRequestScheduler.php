@@ -43,7 +43,7 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
     }
 
     /**
-     * @return list<Request>
+     * @return array<array-key, Request>
      */
     public function nextRequests(int $batchSize): array
     {
@@ -77,7 +77,9 @@ final class ArrayRequestScheduler implements RequestSchedulerInterface
     }
 
     /**
-     * @return list<Request>
+     * @psalm-suppress MixedReturnTypeCoercion
+     *
+     * @return array<array-key, Request>
      */
     private function getNextRequests(int $batchSize): array
     {

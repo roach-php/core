@@ -116,6 +116,6 @@ abstract class AbstractItem implements ItemInterface
 
     final public function offsetUnset(mixed $offset): void
     {
-        throw new RuntimeException('Unsetting properties is not supported for custom item classes');
+        throw new \RuntimeException('Unsetting properties is not supported for custom item classes');
     }
 }

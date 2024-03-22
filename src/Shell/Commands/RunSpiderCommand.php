@@ -25,9 +25,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'roach:run')]
 final class RunSpiderCommand extends Command
 {
-    protected static $defaultName = 'roach:run';
+    protected static string $defaultName = 'roach:run';
 
-    protected static $defaultDescription = 'Start a spider run for the provided spider class';
+    protected static string $defaultDescription = 'Start a spider run for the provided spider class';
 
     protected function configure(): void
     {

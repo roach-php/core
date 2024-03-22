@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class Processor
 {
     /**
-     * @var list<SpiderMiddlewareInterface>
+     * @var array<array-key, SpiderMiddlewareInterface>
      */
     private array $middleware = [];
 

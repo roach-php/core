@@ -25,11 +25,11 @@ use RoachPHP\Spider\SpiderMiddlewareInterface;
 final class Run
 {
     /**
-     * @param list<Request>                       $startRequests
-     * @param list<DownloaderMiddlewareInterface> $downloaderMiddleware
-     * @param list<ItemProcessorInterface>        $itemProcessors
-     * @param list<SpiderMiddlewareInterface>     $responseMiddleware
-     * @param list<ExtensionInterface>            $extensions
+     * @param array<array-key, Request>                       $startRequests
+     * @param array<array-key, DownloaderMiddlewareInterface> $downloaderMiddleware
+     * @param array<array-key, ItemProcessorInterface>        $itemProcessors
+     * @param array<array-key, SpiderMiddlewareInterface>     $responseMiddleware
+     * @param array<array-key, ExtensionInterface>            $extensions
      */
     public function __construct(
         public array $startRequests,

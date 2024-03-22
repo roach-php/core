@@ -51,9 +51,9 @@ final class RunFactory
     }
 
     /**
-     * @psalm-param class-string<DownloaderMiddlewareInterface>[] $downloaderMiddleware
+     * @param array<array-key, class-string<DownloaderMiddlewareInterface>> $downloaderMiddleware
      *
-     * @return list<DownloaderMiddlewareInterface>
+     * @return array<array-key, DownloaderMiddlewareInterface>
      */
     private function buildDownloaderMiddleware(array $downloaderMiddleware): array
     {
@@ -63,9 +63,9 @@ final class RunFactory
     }
 
     /**
-     * @psalm-param array<class-string<ItemProcessorInterface>> $processors
+     * @param array<array-key, class-string<ItemProcessorInterface>> $processors
      *
-     * @return list<ItemProcessorInterface>
+     * @return array<array-key, ItemProcessorInterface>
      */
     private function buildItemPipeline(array $processors): array
     {
@@ -73,9 +73,9 @@ final class RunFactory
     }
 
     /**
-     * @psalm-param array<class-string<SpiderMiddlewareInterface>> $handlers
+     * @param array<array-key, class-string<SpiderMiddlewareInterface>> $handlers
      *
-     * @return list<SpiderMiddlewareInterface>
+     * @return array<array-key, SpiderMiddlewareInterface>
      */
     private function buildResponseMiddleware(array $handlers): array
     {
@@ -85,9 +85,9 @@ final class RunFactory
     }
 
     /**
-     * @param list<class-string<ExtensionInterface>> $extensions
+     * @param array<array-key, class-string<ExtensionInterface>> $extensions
      *
-     * @return list<ExtensionInterface>
+     * @return array<array-key, ExtensionInterface>
      */
     private function buildExtensions(array $extensions): array
     {
