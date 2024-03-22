@@ -16,9 +16,6 @@ namespace RoachPHP\Downloader\Middleware;
 use Psr\Log\LoggerInterface;
 use RoachPHP\Http\Request;
 use RoachPHP\Support\Configurable;
-use const HTTP_URL_REPLACE;
-use const HTTP_URL_STRIP_FRAGMENT;
-use const HTTP_URL_STRIP_QUERY;
 
 final class RequestDeduplicationMiddleware implements RequestMiddlewareInterface
 {
@@ -36,11 +33,11 @@ final class RequestDeduplicationMiddleware implements RequestMiddlewareInterface
     public function handleRequest(Request $request): Request
     {
         $uri = $request->getUri();
-        $replaceFlags = HTTP_URL_REPLACE;
+        $replaceFlags = \HTTP_URL_REPLACE;
         $parts = \parse_url($uri);
 
         if ($this->option('ignore_url_fragments')) {
-            $replaceFlags |= HTTP_URL_STRIP_FRAGMENT;
+            $replaceFlags |= \HTTP_URL_STRIP_FRAGMENT;
         }
 
         if ($this->option('ignore_trailing_slashes') && isset($parts['path'])) {
@@ -48,7 +45,7 @@ final class RequestDeduplicationMiddleware implements RequestMiddlewareInterface
         }
 
         if ($this->option('ignore_query_string')) {
-            $replaceFlags |= HTTP_URL_STRIP_QUERY;
+            $replaceFlags |= \HTTP_URL_STRIP_QUERY;
         }
 
         $uri = http_build_url($uri, $parts, $replaceFlags);

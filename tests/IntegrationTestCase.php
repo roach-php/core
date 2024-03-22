@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace RoachPHP\Tests;
 
 use PHPUnit\Framework\TestCase;
-use const JSON_THROW_ON_ERROR;
 
 /**
  * @internal
@@ -69,7 +68,7 @@ abstract class IntegrationTestCase extends TestCase
             $response,
             true,
             512,
-            JSON_THROW_ON_ERROR,
+            \JSON_THROW_ON_ERROR,
         );
     }
 }
