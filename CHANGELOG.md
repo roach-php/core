@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0](https://github.com/roach-php/core/compare/v3.1.0...v3.2.0) (2024-04-04)
+
+
+### Features
+
+* add http error middleware ([f937d89](https://github.com/roach-php/core/commit/f937d89e0afd93d8f2272c89e724b52897d60690))
+* enable http error middleware by default in BasicSpider ([450ed50](https://github.com/roach-php/core/commit/450ed504c556b2243ea7cc76f44161242a551a5a))
+
 ## [3.1.0](https://github.com/roach-php/core/compare/v3.0.1...v3.1.0) (2024-03-22)
 
 
