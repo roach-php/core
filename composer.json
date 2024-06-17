@@ -34,7 +34,7 @@
         "psr/http-message": "^1.1.0",
         "roave/security-advisories": "dev-latest",
         "slim/slim": "^4.12",
-        "spatie/browsershot": "^3.60.0",
+        "spatie/browsershot": "^3.60.0 || ^4.0.0",
         "vimeo/psalm": "^5.16"
     },
     "suggest": {
