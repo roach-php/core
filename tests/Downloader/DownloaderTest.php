@@ -234,6 +234,29 @@ final class DownloaderTest extends TestCase
         );
     }
 
+    public function testDoesNotDispatchEventIfResponseWasNotDropped(): void
+    {
+        $this->downloader->prepare($this->makeRequest());
+        $this->downloader->flush();
+
+        $this->dispatcher->assertNotDispatched(ResponseDropped::NAME);
+    }
+
+    public function testDispatchesAnEventIfResponseWasDropped(): void
+    {
+        $request = $this->makeRequest();
+        $dropMiddleware = new FakeMiddleware(null, static fn (Response $response) => $response->drop('::reason::'));
+        $this->downloader->withMiddleware($dropMiddleware);
+
+        $this->downloader->prepare($request);
+        $this->downloader->flush();
+
+        $this->dispatcher->assertDispatched(
+            ResponseDropped::NAME,
+            static fn (ResponseDropped $event) => $event->response->wasDropped() && $event->response->getUri() === $request->getUri(),
+        );
+    }
+
     public function testDontPassResponseToMiddlewareIfDroppedByExtension(): void
     {
         $request = $this->makeRequest();
