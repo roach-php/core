@@ -132,6 +132,11 @@ final class Downloader
             $response = $middleware->handleResponse($response);
 
             if ($response->wasDropped()) {
+                $this->eventDispatcher->dispatch(
+                    new ResponseDropped($response),
+                    ResponseDropped::NAME,
+                );
+
                 return;
             }
         }
