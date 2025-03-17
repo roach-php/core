@@ -13,9 +13,10 @@ declare(strict_types=1);
 
 namespace RoachPHP\Downloader;
 
+use RoachPHP\Downloader\Middleware\ExceptionMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\RequestMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\ResponseMiddlewareInterface;
 
-interface DownloaderMiddlewareInterface extends RequestMiddlewareInterface, ResponseMiddlewareInterface
+interface DownloaderMiddlewareInterface extends RequestMiddlewareInterface, ResponseMiddlewareInterface, ExceptionMiddlewareInterface
 {
 }
