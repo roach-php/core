@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace RoachPHP\Extensions;
 
 use Psr\Log\LoggerInterface;
+use RoachPHP\Events\ExceptionReceived;
 use RoachPHP\Events\ItemDropped;
 use RoachPHP\Events\ItemScraped;
 use RoachPHP\Events\RequestDropped;
@@ -39,6 +40,7 @@ final class LoggerExtension implements ExtensionInterface
             RequestDropped::NAME => ['onRequestDropped', 100],
             ItemScraped::NAME => ['onItemScraped', 100],
             ItemDropped::NAME => ['onItemDropped', 100],
+            ExceptionReceived::NAME => ['onExceptionReceived', 100],
         ];
     }
 
@@ -79,6 +81,13 @@ final class LoggerExtension implements ExtensionInterface
         $this->logger->info('Item dropped', [
             'item' => $event->item->all(),
             'reason' => $event->item->getDropReason(),
+        ]);
+    }
+
+    public function onExceptionReceived(ExceptionReceived $event): void
+    {
+        $this->logger->warning('Exception received', [
+            'exception' => $event->exception,
         ]);
     }
 }
