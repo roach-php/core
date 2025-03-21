@@ -22,7 +22,7 @@ final class UserAgentMiddleware implements RequestMiddlewareInterface
 
     public function handleRequest(Request $request): Request
     {
-        /** @psalm-suppress MixedArgument */
+        /** @phpstan-ignore argument.type */
         return $request->addHeader('User-Agent', $this->option('userAgent'));
     }
 

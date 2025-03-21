@@ -33,6 +33,9 @@ final class FakeNamespaceResolverTest extends TestCase
         self::assertSame($input, $result);
     }
 
+    /**
+     * @return iterable<array<int, string>>
+     */
     public static function inputStringProvider(): iterable
     {
         yield from [

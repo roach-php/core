@@ -87,7 +87,10 @@ final class ExecuteJavascriptMiddlewareTest extends IntegrationTestCase
         $response = $this->makeResponse(
             $this->makeRequest('http://localhost:8000/javascript'),
         );
-        $middleware = new ExecuteJavascriptMiddleware(new FakeLogger(), static fn (string $uri): Browsershot => $mockBrowserShot);
+        $middleware = new ExecuteJavascriptMiddleware(
+            new FakeLogger(),
+            static fn (string $uri): Browsershot => $mockBrowserShot,
+        );
         $middleware->configure(['userAgent' => 'custom']);
 
         $mockBrowserShot->expects(self::once())

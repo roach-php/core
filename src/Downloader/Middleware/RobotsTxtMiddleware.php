@@ -56,7 +56,10 @@ final class RobotsTxtMiddleware implements RequestMiddlewareInterface
             $robotsUrl .= ":{$port}";
         }
 
-        return "{$robotsUrl}/{$this->option('fileName')}";
+        /** @var string $fileName */
+        $fileName = $this->option('fileName');
+
+        return "{$robotsUrl}/{$fileName}";
     }
 
     private function defaultOptions(): array

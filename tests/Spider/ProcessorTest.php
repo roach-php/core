@@ -44,7 +44,7 @@ final class ProcessorTest extends TestCase
 
     public function testCallsCallbackOnRequest(): void
     {
-        $parseCallback = static fn () => null;
+        $parseCallback = static fn (Response $response) => yield from [];
         $expectedRequest = ParseResult::request('GET', '::new-url::', $parseCallback);
         $request = $this->makeRequest(callback: static fn () => yield $expectedRequest);
         $response = $this->makeResponse($request);
@@ -110,8 +110,8 @@ final class ProcessorTest extends TestCase
             handleRequestCallback: static fn ($r) => $r->withMeta('::key::', $r->getMeta('::key::', '') . 'B'),
         );
         $results = [
-            ParseResult::request('GET', '::url::', static fn () => null),
-            ParseResult::request('GET', '::url::', static fn () => null),
+            ParseResult::request('GET', '::url::', static fn (Response $response) => yield from []),
+            ParseResult::request('GET', '::url::', static fn (Response $response) => yield from []),
         ];
         $request = $this->makeRequest(callback: static fn () => yield from $results);
         $stack = $this->processor->withMiddleware($handlerA, $handlerB);

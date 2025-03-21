@@ -63,6 +63,7 @@ abstract class AbstractSpider implements SpiderInterface
         string $parseMethod = 'parse',
         array $options = [],
     ): ParseResult {
+        // @phpstan-ignore argument.type
         return ParseResult::request($method, $url, [$this, $parseMethod], $options);
     }
 

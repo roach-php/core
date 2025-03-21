@@ -1,0 +1,12 @@
+includes: []
+
+parameters:
+    paths:
+        - src
+
+    level: 9
+
+    ignoreErrors:
+      - identifier: missingType.iterableValue
+
+    excludePaths: []

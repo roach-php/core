@@ -41,13 +41,14 @@ final class RequestDeduplicationMiddleware implements RequestMiddlewareInterface
         }
 
         if ($this->option('ignore_trailing_slashes') && isset($parts['path'])) {
-            $parts['path'] = \rtrim($parts['path'], '/');
+            $parts['path'] = \mb_rtrim($parts['path'], '/');
         }
 
         if ($this->option('ignore_query_string')) {
             $replaceFlags |= \HTTP_URL_STRIP_QUERY;
         }
 
+        /** @phpstan-ignore argument.type */
         $uri = http_build_url($uri, $parts, $replaceFlags);
 
         if (\in_array($uri, $this->seenUris, true)) {

@@ -67,29 +67,38 @@ final class DefaultContainer implements ContainerInterface
             static fn () => (new Logger('roach'))->pushHandler(new StreamHandler('php://stdout')),
         );
         $this->container->addShared(EventDispatcher::class, EventDispatcher::class);
-        $this->container->addShared(EventDispatcherInterface::class, EventDispatcher::class);
+        $this->container->addShared(
+            EventDispatcherInterface::class,
+            EventDispatcher::class,
+        );
         $this->container->add(ClockInterface::class, SystemClock::class);
         $this->container->add(
             RequestSchedulerInterface::class,
-            /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
+            /** @phpstan-ignore return.type */
             fn (): RequestSchedulerInterface => $this->container->get(ArrayRequestScheduler::class),
         );
         $this->container->add(ClientInterface::class, Client::class);
         $this->container->add(
             ItemPipelineInterface::class,
-            /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
+            /** @phpstan-ignore return.type */
             fn (): ItemPipelineInterface => $this->container->get(ItemPipeline::class),
         );
-        $this->container->add(NamespaceResolverInterface::class, StaticNamespaceResolver::class);
+        $this->container->add(
+            NamespaceResolverInterface::class,
+            StaticNamespaceResolver::class,
+        );
         $this->container->add(
             EngineInterface::class,
-            /** @psalm-suppress MixedReturnStatement, MixedInferredReturnType */
+            /** @phpstan-ignore return.type */
             fn (): EngineInterface => $this->container->get(Engine::class),
         );
         $this->container->add(
             RunnerInterface::class,
-            /** @psalm-suppress MixedArgument */
-            fn (): RunnerInterface => new Runner($this->container, $this->container->get(EngineInterface::class)),
+            fn (): RunnerInterface => new Runner(
+                $this->container,
+                /** @phpstan-ignore argument.type */
+                $this->container->get(EngineInterface::class),
+            ),
         );
     }
 }
