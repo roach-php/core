@@ -28,7 +28,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
     private $getBrowsershot;
 
     /**
-     * @param  null|callable(string): Browsershot  $getBrowsershot
+     * @param null|callable(string): Browsershot $getBrowsershot
      */
     public function __construct(
         private LoggerInterface $logger,
@@ -64,7 +64,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
     {
         $browsershot = ($this->getBrowsershot)($uri);
 
-        if (! empty($this->option('chromiumArguments'))) {
+        if (!empty($this->option('chromiumArguments'))) {
             /** @phpstan-ignore argument.type */
             $browsershot->addChromiumArguments($this->option('chromiumArguments'));
         }
@@ -104,7 +104,7 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
             $browsershot->userAgent($userAgent);
         }
 
-        if (! empty($delay = $this->option('delay'))) {
+        if (!empty($delay = $this->option('delay'))) {
             /** @phpstan-ignore argument.type */
             $browsershot->setDelay($delay);
         }
