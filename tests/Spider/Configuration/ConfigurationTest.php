@@ -30,6 +30,8 @@ final class ConfigurationTest extends TestCase
 {
     /**
      * @dataProvider overridesProvider
+     *
+     * @param array<string, mixed> $overrides
      */
     public function testMergeWithOverrides(array $overrides, callable $verifyConfig): void
     {
@@ -56,6 +58,9 @@ final class ConfigurationTest extends TestCase
         $verifyConfig($overrideConfig);
     }
 
+    /**
+     * @return iterable<array{0: array<string, mixed>, 1: callable}>
+     */
     public static function overridesProvider(): iterable
     {
         yield from [
@@ -110,6 +115,9 @@ final class ConfigurationTest extends TestCase
         ];
     }
 
+    /**
+     * @param array<string, mixed> $values
+     */
     private function makeConfiguration(array $values): Configuration
     {
         $defaults = [

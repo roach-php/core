@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "~8.2.0 || ~8.3.0",
+        "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
         "guzzlehttp/guzzle": "^7.8.0",
         "jakeasmith/http_build_url": "^1.0.1",
         "league/container": "^4.2",
@@ -27,15 +27,15 @@
         "symfony/options-resolver": "^7.0"
     },
     "require-dev": {
-        "ergebnis/composer-normalize": "^2.39",
-        "ergebnis/php-cs-fixer-config": "^6.11.0",
+        "ergebnis/composer-normalize": "^2.45",
+        "ergebnis/php-cs-fixer-config": "^6.45.0",
         "http-interop/http-factory-guzzle": "^1.2",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^10.4.2",
         "psr/http-message": "^1.1.0",
         "roave/security-advisories": "dev-latest",
         "slim/slim": "^4.12",
-        "spatie/browsershot": "^3.60.0",
-        "vimeo/psalm": "^5.16"
+        "spatie/browsershot": "^5.0"
     },
     "suggest": {
         "spatie/browsershot": "Required to execute Javascript in spiders"
@@ -67,7 +67,7 @@
             "composer normalize"
         ],
         "analyze": [
-            "vendor/bin/psalm --no-cache"
+            "vendor/bin/phpstan"
         ],
         "coding-standards": [
             "mkdir -p .build/php-cs-fixer",

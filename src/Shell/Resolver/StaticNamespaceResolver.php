@@ -19,7 +19,7 @@ use RoachPHP\Spider\SpiderInterface;
 final class StaticNamespaceResolver implements NamespaceResolverInterface
 {
     /**
-     * @psalm-suppress MoreSpecificReturnType
+     * @param class-string<SpiderInterface> $spiderClass
      *
      * @throws \ReflectionException
      * @throws InvalidSpiderException
@@ -36,12 +36,11 @@ final class StaticNamespaceResolver implements NamespaceResolverInterface
             throw new InvalidSpiderException("The class {$spiderClass} is not a spider");
         }
 
-        /** @psalm-suppress LessSpecificReturnStatement */
         return $spiderClass;
     }
 
     /**
-     * @param class-string $spiderClass
+     * @param class-string<SpiderInterface> $spiderClass
      *
      * @throws \ReflectionException
      */

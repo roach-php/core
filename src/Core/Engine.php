@@ -113,12 +113,13 @@ final class Engine implements EngineInterface
 
     private function onFulfilled(Response $response): void
     {
-        /** @var list<ParseResult> $parseResults */
+        /** @var \Generator<int, ParseResult> $parseResults */
         $parseResults = $this->responseProcessor->handle($response);
 
         foreach ($parseResults as $result) {
             $result->apply(
                 fn (Request $request) => $this->scheduleRequest($request),
+                /** @phpstan-ignore argument.type */
                 fn (ItemInterface $item) => $this->itemPipeline->sendItem($item),
             );
         }

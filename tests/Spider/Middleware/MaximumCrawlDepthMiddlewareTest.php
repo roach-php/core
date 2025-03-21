@@ -39,6 +39,9 @@ final class MaximumCrawlDepthMiddlewareTest extends TestCase
         self::assertSame($initialDepth + 1, $processedRequest->getMeta('depth'));
     }
 
+    /**
+     * @return iterable<list<int>>
+     */
     public static function initialDepthProvider(): iterable
     {
         yield from [
@@ -97,6 +100,9 @@ final class MaximumCrawlDepthMiddlewareTest extends TestCase
         self::assertFalse($processedRequest->wasDropped());
     }
 
+    /**
+     * @return iterable<list<int>>
+     */
     public static function maxCrawlDepthProvider(): iterable
     {
         yield from [

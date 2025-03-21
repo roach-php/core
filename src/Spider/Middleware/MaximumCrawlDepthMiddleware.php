@@ -23,6 +23,7 @@ final class MaximumCrawlDepthMiddleware implements RequestMiddlewareInterface
 
     public function handleRequest(Request $request, Response $response): Request
     {
+        /** @phpstan-ignore cast.int */
         $currentDepth = (int) $response->getRequest()->getMeta('depth', 1);
         $newDepth = $currentDepth + 1;
 

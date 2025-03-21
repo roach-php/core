@@ -28,13 +28,12 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
     private $getBrowsershot;
 
     /**
-     * @param null|callable(string): Browsershot $getBrowsershot
+     * @param  null|callable(string): Browsershot  $getBrowsershot
      */
     public function __construct(
         private LoggerInterface $logger,
         ?callable $getBrowsershot = null,
     ) {
-        /** @psalm-suppress MixedInferredReturnType, MixedReturnStatement */
         $this->getBrowsershot = $getBrowsershot ?? static fn (string $uri): Browsershot => Browsershot::url($uri)->waitUntilNetworkIdle();
     }
 
@@ -65,39 +64,48 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
     {
         $browsershot = ($this->getBrowsershot)($uri);
 
-        if (!empty($this->option('chromiumArguments'))) {
+        if (! empty($this->option('chromiumArguments'))) {
+            /** @phpstan-ignore argument.type */
             $browsershot->addChromiumArguments($this->option('chromiumArguments'));
         }
 
         if (null !== ($chromePath = $this->option('chromePath'))) {
+            /** @phpstan-ignore argument.type */
             $browsershot->setChromePath($chromePath);
         }
 
         if (null !== ($binPath = $this->option('binPath'))) {
+            /** @phpstan-ignore argument.type */
             $browsershot->setBinPath($binPath);
         }
 
         if (null !== ($nodeModulePath = $this->option('nodeModulePath'))) {
+            /** @phpstan-ignore argument.type */
             $browsershot->setNodeModulePath($nodeModulePath);
         }
 
         if (null !== ($includePath = $this->option('includePath'))) {
+            /** @phpstan-ignore argument.type */
             $browsershot->setIncludePath($includePath);
         }
 
         if (null !== ($nodeBinary = $this->option('nodeBinary'))) {
+            /** @phpstan-ignore argument.type */
             $browsershot->setNodeBinary($nodeBinary);
         }
 
         if (null !== ($npmBinary = $this->option('npmBinary'))) {
+            /** @phpstan-ignore argument.type */
             $browsershot->setNpmBinary($npmBinary);
         }
 
         if (null !== ($userAgent = $this->option('userAgent'))) {
+            /** @phpstan-ignore argument.type */
             $browsershot->userAgent($userAgent);
         }
 
-        if (!empty($delay = $this->option('delay'))) {
+        if (! empty($delay = $this->option('delay'))) {
+            /** @phpstan-ignore argument.type */
             $browsershot->setDelay($delay);
         }
 

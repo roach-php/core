@@ -25,6 +25,8 @@ final class FakeLoggerTest extends TestCase
 {
     /**
      * @dataProvider logMessageProvider
+     *
+     * @param array<array-key, mixed> $context
      */
     public function testCheckIfSpecificMessageWasLoggedAtLevel(string $level, string $message, array $context): void
     {
@@ -39,6 +41,8 @@ final class FakeLoggerTest extends TestCase
 
     /**
      * @dataProvider logMessageProvider
+     *
+     * @param array<array-key, mixed> $context
      */
     public function testCheckIfMessageWasLoggedWithContext(string $level, string $message, array $context): void
     {
@@ -51,6 +55,9 @@ final class FakeLoggerTest extends TestCase
         self::assertTrue($logger->messageWasLogged($level, $message, $context));
     }
 
+    /**
+     * @return iterable<string, array{0: string, 1: string, 2: array<array-key, mixed>}>
+     */
     public static function logMessageProvider(): iterable
     {
         yield from [

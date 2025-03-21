@@ -24,7 +24,7 @@ final class DefaultNamespaceResolverDecorator implements NamespaceResolverInterf
         private NamespaceResolverInterface $wrapped,
         string $defaultNamespace,
     ) {
-        $this->defaultNamespace = \trim($defaultNamespace, " \t\n\r\0\x0B\\");
+        $this->defaultNamespace = \mb_trim($defaultNamespace, " \t\n\r\0\x0B\\");
     }
 
     /**
@@ -34,7 +34,7 @@ final class DefaultNamespaceResolverDecorator implements NamespaceResolverInterf
      */
     public function resolveSpiderNamespace(string $spiderClass): string
     {
-        $spiderClass = \trim($spiderClass);
+        $spiderClass = \mb_trim($spiderClass);
 
         if (
             \str_starts_with($spiderClass, '\\')

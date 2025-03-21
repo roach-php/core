@@ -40,6 +40,9 @@ final class DefaultNamespaceResolverDecoratorTest extends TestCase
         self::assertSame('RoachPHP\Tests\Fixtures\\' . $spiderName, $result);
     }
 
+    /**
+     * @return iterable<string, array{0: string}>
+     */
     public static function prependNamespaceProvider(): iterable
     {
         yield from [
@@ -63,6 +66,9 @@ final class DefaultNamespaceResolverDecoratorTest extends TestCase
         self::assertSame('RoachPHP\Tests\Fixtures\TestSpider', $result);
     }
 
+    /**
+     * @return iterable<string, array{0: string}>
+     */
     public static function defaultNamespaceProvider(): iterable
     {
         yield from [
@@ -94,6 +100,9 @@ final class DefaultNamespaceResolverDecoratorTest extends TestCase
         self::assertSame('RoachPHP\Tests\Fixtures\TestSpider', $result);
     }
 
+    /**
+     * @return iterable<string, array{0: string}>
+     */
     public static function spiderNameProvider(): iterable
     {
         yield from [
