@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.1](https://github.com/roach-php/core/compare/v3.2.0...v3.2.1) (2025-03-21)
+
+
+### Bug Fixes
+
+* added missing response middleware dropped event ([31cdfa6](https://github.com/roach-php/core/commit/31cdfa60a24f187e52242ae78b9e337377b78715))
+
+
+### Miscellaneous Chores
+
+* support php 8.4 ([dd163c0](https://github.com/roach-php/core/commit/dd163c0e913c58da067234f937b4b9e16da91310))
+
 ## [3.2.0](https://github.com/roach-php/core/compare/v3.1.0...v3.2.0) (2024-04-04)
 
 
