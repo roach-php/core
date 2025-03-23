@@ -72,9 +72,12 @@ final class Engine implements EngineInterface
 
     private function work(Run $run): void
     {
+        $onFulfilled = fn (Response $response) => $this->onFulfilled($response);
+        $onRejected = fn (\Throwable $exception, Request $request) => $this->onRejected($exception, $request);
+
         while (!$this->scheduler->empty()) {
             foreach ($this->scheduler->nextRequests($run->concurrency) as $request) {
-                $this->downloader->prepare($request);
+                $this->downloader->prepare($request, $onRejected);
             }
 
             // It's possible that requests were dropped while sending them through the
@@ -94,15 +97,13 @@ final class Engine implements EngineInterface
                 $difference = $run->concurrency - $scheduledRequests;
 
                 foreach ($this->scheduler->forceNextRequests($difference) as $request) {
-                    $this->downloader->prepare($request);
+                    $this->downloader->prepare($request, $onRejected);
                 }
 
                 $scheduledRequests = $this->downloader->scheduledRequests();
             }
 
-            $this->downloader->flush(
-                fn (Response $response) => $this->onFulfilled($response),
-            );
+            $this->downloader->flush($onFulfilled, $onRejected);
         }
 
         $this->eventDispatcher->dispatch(
@@ -123,6 +124,11 @@ final class Engine implements EngineInterface
                 fn (ItemInterface $item) => $this->itemPipeline->sendItem($item),
             );
         }
+    }
+
+    private function onRejected(\Throwable $exception, Request $request): void
+    {
+        throw $exception;
     }
 
     private function scheduleRequest(Request $request): void
