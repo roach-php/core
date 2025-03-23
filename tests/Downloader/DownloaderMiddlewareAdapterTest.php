@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Downloader;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
 use RoachPHP\Downloader\Middleware\DownloaderMiddlewareAdapter;
@@ -43,6 +44,11 @@ final class DownloaderMiddlewareAdapterTest extends TestCase
             public function handleResponse(Response $response): Response
             {
                 return $response;
+            }
+
+            public function handleException(Exception $exception, Request $request): ?Request
+            {
+                return $request;
             }
         };
 
