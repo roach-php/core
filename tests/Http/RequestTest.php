@@ -128,6 +128,18 @@ final class RequestTest extends TestCase
         );
     }
 
+    public function testRetryAt(): void
+    {
+        $request = $this->makeRequest();
+
+        self::assertNull($request->getReadyAt());
+
+        $dateTime = (new \DateTimeImmutable())->add(new \DateInterval("PT2S"));
+        $request = $request->retryAt($dateTime);
+
+        self::assertSame($dateTime, $request->getReadyAt());
+    }
+
     protected function createDroppable(): DroppableInterface
     {
         return $this->makeRequest();

@@ -42,6 +42,8 @@ final class Request implements DroppableInterface
      */
     private array $options;
 
+    private ?\DateTimeImmutable $readyAt = null;
+
     /**
      * @param callable(Response): \Generator<ParseResult> $parseMethod
      */
@@ -135,5 +137,18 @@ final class Request implements DroppableInterface
         $clone->response = $response;
 
         return $clone;
+    }
+
+    public function retryAt(\DateTimeImmutable $readyAt): static
+    {
+        $clone = clone $this;
+        $clone->readyAt = $readyAt;
+
+        return $clone;
+    }
+
+    public function getReadyAt(): ?\DateTimeImmutable
+    {
+        return $this->readyAt;
     }
 }
