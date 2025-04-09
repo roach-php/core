@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace RoachPHP\Downloader\Middleware;
 
+use GuzzleHttp\Psr7\Response as Psr7Response;
 use Psr\Log\LoggerInterface;
+use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\Configurable;
 use Spatie\Browsershot\Browsershot;
 
-final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
+final class ExecuteJavascriptMiddleware implements RequestMiddlewareInterface
 {
     use Configurable;
 
@@ -37,10 +39,10 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
         $this->getBrowsershot = $getBrowsershot ?? static fn (string $uri): Browsershot => Browsershot::url($uri)->waitUntilNetworkIdle();
     }
 
-    public function handleResponse(Response $response): Response
+    public function handleRequest(Request $request): Request
     {
         $browsershot = $this->configureBrowsershot(
-            $response->getRequest()->getUri(),
+            $request->getUri(),
         );
 
         try {
@@ -51,10 +53,20 @@ final class ExecuteJavascriptMiddleware implements ResponseMiddlewareInterface
                 'trace' => $e->getTraceAsString(),
             ]);
 
-            return $response->drop('Error while executing javascript');
+            return $request->drop('Error while executing javascript');
         }
 
-        return $response->withBody($body);
+        return $request->withResponse(
+            $this->makeResponse($request, $body),
+        );
+    }
+
+    private function makeResponse(Request $request, string $body): Response
+    {
+        return new Response(
+            new Psr7Response(200, [], $body),
+            $request,
+        );
     }
 
     /**
