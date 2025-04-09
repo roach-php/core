@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$item of method RoachPHP\\Spider\\Middleware\\ItemMiddlewareInterface\:\:handleItem\(\) expects RoachPHP\\ItemPipeline\\ItemInterface, RoachPHP\\Http\\Request\|RoachPHP\\ItemPipeline\\ItemInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Spider/Processor.php
+
+		-
+			message: '#^Parameter \#1 \$request of method RoachPHP\\Spider\\Middleware\\RequestMiddlewareInterface\:\:handleRequest\(\) expects RoachPHP\\Http\\Request, RoachPHP\\Http\\Request\|RoachPHP\\ItemPipeline\\ItemInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Spider/Processor.php
