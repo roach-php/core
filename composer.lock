@@ -3146,23 +3146,23 @@
         },
         {
             "name": "ergebnis/php-cs-fixer-config",
-            "version": "6.45.0",
+            "version": "6.46.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/php-cs-fixer-config.git",
-                "reference": "8f0ef2548422a0fd5a0fa80d02b5075192532a86"
+                "reference": "a53c52cbce1aa074bbab68917b4fffa0c04d3c29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/8f0ef2548422a0fd5a0fa80d02b5075192532a86",
-                "reference": "8f0ef2548422a0fd5a0fa80d02b5075192532a86",
+                "url": "https://api.github.com/repos/ergebnis/php-cs-fixer-config/zipball/a53c52cbce1aa074bbab68917b4fffa0c04d3c29",
+                "reference": "a53c52cbce1aa074bbab68917b4fffa0c04d3c29",
                 "shasum": ""
             },
             "require": {
                 "erickskrauch/php-cs-fixer-custom-fixers": "~1.3.0",
                 "ext-filter": "*",
-                "friendsofphp/php-cs-fixer": "~3.71.0",
-                "kubawerlos/php-cs-fixer-custom-fixers": "~3.23.0",
+                "friendsofphp/php-cs-fixer": "~3.75.0",
+                "kubawerlos/php-cs-fixer-custom-fixers": "~3.24.0",
                 "php": "~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0"
             },
             "require-dev": {
@@ -3174,12 +3174,12 @@
                 "ergebnis/rector-rules": "^1.3.0",
                 "fakerphp/faker": "^1.24.1",
                 "phpstan/extension-installer": "^1.4.3",
-                "phpstan/phpstan": "^2.1.7",
+                "phpstan/phpstan": "^2.1.8",
                 "phpstan/phpstan-deprecation-rules": "^2.0.1",
-                "phpstan/phpstan-phpunit": "^2.0.4",
-                "phpstan/phpstan-strict-rules": "^2.0.3",
+                "phpstan/phpstan-phpunit": "^2.0.6",
+                "phpstan/phpstan-strict-rules": "^2.0.4",
                 "phpunit/phpunit": "^9.6.22",
-                "rector/rector": "^2.0.10",
+                "rector/rector": "^2.0.11",
                 "symfony/filesystem": "^5.0.0 || ^6.0.0",
                 "symfony/process": "^5.0.0 || ^6.0.0"
             },
@@ -3213,7 +3213,7 @@
                 "security": "https://github.com/ergebnis/php-cs-fixer-config/blob/main/.github/SECURITY.md",
                 "source": "https://github.com/ergebnis/php-cs-fixer-config"
             },
-            "time": "2025-03-08T08:34:05+00:00"
+            "time": "2025-04-09T13:39:51+00:00"
         },
         {
             "name": "erickskrauch/php-cs-fixer-custom-fixers",
@@ -3392,16 +3392,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.71.0",
+            "version": "v3.75.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "3825ffdc69501e1c9230291b79f036a0c0d8749d"
+                "reference": "399a128ff2fdaf4281e4e79b755693286cdf325c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/3825ffdc69501e1c9230291b79f036a0c0d8749d",
-                "reference": "3825ffdc69501e1c9230291b79f036a0c0d8749d",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/399a128ff2fdaf4281e4e79b755693286cdf325c",
+                "reference": "399a128ff2fdaf4281e4e79b755693286cdf325c",
                 "shasum": ""
             },
             "require": {
@@ -3409,6 +3409,7 @@
                 "composer/semver": "^3.4",
                 "composer/xdebug-handler": "^3.0.3",
                 "ext-filter": "*",
+                "ext-hash": "*",
                 "ext-json": "*",
                 "ext-tokenizer": "*",
                 "fidry/cpu-core-counter": "^1.2",
@@ -3431,18 +3432,18 @@
                 "symfony/stopwatch": "^5.4 || ^6.4 || ^7.0"
             },
             "require-dev": {
-                "facile-it/paraunit": "^1.3.1 || ^2.5",
-                "infection/infection": "^0.29.10",
-                "justinrainbow/json-schema": "^5.3 || ^6.0",
+                "facile-it/paraunit": "^1.3.1 || ^2.6",
+                "infection/infection": "^0.29.14",
+                "justinrainbow/json-schema": "^5.3 || ^6.2",
                 "keradus/cli-executor": "^2.1",
                 "mikey179/vfsstream": "^1.6.12",
                 "php-coveralls/php-coveralls": "^2.7",
                 "php-cs-fixer/accessible-object": "^1.1",
                 "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.6",
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.6",
-                "phpunit/phpunit": "^9.6.22 || ^10.5.45 || ^11.5.7",
-                "symfony/var-dumper": "^5.4.48 || ^6.4.18 || ^7.2.0",
-                "symfony/yaml": "^5.4.45 || ^6.4.18 || ^7.2.0"
+                "phpunit/phpunit": "^9.6.22 || ^10.5.45 || ^11.5.12",
+                "symfony/var-dumper": "^5.4.48 || ^6.4.18 || ^7.2.3",
+                "symfony/yaml": "^5.4.45 || ^6.4.18 || ^7.2.3"
             },
             "suggest": {
                 "ext-dom": "For handling output formats in XML",
@@ -3483,7 +3484,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.71.0"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.75.0"
             },
             "funding": [
                 {
@@ -3491,7 +3492,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-07T23:06:56+00:00"
+            "time": "2025-03-31T18:40:42+00:00"
         },
         {
             "name": "http-interop/http-factory-guzzle",
@@ -3628,16 +3629,16 @@
         },
         {
             "name": "kubawerlos/php-cs-fixer-custom-fixers",
-            "version": "v3.23.0",
+            "version": "v3.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers.git",
-                "reference": "b3210c6e546bdfc95664297a8971ae3b6b1f4a5a"
+                "reference": "93222100a91399314c3726857e249e76c4a7d760"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/b3210c6e546bdfc95664297a8971ae3b6b1f4a5a",
-                "reference": "b3210c6e546bdfc95664297a8971ae3b6b1f4a5a",
+                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/93222100a91399314c3726857e249e76c4a7d760",
+                "reference": "93222100a91399314c3726857e249e76c4a7d760",
                 "shasum": ""
             },
             "require": {
@@ -3647,7 +3648,7 @@
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.6.4 || ^10.5.29"
+                "phpunit/phpunit": "^9.6.22 || 10.5.45 || ^11.5.7"
             },
             "type": "library",
             "autoload": {
@@ -3668,9 +3669,9 @@
             "description": "A set of custom fixers for PHP CS Fixer",
             "support": {
                 "issues": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/issues",
-                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.23.0"
+                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.24.0"
             },
-            "time": "2025-02-15T09:15:56+00:00"
+            "time": "2025-03-22T16:51:39+00:00"
         },
         {
             "name": "localheinz/diff",
@@ -7676,6 +7677,6 @@
     "platform": {
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
