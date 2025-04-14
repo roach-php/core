@@ -13,7 +13,7 @@
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0",
         "guzzlehttp/guzzle": "^7.8.0",
         "jakeasmith/http_build_url": "^1.0.1",
-        "league/container": "^4.2",
+        "league/container": "^4.2 || ^5.0",
         "monolog/monolog": "^3.5",
         "nyholm/psr7": "^1.8.1",
         "nyholm/psr7-server": "^1.1",
