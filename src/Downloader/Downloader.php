@@ -57,7 +57,7 @@ final class Downloader
         return \count($this->requests);
     }
 
-    public function prepare(Request $request, ?callable $onRejected): void
+    public function prepare(Request $request, ?callable $onRejected = null): void
     {
         try {
             foreach ($this->middleware as $middleware) {
