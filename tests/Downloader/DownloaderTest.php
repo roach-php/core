@@ -13,9 +13,12 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Downloader;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Downloader\Downloader;
 use RoachPHP\Downloader\Middleware\FakeMiddleware;
+use RoachPHP\Events\ExceptionReceived;
+use RoachPHP\Events\ExceptionReceiving;
 use RoachPHP\Events\FakeDispatcher;
 use RoachPHP\Events\RequestDropped;
 use RoachPHP\Events\RequestSending;
@@ -52,8 +55,8 @@ final class DownloaderTest extends TestCase
         $requestA = $this->makeRequest('::url-a::');
         $requestB = $this->makeRequest('::url-a::');
 
-        $this->downloader->prepare($requestA);
-        $this->downloader->prepare($requestB);
+        $this->downloader->prepare($requestA, null);
+        $this->downloader->prepare($requestB, null);
         $this->downloader->flush();
 
         $this->client->assertRequestWasSent($requestA);
@@ -69,7 +72,7 @@ final class DownloaderTest extends TestCase
 
         $this->downloader
             ->withMiddleware($middlewareA, $middlewareB)
-            ->prepare($initialRequest);
+            ->prepare($initialRequest, null);
 
         $middlewareA->assertRequestHandled($initialRequest);
         $middlewareB->assertRequestHandled($middlewareARequest);
@@ -83,7 +86,7 @@ final class DownloaderTest extends TestCase
 
         $this->downloader
             ->withMiddleware($dropMiddleware, $middleware)
-            ->prepare($initialRequest);
+            ->prepare($initialRequest, null);
 
         $dropMiddleware->assertRequestHandled($initialRequest);
         $middleware->assertNoRequestsHandled();
@@ -96,7 +99,7 @@ final class DownloaderTest extends TestCase
 
         $this->downloader
             ->withMiddleware($dropMiddleware)
-            ->prepare($request);
+            ->prepare($request, null);
         $this->downloader->flush();
 
         $this->client->assertRequestWasNotSent($request);
@@ -111,7 +114,7 @@ final class DownloaderTest extends TestCase
         $middlewareC = new FakeMiddleware();
         $this->downloader->withMiddleware($middlewareA, $middlewareB, $middlewareC);
 
-        $this->downloader->prepare($this->makeRequest());
+        $this->downloader->prepare($this->makeRequest(), null);
         $this->downloader->flush();
 
         $middlewareB->assertResponseHandled($middlewareAResponse);
@@ -124,7 +127,7 @@ final class DownloaderTest extends TestCase
         $middleware = new FakeMiddleware();
         $this->downloader->withMiddleware($dropMiddleware, $middleware);
 
-        $this->downloader->prepare($this->makeRequest());
+        $this->downloader->prepare($this->makeRequest(), null);
         $this->downloader->flush();
 
         $middleware->assertNoResponseHandled();
@@ -136,8 +139,8 @@ final class DownloaderTest extends TestCase
             $this->makeRequest('::url-a::')->withMeta('index', 0),
             $this->makeRequest('::url-b::')->withMeta('index', 1),
         ];
-        $this->downloader->prepare($requests[0]);
-        $this->downloader->prepare($requests[1]);
+        $this->downloader->prepare($requests[0], null);
+        $this->downloader->prepare($requests[1], null);
 
         $this->downloader->flush(static function (Response $response) use (&$requests): void {
             self::assertContains($response->getRequest(), $requests);
@@ -152,7 +155,7 @@ final class DownloaderTest extends TestCase
         $dropMiddleware = new FakeMiddleware(null, static fn (Response $response) => $response->drop('::reason::'));
         $this->downloader->withMiddleware($dropMiddleware);
 
-        $this->downloader->prepare($this->makeRequest());
+        $this->downloader->prepare($this->makeRequest(), null);
         $this->downloader->flush(static function () use (&$called): void {
             $called = true;
         });
@@ -166,7 +169,7 @@ final class DownloaderTest extends TestCase
         $dropMiddleware = new FakeMiddleware(static fn (Request $request) => $request->drop('::reason::'));
         $this->downloader->withMiddleware($dropMiddleware);
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
 
         $this->dispatcher->assertDispatched(
             RequestDropped::NAME,
@@ -176,7 +179,7 @@ final class DownloaderTest extends TestCase
 
     public function testDoesNotDispatchEventIfRequestWasNotDropped(): void
     {
-        $this->downloader->prepare($this->makeRequest());
+        $this->downloader->prepare($this->makeRequest(), null);
 
         $this->dispatcher->assertNotDispatched(RequestDropped::NAME);
     }
@@ -184,7 +187,7 @@ final class DownloaderTest extends TestCase
     public function testDispatchesAnEventBeforeRequestIsScheduled(): void
     {
         $request = $this->makeRequest();
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
 
         $this->dispatcher->assertDispatched(
             RequestSending::NAME,
@@ -199,7 +202,7 @@ final class DownloaderTest extends TestCase
         });
         $request = $this->makeRequest();
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->downloader->flush();
 
         $this->client->assertRequestWasNotSent($request);
@@ -212,7 +215,7 @@ final class DownloaderTest extends TestCase
         });
         $request = $this->makeRequest();
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
 
         $this->dispatcher->assertDispatched(
             RequestDropped::NAME,
@@ -224,7 +227,7 @@ final class DownloaderTest extends TestCase
     {
         $request = $this->makeRequest();
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->dispatcher->assertNotDispatched(ResponseReceiving::NAME);
 
         $this->downloader->flush();
@@ -266,7 +269,7 @@ final class DownloaderTest extends TestCase
         $middleware = new FakeMiddleware();
         $this->downloader->withMiddleware($middleware);
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->downloader->flush();
 
         $middleware->assertNoResponseHandled();
@@ -279,7 +282,7 @@ final class DownloaderTest extends TestCase
             $event->response = $event->response->drop('::reason::');
         });
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->downloader->flush();
 
         $this->dispatcher->assertDispatched(
@@ -296,7 +299,7 @@ final class DownloaderTest extends TestCase
             $event->response = $event->response->drop('::reason::');
         });
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->downloader->flush(static function () use (&$called): void {
             $called = true;
         });
@@ -316,7 +319,7 @@ final class DownloaderTest extends TestCase
         );
         $this->downloader->withMiddleware($middleware);
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->downloader->flush();
 
         $this->dispatcher->assertDispatched(
@@ -332,7 +335,7 @@ final class DownloaderTest extends TestCase
             $event->response = $event->response->drop('::reason::');
         });
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->downloader->flush();
 
         $this->dispatcher->assertDispatched(
@@ -349,7 +352,7 @@ final class DownloaderTest extends TestCase
             $event->response = $event->response->drop('::reason::');
         });
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->downloader->flush(static function () use (&$called): void {
             $called = true;
         });
@@ -362,7 +365,7 @@ final class DownloaderTest extends TestCase
         $request = $this->makeRequest();
         $request = $request->withResponse($this->makeResponse($request));
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->downloader->flush();
 
         $this->client->assertRequestWasNotSent($request);
@@ -373,7 +376,7 @@ final class DownloaderTest extends TestCase
         $request = $this->makeRequest();
         $request = $request->withResponse($this->makeResponse($request));
 
-        $this->downloader->prepare($request);
+        $this->downloader->prepare($request, null);
         $this->dispatcher->assertNotDispatched(ResponseReceiving::NAME);
 
         $this->downloader->flush();
@@ -394,8 +397,96 @@ final class DownloaderTest extends TestCase
 
         $this->downloader
             ->withMiddleware($middleware)
-            ->prepare($request);
+            ->prepare($request, null);
 
         $middleware->assertRequestHandled($request);
+    }
+
+    public function testCallsOnRejectedCallbackWhenExceptionOccursDuringRequestHandling(): void
+    {
+        $called = false;
+        $request = $this->makeRequest();
+        $exceptionMiddleware = new FakeMiddleware(static fn (Request $request) => throw new \Exception('Oh no!'));
+
+        $this->downloader
+            ->withMiddleware($exceptionMiddleware)
+            ->prepare($request, function () use (&$called) {
+                $called = true;
+            });
+        $this->downloader->flush();
+
+        $this->client->assertRequestWasNotSent($request);
+        self::assertTrue($called);
+    }
+
+    public function testCallsOnRejectedCallbackWhenExceptionOccursDuringFlushing(): void
+    {
+        $called = false;
+        $request = $this->makeRequest();
+        $this->client->makeRequestsFail($request);
+
+        $this->downloader->prepare($request, null);
+        $this->downloader->flush(onRejected: function () use (&$called) {
+            $called = true;
+        });
+
+        self::assertTrue($called);
+    }
+
+    public function testPassExceptionsThroughExceptionHandlers(): void
+    {
+        $request = $this->makeRequest();
+        $exception = new Exception('Oh no!');
+        $exceptionMiddleware = new FakeMiddleware(static fn () => throw $exception);
+
+        $this->downloader
+            ->withMiddleware($exceptionMiddleware)
+            ->prepare($request, null);
+
+        $exceptionMiddleware->assertExceptionHandled($exception);
+    }
+
+    public function testDispatchEventIfExceptionIsBeingReceived(): void
+    {
+        $request = $this->makeRequest();
+        $successfulMiddleware = new FakeMiddleware();
+        $exception = new Exception('On no!');
+        $failingMiddleware = new FakeMiddleware(static fn () => throw $exception);
+
+        $this->downloader
+            ->withMiddleware($successfulMiddleware)
+            ->prepare($request, null);
+        $this->dispatcher->assertNotDispatched(ExceptionReceiving::class);
+
+        $this->downloader
+            ->withMiddleware($failingMiddleware)
+            ->prepare($request, null);
+
+        $this->dispatcher->assertDispatched(
+            ExceptionReceiving::NAME,
+            static fn (ExceptionReceiving $event) => $event->exception == $exception,
+        );
+    }
+
+    public function testDispatchEventWhenExceptionWasProcessedByMiddleware(): void
+    {
+        $request = $this->makeRequest();
+        $exception = new Exception('On no!');
+        $middleware = new FakeMiddleware(
+            requestHandler: static fn () => throw $exception,
+            exceptionHandler: function (Exception $exception, Request $request) {
+                $this->dispatcher->assertNotDispatched(ExceptionReceived::NAME);
+
+                return $request;
+            },
+        );
+        $this->downloader->withMiddleware($middleware);
+
+        $this->downloader->prepare($request, null);
+
+        $this->dispatcher->assertDispatched(
+            ExceptionReceived::NAME,
+            static fn (ExceptionReceived $event) => $event->exception === $exception,
+        );
     }
 }
