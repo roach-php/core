@@ -27,6 +27,7 @@ use RoachPHP\Events\ResponseReceived;
 use RoachPHP\Events\ResponseReceiving;
 use RoachPHP\Http\FakeClient;
 use RoachPHP\Http\Request;
+use RoachPHP\Http\RequestException;
 use RoachPHP\Http\Response;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 
@@ -406,7 +407,11 @@ final class DownloaderTest extends TestCase
     {
         $called = false;
         $request = $this->makeRequest();
-        $exceptionMiddleware = new FakeMiddleware(static fn (Request $request) => throw new \Exception('Oh no!'));
+        $exceptionMiddleware = new FakeMiddleware(
+            requestHandler: static fn () => throw new \Exception('Oh no!'),
+            // Handle request exception to not let the exception be thrown
+            exceptionHandler: static fn (RequestException $requestException) => $requestException->setHandled()
+        );
 
         $this->downloader
             ->withMiddleware($exceptionMiddleware)
@@ -437,7 +442,11 @@ final class DownloaderTest extends TestCase
     {
         $request = $this->makeRequest();
         $exception = new Exception('Oh no!');
-        $exceptionMiddleware = new FakeMiddleware(static fn () => throw $exception);
+        $exceptionMiddleware = new FakeMiddleware(
+            requestHandler: static fn () => throw $exception,
+            // Handle request exception to not let the exception be thrown
+            exceptionHandler: static fn (RequestException $requestException) => $requestException->setHandled()
+        );
 
         $this->downloader
             ->withMiddleware($exceptionMiddleware)
@@ -451,7 +460,11 @@ final class DownloaderTest extends TestCase
         $request = $this->makeRequest();
         $successfulMiddleware = new FakeMiddleware();
         $exception = new Exception('On no!');
-        $failingMiddleware = new FakeMiddleware(static fn () => throw $exception);
+        $failingMiddleware = new FakeMiddleware(
+            requestHandler: static fn () => throw $exception,
+            // Handle request exception to not let the exception be thrown
+            exceptionHandler: static fn (RequestException $requestException) => $requestException->setHandled()
+        );
 
         $this->downloader
             ->withMiddleware($successfulMiddleware)
@@ -464,7 +477,7 @@ final class DownloaderTest extends TestCase
 
         $this->dispatcher->assertDispatched(
             ExceptionReceiving::NAME,
-            static fn (ExceptionReceiving $event) => $event->exception == $exception,
+            static fn (ExceptionReceiving $event) => $event->exception->getPrevious() == $exception,
         );
     }
 
@@ -474,10 +487,11 @@ final class DownloaderTest extends TestCase
         $exception = new Exception('On no!');
         $middleware = new FakeMiddleware(
             requestHandler: static fn () => throw $exception,
-            exceptionHandler: function (Exception $exception, Request $request) {
+            exceptionHandler: function (RequestException $requestException) {
                 $this->dispatcher->assertNotDispatched(ExceptionReceived::NAME);
 
-                return $request;
+                // Handle request exception to not let the exception be thrown
+                return $requestException->setHandled();
             },
         );
         $this->downloader->withMiddleware($middleware);
@@ -486,7 +500,21 @@ final class DownloaderTest extends TestCase
 
         $this->dispatcher->assertDispatched(
             ExceptionReceived::NAME,
-            static fn (ExceptionReceived $event) => $event->exception === $exception,
+            static fn (ExceptionReceived $event) => $event->exception->getPrevious() === $exception,
         );
+    }
+
+    public function testThrowsExceptionWhenNoMiddlewareSpecified(): void
+    {
+        $request = $this->makeRequest();
+        $exception = new Exception('On no!');
+        $middleware = new FakeMiddleware(requestHandler: static fn () => throw $exception);
+        $this->downloader->withMiddleware($middleware);
+
+        try {
+            $this->downloader->prepare($request, null);
+        } catch (RequestException $requestException) {
+            $this->assertEquals($exception, $requestException->getPrevious());
+        }
     }
 }
