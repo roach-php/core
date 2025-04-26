@@ -19,7 +19,7 @@ final class RequestException extends \Exception
 {
     public function __construct(
         private Request $request,
-        private GuzzleException $reason,
+        private GuzzleException|\Exception $reason,
     ) {
         parent::__construct('An exception occurred while sending a request', previous: $reason);
     }
@@ -29,7 +29,7 @@ final class RequestException extends \Exception
         return $this->request;
     }
 
-    public function getReason(): GuzzleException
+    public function getReason(): GuzzleException|\Exception
     {
         return $this->reason;
     }
