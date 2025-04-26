@@ -94,7 +94,7 @@ final class Downloader
 
             $this->requests[] = $event->request;
         } catch (Exception $exception) {
-            $this->onExceptionReceived($exception, $request, $onRejected);
+            $this->onExceptionReceived(new RequestException($request, $exception), $onRejected);
         }
     }
 
@@ -122,11 +122,7 @@ final class Downloader
                 $this->onResponseReceived($response, $onFullFilled);
             },
             function (RequestException $requestException) use ($onRejected): void {
-                $this->onExceptionReceived(
-                    $requestException->getReason(),
-                    $requestException->getRequest(),
-                    $onRejected,
-                );
+                $this->onExceptionReceived($requestException, $onRejected);
             }
         );
     }
@@ -177,24 +173,24 @@ final class Downloader
         }
     }
 
-    private function onExceptionReceived(\Throwable $exception, Request $request, ?callable $callback): void
+    private function onExceptionReceived(RequestException $requestException, ?callable $callback): void
     {
         $this->eventDispatcher->dispatch(
-            new ExceptionReceiving($exception),
+            new ExceptionReceiving($requestException),
             ExceptionReceiving::NAME,
         );
 
         foreach ($this->middleware as $middleware) {
-            $request = $middleware->handleException($exception, $request);
+            $middleware->handleException($requestException);
         }
 
         $this->eventDispatcher->dispatch(
-            new ExceptionReceived($exception),
+            new ExceptionReceived($requestException),
             ExceptionReceived::NAME,
         );
 
         if (null !== $callback) {
-            $callback($exception, $request);
+            $callback($requestException);
         }
     }
 }
