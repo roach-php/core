@@ -180,13 +180,8 @@ final class Downloader
             ExceptionReceiving::NAME,
         );
 
-        $handled = false;
         foreach ($this->middleware as $middleware) {
-            $middleware->handleException($requestException);
-
-            if ($requestException->isHandled()) {
-                $handled = true;
-            }
+            $requestException = $middleware->handleException($requestException);
         }
 
         $this->eventDispatcher->dispatch(
@@ -197,7 +192,7 @@ final class Downloader
         if (null !== $callback) {
             $callback($requestException);
 
-        } else if (!$handled) {
+        } else if (!$requestException->isHandled()) {
             throw $requestException;
         }
     }
