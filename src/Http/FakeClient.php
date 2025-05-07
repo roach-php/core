@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace RoachPHP\Http;
 
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use PHPUnit\Framework\Assert;
 
@@ -26,10 +28,21 @@ final class FakeClient implements ClientInterface
      */
     private array $sentRequestUrls = [];
 
+    /**
+     * @var array<array-key, Request>
+     */ 
+    private array $failingRequests = [];
+
     public function pool(array $requests, ?callable $onFulfilled = null, ?callable $onRejected = null): void
     {
         foreach ($requests as $request) {
             $this->sentRequestUrls[] = $request->getUri();
+
+            if (null !== $onRejected && in_array($request, $this->failingRequests)) {
+                $exception = new RequestException($request, new FakeGuzzleException());
+
+                $onRejected($exception);
+            }
 
             if (null !== $onFulfilled) {
                 $response = new Response(new GuzzleResponse(), $request);
@@ -37,6 +50,13 @@ final class FakeClient implements ClientInterface
                 $onFulfilled($response);
             }
         }
+    }
+
+    public function makeRequestsFail(Request ...$request): static
+    {
+        $this->failingRequests = $request;
+
+        return $this;
     }
 
     public function assertRequestWasSent(Request $request): void

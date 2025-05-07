@@ -13,9 +13,12 @@ declare(strict_types=1);
 
 namespace RoachPHP\Downloader\Middleware;
 
+use Exception;
 use PHPUnit\Framework\Assert;
 use RoachPHP\Downloader\DownloaderMiddlewareInterface;
+use RoachPHP\Http\ExceptionContext;
 use RoachPHP\Http\Request;
+use RoachPHP\Http\RequestException;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\Configurable;
 
@@ -37,12 +40,19 @@ final class FakeMiddleware implements DownloaderMiddlewareInterface
     private array $responsesHandled = [];
 
     /**
+     * @var array Exception[]
+     */
+    private array $exceptionsHandled = [];
+
+    /**
      * @param ?\Closure(Request): Request   $requestHandler
      * @param ?\Closure(Response): Response $responseHandler
+     * @param ?\Closure(RequestException): RequestException $exceptionHandler
      */
     public function __construct(
         private ?\Closure $requestHandler = null,
         private ?\Closure $responseHandler = null,
+        private ?\Closure $exceptionHandler = null,
     ) {
     }
 
@@ -66,6 +76,17 @@ final class FakeMiddleware implements DownloaderMiddlewareInterface
         }
 
         return $response;
+    }
+
+    public function handleException(RequestException $requestException): RequestException
+    {
+        $this->exceptionsHandled[] = $requestException->getReason();
+
+        if (null !== $this->exceptionHandler) {
+            return ($this->exceptionHandler)($requestException);
+        }
+
+        return $requestException;
     }
 
     public function assertRequestHandled(Request $request): void
@@ -96,5 +117,20 @@ final class FakeMiddleware implements DownloaderMiddlewareInterface
     public function assertNoResponseHandled(): void
     {
         Assert::assertEmpty($this->responsesHandled);
+    }
+
+    public function assertExceptionHandled(Exception $exception): void
+    {
+        Assert::assertContains($exception, $this->exceptionsHandled);
+    }
+
+    public function assertExceptionNotHandled(Exception $exception): void
+    {
+        Assert::assertNotContains($exception, $this->exceptionsHandled);
+    }
+
+    public function assertNoExceptionHandled(): void
+    {
+        Assert::assertEmpty($this->exceptionsHandled);
     }
 }

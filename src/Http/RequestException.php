@@ -17,9 +17,11 @@ use GuzzleHttp\Exception\GuzzleException;
 
 final class RequestException extends \Exception
 {
+    private bool $handled = false;
+
     public function __construct(
         private Request $request,
-        private GuzzleException $reason,
+        private GuzzleException|\Exception $reason,
     ) {
         parent::__construct('An exception occurred while sending a request', previous: $reason);
     }
@@ -29,8 +31,20 @@ final class RequestException extends \Exception
         return $this->request;
     }
 
-    public function getReason(): GuzzleException
+    public function getReason(): GuzzleException|\Exception
     {
         return $this->reason;
+    }
+
+    public function isHandled(): bool
+    {
+        return $this->handled;
+    }
+
+    public function setHandled(): self
+    {
+        $this->handled = true;
+
+        return $this;
     }
 }

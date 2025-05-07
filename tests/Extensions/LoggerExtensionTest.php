@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Extensions;
 
+use Exception;
 use RoachPHP\Core\Run;
+use RoachPHP\Events\ExceptionReceived;
 use RoachPHP\Events\ItemDropped;
 use RoachPHP\Events\ItemScraped;
 use RoachPHP\Events\RequestDropped;
@@ -125,6 +127,20 @@ final class LoggerExtensionTest extends ExtensionTestCase
 
         self::assertTrue(
             $this->logger->messageWasLogged('info', 'Item scraped', ['foo' => 'bar']),
+        );
+    }
+
+    public function testLogWhenExceptionWasReceived(): void
+    {
+        self::assertFalse(
+            $this->logger->messageWasLogged('warning', 'Exception received'),
+        );
+
+        $exception = new Exception();
+        $this->dispatch(new ExceptionReceived($exception), ExceptionReceived::NAME);
+
+        self::assertTrue(
+            $this->logger->messageWasLogged('warning', 'Exception received', ['exception' => $exception]),
         );
     }
 
