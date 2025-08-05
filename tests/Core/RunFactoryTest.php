@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Core;
 
-use Generator;
 use League\Container\Container;
 use League\Container\ReflectionContainer;
 use PHPUnit\Framework\TestCase;
@@ -224,15 +223,6 @@ final class RunFactoryTest extends TestCase
         self::assertSame($requestDelay, $run->requestDelay);
     }
 
-    public function testConfigureRunNamespace(): void
-    {
-        $spider = $this->createSpider();
-
-        $run = $this->factory->fromSpider($spider);
-
-        self::assertSame($spider::class, $run->namespace);
-    }
-
     public static function numberProvider(): iterable
     {
         yield from [
@@ -242,6 +232,15 @@ final class RunFactoryTest extends TestCase
             [4],
             [5],
         ];
+    }
+
+    public function testConfigureRunNamespace(): void
+    {
+        $spider = $this->createSpider();
+
+        $run = $this->factory->fromSpider($spider);
+
+        self::assertSame($spider::class, $run->namespace);
     }
 
     /**
@@ -364,7 +363,7 @@ final class RunFactoryTest extends TestCase
                 parent::__construct();
             }
 
-            public function parse(Response $response): Generator
+            public function parse(Response $response): \Generator
             {
                 yield from [];
             }

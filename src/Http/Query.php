@@ -39,7 +39,7 @@ final class Query
     {
         \parse_str($query, $values);
 
-        /** @psalm-suppress MixedArgumentTypeCoercion */
+        // @phpstan-ignore argument.type
         return self::fromArray($values);
     }
 
@@ -129,6 +129,7 @@ final class Query
             throw QueryParameterTypeMismatchException::forArray($key);
         }
 
+        // @phpstan-ignore return.type
         return $value;
     }
 

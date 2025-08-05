@@ -22,7 +22,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class ItemPipeline implements ItemPipelineInterface
 {
     /**
-     * @var array<ItemProcessorInterface>
+     * @var array<array-key, ItemProcessorInterface>
      */
     private array $processors = [];
 

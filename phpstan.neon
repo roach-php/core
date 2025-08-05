@@ -1,0 +1,13 @@
+includes:
+  - phpstan-baseline.neon
+
+parameters:
+    paths:
+        - src
+
+    level: 9
+
+    ignoreErrors:
+      - identifier: missingType.iterableValue
+
+    excludePaths: []

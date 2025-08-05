@@ -39,7 +39,7 @@ final class ShellCaster
     public static function castLink(Link $link): array
     {
         return [
-            CASTER::PREFIX_PROTECTED . '.uri' => $link->getUri(),
+            Caster::PREFIX_PROTECTED . '.uri' => $link->getUri(),
         ];
     }
 }

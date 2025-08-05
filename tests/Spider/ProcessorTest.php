@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Spider;
 
-use Closure;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Events\FakeDispatcher;
 use RoachPHP\Events\ItemDropped;
@@ -45,7 +44,7 @@ final class ProcessorTest extends TestCase
 
     public function testCallsCallbackOnRequest(): void
     {
-        $parseCallback = static fn () => null;
+        $parseCallback = static fn (Response $response) => yield from [];
         $expectedRequest = ParseResult::request('GET', '::new-url::', $parseCallback);
         $request = $this->makeRequest(callback: static fn () => yield $expectedRequest);
         $response = $this->makeResponse($request);
@@ -111,8 +110,8 @@ final class ProcessorTest extends TestCase
             handleRequestCallback: static fn ($r) => $r->withMeta('::key::', $r->getMeta('::key::', '') . 'B'),
         );
         $results = [
-            ParseResult::request('GET', '::url::', static fn () => null),
-            ParseResult::request('GET', '::url::', static fn () => null),
+            ParseResult::request('GET', '::url::', static fn (Response $response) => yield from []),
+            ParseResult::request('GET', '::url::', static fn (Response $response) => yield from []),
         ];
         $request = $this->makeRequest(callback: static fn () => yield from $results);
         $stack = $this->processor->withMiddleware($handlerA, $handlerB);
@@ -258,9 +257,9 @@ final class ProcessorTest extends TestCase
     }
 
     private function makeHandler(
-        ?Closure $handleResponse = null,
-        ?Closure $handleItemCallback = null,
-        ?Closure $handleRequestCallback = null,
+        ?\Closure $handleResponse = null,
+        ?\Closure $handleItemCallback = null,
+        ?\Closure $handleRequestCallback = null,
     ): FakeHandler {
         return new FakeHandler($handleResponse, $handleItemCallback, $handleRequestCallback);
     }

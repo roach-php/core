@@ -36,7 +36,12 @@ $app->add(static function (ServerRequestInterface $request, RequestHandlerInterf
     }
 
     try {
-        $logs = \json_decode(\file_get_contents(LOG_PATH), true, 512, \JSON_THROW_ON_ERROR);
+        $logs = \json_decode(
+            \file_get_contents(LOG_PATH), // @phpstan-ignore argument.type
+            true,
+            512,
+            \JSON_THROW_ON_ERROR,
+        );
     } catch (JsonException) {
         $logs = [];
     }

@@ -123,6 +123,9 @@ final class FakeRunnerTest extends TestCase
         $this->runner->assertRunWasNotStarted(TestSpider::class);
     }
 
+    /**
+     * @return iterable<array-key, array{0: string}>
+     */
     public static function runnerMethodProvider(): iterable
     {
         yield from [

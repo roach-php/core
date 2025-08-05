@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\ItemPipeline;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Tests\Fixtures\TestItem;
-use RuntimeException;
 
 /**
  * @internal
@@ -75,7 +73,7 @@ final class AbstractItemTest extends TestCase
     {
         $item = new TestItem(foo: '::old-value-1::', bar: '::old-value-2::');
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("No public property {$property} exists on class RoachPHP\\Tests\\Fixtures\\TestItem");
         $item->set($property, '::new-value::');
     }
@@ -138,7 +136,7 @@ final class AbstractItemTest extends TestCase
     {
         $item = new TestItem(foo: '::value-1::', bar: '::value-2::');
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Offset needs to be a string');
 
         $item[0];
@@ -162,7 +160,7 @@ final class AbstractItemTest extends TestCase
     {
         $item = new TestItem(foo: '::value-1::', bar: '::value-2::');
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("No public property {$property} exists on class RoachPHP\\Tests\\Fixtures\\TestItem");
 
         $item[$property] = '::new-value::';
@@ -181,7 +179,7 @@ final class AbstractItemTest extends TestCase
     {
         $item = new TestItem(foo: '::value-1::', bar: '::value-2::');
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Offset needs to be a string');
 
         $item[0] = '::value::';
@@ -191,7 +189,7 @@ final class AbstractItemTest extends TestCase
     {
         $item = new TestItem(foo: '::value-1::', bar: '::value-2::');
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Unsetting properties is not supported for custom item classes');
 
         unset($item['foo']);

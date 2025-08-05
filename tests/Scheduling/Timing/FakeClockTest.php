@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Scheduling\Timing;
 
-use DateInterval;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Scheduling\Timing\ClockInterface;
 use RoachPHP\Scheduling\Timing\FakeClock;
@@ -34,11 +33,11 @@ final class FakeClockTest extends TestCase
     {
         $now = $this->clock->now();
 
-        $this->clock->sleepUntil($now->add(new DateInterval('PT1S')));
+        $this->clock->sleepUntil($now->add(new \DateInterval('PT1S')));
         $then1 = $this->clock->now();
         self::assertSame(1, $now->diff($then1)->s);
 
-        $this->clock->sleepUntil($then1->add(new DateInterval('PT1S')));
+        $this->clock->sleepUntil($then1->add(new \DateInterval('PT1S')));
         $then2 = $this->clock->now();
         self::assertSame(1, $then1->diff($then2)->s);
         self::assertSame(2, $now->diff($then2)->s);
@@ -48,7 +47,7 @@ final class FakeClockTest extends TestCase
     {
         $now = $this->clock->now();
 
-        $this->clock->sleepUntil($now->sub(new DateInterval('PT2S')));
+        $this->clock->sleepUntil($now->sub(new \DateInterval('PT2S')));
         $then = $this->clock->now();
         self::assertSame(0, $now->diff($then)->s);
     }
@@ -59,13 +58,13 @@ final class FakeClockTest extends TestCase
 
         self::assertSame(0, $clock->timePassed());
 
-        $clock->sleepUntil($clock->now()->add(new DateInterval('PT5S')));
+        $clock->sleepUntil($clock->now()->add(new \DateInterval('PT5S')));
         self::assertSame(5, $clock->timePassed());
 
-        $clock->sleepUntil($clock->now()->add(new DateInterval('PT2S')));
+        $clock->sleepUntil($clock->now()->add(new \DateInterval('PT2S')));
         self::assertSame(7, $clock->timePassed());
 
-        $clock->sleepUntil($clock->now()->add(new DateInterval('PT3S')));
+        $clock->sleepUntil($clock->now()->add(new \DateInterval('PT3S')));
         self::assertSame(10, $clock->timePassed());
     }
 

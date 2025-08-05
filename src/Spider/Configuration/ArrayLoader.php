@@ -24,14 +24,14 @@ final class ArrayLoader implements ConfigurationLoaderStrategy
 {
     /**
      * @var array{
-     *             startUrls: string[],
-     *             downloaderMiddleware: class-string<DownloaderMiddlewareInterface>[],
-     *             spiderMiddleware: class-string<SpiderMiddlewareInterface>[],
-     *             itemProcessors: class-string<ItemProcessorInterface>[],
-     *             extensions: class-string<ExtensionInterface>[],
-     *             concurrency: int,
-     *             requestDelay: int
-     *             }
+     *   startUrls: string[],
+     *   downloaderMiddleware: class-string<DownloaderMiddlewareInterface>[],
+     *   spiderMiddleware: class-string<SpiderMiddlewareInterface>[],
+     *   itemProcessors: class-string<ItemProcessorInterface>[],
+     *   extensions: class-string<ExtensionInterface>[],
+     *   concurrency: int,
+     *   requestDelay: int
+     * }
      */
     private array $config;
 
@@ -49,7 +49,7 @@ final class ArrayLoader implements ConfigurationLoaderStrategy
             'requestDelay' => 0,
         ]);
 
-        /** @psalm-suppress MixedPropertyTypeCoercion */
+        // @phpstan-ignore assign.propertyType
         $this->config = $resolver->resolve($configuration);
     }
 

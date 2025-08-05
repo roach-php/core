@@ -25,9 +25,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'roach:run')]
 final class RunSpiderCommand extends Command
 {
-    protected static $defaultName = 'roach:run';
+    protected static string $defaultName = 'roach:run';
 
-    protected static $defaultDescription = 'Start a spider run for the provided spider class';
+    protected static string $defaultDescription = 'Start a spider run for the provided spider class';
 
     protected function configure(): void
     {
@@ -39,7 +39,7 @@ final class RunSpiderCommand extends Command
         $resolver = Roach::resolve(NamespaceResolverInterface::class);
 
         try {
-            /** @psalm-suppress MixedArgument */
+            /** @phpstan-ignore argument.type */
             $spiderClass = $resolver->resolveSpiderNamespace($input->getArgument('spider'));
         } catch (InvalidSpiderException $exception) {
             $output->writeln(\sprintf('<error>Invalid spider: %s</error>', $exception->getMessage()));

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\ItemPipeline;
 
-use Closure;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Events\FakeDispatcher;
 use RoachPHP\Events\ItemDropped;
@@ -139,12 +138,12 @@ final class ItemPipelineTest extends TestCase
         self::assertFalse($result->wasDropped());
     }
 
-    private function makeProcessor(Closure $processItem): ItemProcessorInterface
+    private function makeProcessor(\Closure $processItem): ItemProcessorInterface
     {
         return new class($processItem) implements ItemProcessorInterface {
             use Configurable;
 
-            public function __construct(private Closure $processItem)
+            public function __construct(private \Closure $processItem)
             {
             }
 
@@ -157,14 +156,14 @@ final class ItemPipelineTest extends TestCase
 
     private function makeConditionalProcessor(
         bool $handlesItem,
-        Closure $processItem,
+        \Closure $processItem,
     ): ConditionalItemProcessor {
         return new class($handlesItem, $processItem) implements ConditionalItemProcessor {
             use Configurable;
 
             public function __construct(
                 private bool $handlesItem,
-                private Closure $processItem,
+                private \Closure $processItem,
             ) {
             }
 

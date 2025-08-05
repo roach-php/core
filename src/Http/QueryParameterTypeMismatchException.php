@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace RoachPHP\Http;
 
-use Exception;
-
-final class QueryParameterTypeMismatchException extends Exception
+final class QueryParameterTypeMismatchException extends \Exception
 {
     public static function forInt(string $key): self
     {

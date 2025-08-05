@@ -47,6 +47,19 @@ final class ResponseTest extends TestCase
         self::assertSame($statusCode, $response->getStatus());
     }
 
+    public static function responseCodeProvider(): iterable
+    {
+        yield from [
+            [200],
+            [300],
+            [301],
+            [302],
+            [400],
+            [404],
+            [500],
+        ];
+    }
+
     /**
      * @dataProvider responseBodyProvider
      */
@@ -59,6 +72,29 @@ final class ResponseTest extends TestCase
         );
 
         self::assertSame($body, $response->getBody());
+    }
+
+    public static function responseBodyProvider(): iterable
+    {
+        yield from [
+            'string' => [static fn (string $body) => $body],
+
+            'stream' => [static function (string $body) {
+                $stream = \fopen('php://memory', 'r+b');
+                \fwrite($stream, $body);
+                \rewind($stream);
+
+                return $stream;
+            }],
+
+            'StreamInterface' => [static function (string $body) {
+                $stream = \fopen('php://memory', 'r+b');
+                \fwrite($stream, $body);
+                \rewind($stream);
+
+                return new Stream($stream);
+            }],
+        ];
     }
 
     public function testCanUpdateResponseBody(): void
@@ -87,42 +123,6 @@ final class ResponseTest extends TestCase
         $response = $response->withBody($newBody);
 
         self::assertSame('New', $response->filter('p')->text(''));
-    }
-
-    public static function responseCodeProvider(): iterable
-    {
-        yield from [
-            [200],
-            [300],
-            [301],
-            [302],
-            [400],
-            [404],
-            [500],
-        ];
-    }
-
-    public static function responseBodyProvider(): iterable
-    {
-        yield from [
-            'string' => [static fn (string $body) => $body],
-
-            'stream' => [static function (string $body) {
-                $stream = \fopen('php://memory', 'r+b');
-                \fwrite($stream, $body);
-                \rewind($stream);
-
-                return $stream;
-            }],
-
-            'StreamInterface' => [static function (string $body) {
-                $stream = \fopen('php://memory', 'r+b');
-                \fwrite($stream, $body);
-                \rewind($stream);
-
-                return new Stream($stream);
-            }],
-        ];
     }
 
     protected function createDroppable(): DroppableInterface

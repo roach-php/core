@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Spider;
 
-use Generator;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
@@ -31,12 +30,12 @@ abstract class AbstractSpider implements SpiderInterface
     }
 
     /**
-     * @psalm-return Generator<ParseResult>
+     * @psalm-return \Generator<ParseResult>
      */
-    abstract public function parse(Response $response): Generator;
+    abstract public function parse(Response $response): \Generator;
 
     /**
-     * @return array<Request>
+     * @return array<array-key, Request>
      */
     final public function getInitialRequests(): array
     {
@@ -64,6 +63,7 @@ abstract class AbstractSpider implements SpiderInterface
         string $parseMethod = 'parse',
         array $options = [],
     ): ParseResult {
+        // @phpstan-ignore argument.type
         return ParseResult::request($method, $url, [$this, $parseMethod], $options);
     }
 
@@ -77,7 +77,7 @@ abstract class AbstractSpider implements SpiderInterface
     }
 
     /**
-     * @return array<Request>
+     * @return array<array-key, Request>
      */
     protected function initialRequests(): array
     {

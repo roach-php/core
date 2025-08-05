@@ -13,12 +13,7 @@ declare(strict_types=1);
 
 namespace RoachPHP\ItemPipeline;
 
-use InvalidArgumentException;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionProperty;
 use RoachPHP\Support\Droppable;
-use RuntimeException;
 
 abstract class AbstractItem implements ItemInterface
 {
@@ -26,12 +21,12 @@ abstract class AbstractItem implements ItemInterface
 
     final public function all(): array
     {
-        $reflectionClass = new ReflectionClass($this);
-        $properties = $reflectionClass->getProperties(ReflectionProperty::IS_PUBLIC);
+        $reflectionClass = new \ReflectionClass($this);
+        $properties = $reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC);
 
         return \array_reduce(
             $properties,
-            function (array $data, ReflectionProperty $property): array {
+            function (array $data, \ReflectionProperty $property): array {
                 /** @psalm-suppress MixedAssignment */
                 $data[$property->getName()] = $property->getValue($this);
 
@@ -43,11 +38,11 @@ abstract class AbstractItem implements ItemInterface
 
     final public function get(string $key, mixed $default = null): mixed
     {
-        $reflectionClass = new ReflectionClass($this);
+        $reflectionClass = new \ReflectionClass($this);
 
         try {
             $property = $reflectionClass->getProperty($key);
-        } catch (ReflectionException) {
+        } catch (\ReflectionException) {
             return $default;
         }
 
@@ -60,18 +55,18 @@ abstract class AbstractItem implements ItemInterface
 
     final public function set(string $key, mixed $value): ItemInterface
     {
-        $reflectionClass = new ReflectionClass($this);
+        $reflectionClass = new \ReflectionClass($this);
 
         try {
             $property = $reflectionClass->getProperty($key);
-        } catch (ReflectionException) {
-            throw new InvalidArgumentException(
+        } catch (\ReflectionException) {
+            throw new \InvalidArgumentException(
                 \sprintf('No public property %s exists on class %s', $key, static::class),
             );
         }
 
         if (!$property->isPublic()) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 \sprintf('No public property %s exists on class %s', $key, static::class),
             );
         }
@@ -83,13 +78,13 @@ abstract class AbstractItem implements ItemInterface
 
     final public function has(string $key): bool
     {
-        $reflectionClass = new ReflectionClass($this);
+        $reflectionClass = new \ReflectionClass($this);
 
         try {
             $property = $reflectionClass->getProperty($key);
 
             return $property->isPublic();
-        } catch (ReflectionException) {
+        } catch (\ReflectionException) {
             return false;
         }
     }
@@ -101,19 +96,18 @@ abstract class AbstractItem implements ItemInterface
 
     final public function offsetGet(mixed $offset): mixed
     {
-        /** @psalm-suppress DocblockTypeContradiction */
+        // @phpstan-ignore function.alreadyNarrowedType
         if (!\is_string($offset)) {
-            throw new InvalidArgumentException('Offset needs to be a string');
+            throw new \InvalidArgumentException('Offset needs to be a string');
         }
 
-        /** @psalm-suppress MixedReturnStatement */
         return $this->get($offset);
     }
 
     final public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!\is_string($offset)) {
-            throw new InvalidArgumentException('Offset needs to be a string');
+            throw new \InvalidArgumentException('Offset needs to be a string');
         }
 
         $this->set($offset, $value);
@@ -121,6 +115,6 @@ abstract class AbstractItem implements ItemInterface
 
     final public function offsetUnset(mixed $offset): void
     {
-        throw new RuntimeException('Unsetting properties is not supported for custom item classes');
+        throw new \RuntimeException('Unsetting properties is not supported for custom item classes');
     }
 }

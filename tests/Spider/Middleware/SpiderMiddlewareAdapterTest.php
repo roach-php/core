@@ -78,6 +78,9 @@ final class SpiderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
+    /**
+     * @return iterable<array-key, array{0: callable}>
+     */
     public static function itemMiddlewareProvider(): iterable
     {
         yield 'return request unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
@@ -125,6 +128,9 @@ final class SpiderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
+    /**
+     * @return iterable<array-key, array{0: callable}>
+     */
     public static function requestMiddlewareProvider(): iterable
     {
         yield 'return response unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {
@@ -172,6 +178,9 @@ final class SpiderMiddlewareAdapterTest extends TestCase
         $testCase($adapter);
     }
 
+    /**
+     * @return iterable<array-key, array{0: callable}>
+     */
     public static function responseMiddlewareProvider(): iterable
     {
         yield 'return item unchanged' => [static function (SpiderMiddlewareAdapter $adapter): void {

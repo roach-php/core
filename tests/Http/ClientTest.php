@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Http;
 
-use GuzzleHttp;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use PHPUnit\Framework\TestCase;
@@ -33,12 +32,12 @@ final class ClientTest extends TestCase
     public function testCallFulfilledCallbackForAllSuccessfulResponses(): void
     {
         $client = new Client($this->withMockClient([
-            $response1 = new GuzzleHttp\Psr7\Response(200),
-            $response2 = new GuzzleHttp\Psr7\Response(202),
-            $response3 = new GuzzleHttp\Psr7\Response(204),
+            $response1 = new \GuzzleHttp\Psr7\Response(200),
+            $response2 = new \GuzzleHttp\Psr7\Response(202),
+            $response3 = new \GuzzleHttp\Psr7\Response(204),
         ]));
 
-        /** @var array<Response> $responses */
+        /** @var list<Response> $responses */
         $responses = [];
         $client->pool([
             $request1 = $this->makeRequest('::uri-1::'),
@@ -60,10 +59,10 @@ final class ClientTest extends TestCase
     public function testPassBadResponseExceptionsToFulfilledHandler(): void
     {
         $client = new Client($this->withMockClient([
-            $response = new GuzzleHttp\Psr7\Response(400),
+            $response = new \GuzzleHttp\Psr7\Response(400),
         ]));
 
-        /** @var array<Response> $responses */
+        /** @var list<Response> $responses */
         $responses = [];
         $client->pool(
             [$request = $this->makeRequest('::uri::')],
@@ -104,15 +103,15 @@ final class ClientTest extends TestCase
     {
         yield from [
             'ConnectException' => [
-                GuzzleHttp\Exception\ConnectException::class,
-                static fn (RequestInterface $request) => new GuzzleHttp\Exception\ConnectException(
+                \GuzzleHttp\Exception\ConnectException::class,
+                static fn (RequestInterface $request) => new \GuzzleHttp\Exception\ConnectException(
                     '::message::',
                     $request,
                 ),
             ],
             'TooManyRedirectsException' => [
-                GuzzleHttp\Exception\TooManyRedirectsException::class,
-                static fn (RequestInterface $request) => new GuzzleHttp\Exception\TooManyRedirectsException(
+                \GuzzleHttp\Exception\TooManyRedirectsException::class,
+                static fn (RequestInterface $request) => new \GuzzleHttp\Exception\TooManyRedirectsException(
                     '::message::',
                     $request,
                 ),
@@ -120,9 +119,9 @@ final class ClientTest extends TestCase
         ];
     }
 
-    private function withMockClient(array $handlers): GuzzleHttp\Client
+    private function withMockClient(array $handlers): \GuzzleHttp\Client
     {
-        return new GuzzleHttp\Client([
+        return new \GuzzleHttp\Client([
             'handler' => HandlerStack::create(
                 new MockHandler($handlers),
             ),

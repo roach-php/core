@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Extensions;
 
-use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use RoachPHP\Events\ItemDropped;
 use RoachPHP\Events\ItemScraped;
@@ -28,7 +27,7 @@ final class StatsCollectorExtension implements ExtensionInterface
 {
     use Configurable;
 
-    private ?DateTimeImmutable $startTime = null;
+    private ?\DateTimeImmutable $startTime = null;
 
     /**
      * @var array{
@@ -47,8 +46,10 @@ final class StatsCollectorExtension implements ExtensionInterface
         'items.dropped' => 0,
     ];
 
-    public function __construct(private LoggerInterface $logger, private ClockInterface $clock)
-    {
+    public function __construct(
+        private LoggerInterface $logger,
+        private ClockInterface $clock,
+    ) {
     }
 
     public static function getSubscribedEvents(): array

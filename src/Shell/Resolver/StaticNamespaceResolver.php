@@ -13,14 +13,13 @@ declare(strict_types=1);
 
 namespace RoachPHP\Shell\Resolver;
 
-use ReflectionClass;
 use RoachPHP\Shell\InvalidSpiderException;
 use RoachPHP\Spider\SpiderInterface;
 
 final class StaticNamespaceResolver implements NamespaceResolverInterface
 {
     /**
-     * @psalm-suppress MoreSpecificReturnType
+     * @param class-string<SpiderInterface> $spiderClass
      *
      * @throws \ReflectionException
      * @throws InvalidSpiderException
@@ -37,17 +36,16 @@ final class StaticNamespaceResolver implements NamespaceResolverInterface
             throw new InvalidSpiderException("The class {$spiderClass} is not a spider");
         }
 
-        /** @psalm-suppress LessSpecificReturnStatement */
         return $spiderClass;
     }
 
     /**
-     * @param class-string $spiderClass
+     * @param class-string<SpiderInterface> $spiderClass
      *
      * @throws \ReflectionException
      */
     private function isSpider(string $spiderClass): bool
     {
-        return (new ReflectionClass($spiderClass))->implementsInterface(SpiderInterface::class);
+        return (new \ReflectionClass($spiderClass))->implementsInterface(SpiderInterface::class);
     }
 }

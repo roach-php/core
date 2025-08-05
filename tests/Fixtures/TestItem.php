@@ -21,7 +21,9 @@ final class TestItem extends AbstractItem
 
     private string $qux = 'qux';
 
-    public function __construct(public string $foo, public ?string $bar)
-    {
+    public function __construct(
+        public string $foo,
+        public ?string $bar,
+    ) {
     }
 }

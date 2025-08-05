@@ -15,6 +15,7 @@ namespace RoachPHP\Tests\Spider;
 
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\Request;
+use RoachPHP\Http\Response;
 use RoachPHP\ItemPipeline\ItemInterface;
 use RoachPHP\Spider\ParseResult;
 
@@ -25,7 +26,7 @@ final class ParseResultTest extends TestCase
 {
     public function testPassesRequestToCallbackIfResultIsRequest(): void
     {
-        $result = ParseResult::request('GET', '::url::', static fn () => null);
+        $result = ParseResult::request('GET', '::url::', static fn (Response $response) => yield from []);
 
         $result->apply(
             static fn (Request $request) => self::assertEquals('::url::', (string) $request->getUri()),

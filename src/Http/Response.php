@@ -30,8 +30,10 @@ final class Response implements DroppableInterface
 
     private Crawler $crawler;
 
-    public function __construct(private ResponseInterface $response, private Request $request)
-    {
+    public function __construct(
+        private ResponseInterface $response,
+        private Request $request,
+    ) {
         $this->crawler = new Crawler((string) $response->getBody(), $request->getUri());
     }
 

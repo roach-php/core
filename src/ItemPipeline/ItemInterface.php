@@ -13,13 +13,12 @@ declare(strict_types=1);
 
 namespace RoachPHP\ItemPipeline;
 
-use ArrayAccess;
 use RoachPHP\Support\DroppableInterface;
 
 /**
- * @extends ArrayAccess<string, mixed>
+ * @extends \ArrayAccess<string, mixed>
  */
-interface ItemInterface extends ArrayAccess, DroppableInterface
+interface ItemInterface extends \ArrayAccess, DroppableInterface
 {
     public function all(): array;
 

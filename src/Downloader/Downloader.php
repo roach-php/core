@@ -26,12 +26,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 final class Downloader
 {
     /**
-     * @var array<DownloaderMiddlewareInterface>
+     * @var array<array-key, DownloaderMiddlewareInterface>
      */
     private array $middleware = [];
 
     /**
-     * @var array<Request>
+     * @var list<Request>
      */
     private array $requests = [];
 
@@ -132,6 +132,11 @@ final class Downloader
             $response = $middleware->handleResponse($response);
 
             if ($response->wasDropped()) {
+                $this->eventDispatcher->dispatch(
+                    new ResponseDropped($response),
+                    ResponseDropped::NAME,
+                );
+
                 return;
             }
         }

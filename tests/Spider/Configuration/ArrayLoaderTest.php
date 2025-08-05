@@ -63,9 +63,9 @@ final class ArrayLoaderTest extends TestCase
 
         $expected = new Configuration(
             ['::start-url::'],
-            ['::downloader-middleware::'],
-            ['::item-processor::'],
-            ['::spider-middleware::'],
+            ['::downloader-middleware::'], // @phpstan-ignore argument.type
+            ['::item-processor::'], // @phpstan-ignore argument.type
+            ['::spider-middleware::'], // @phpstan-ignore argument.type
             [LoggerExtension::class],
             2,
             2,

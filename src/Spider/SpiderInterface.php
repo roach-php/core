@@ -34,7 +34,7 @@ interface SpiderInterface
     public function withContext(array $context): void;
 
     /**
-     * @return array<Request>
+     * @return array<array-key, Request>
      */
     public function getInitialRequests(): array;
 }

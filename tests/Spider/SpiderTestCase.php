@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace RoachPHP\Tests\Spider;
 
-use Generator;
 use RoachPHP\Http\Request;
 use RoachPHP\Http\Response;
 use RoachPHP\Roach;
@@ -36,7 +35,7 @@ final class SpiderTestCase extends IntegrationTestCase
             // Don't want logging in this test
             public array $extensions = [];
 
-            public function parse(Response $response): Generator
+            public function parse(Response $response): \Generator
             {
                 yield from [];
             }
@@ -54,7 +53,7 @@ final class SpiderTestCase extends IntegrationTestCase
             // Don't want logging in this test
             public array $extensions = [];
 
-            public function parse(Response $response): Generator
+            public function parse(Response $response): \Generator
             {
                 yield from [];
             }
@@ -75,7 +74,7 @@ final class SpiderTestCase extends IntegrationTestCase
         $spider = new class() extends BasicSpider {
             public array $extensions = [];
 
-            public function parse(Response $response): Generator
+            public function parse(Response $response): \Generator
             {
                 yield from [];
             }

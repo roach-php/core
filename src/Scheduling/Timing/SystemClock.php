@@ -13,13 +13,11 @@ declare(strict_types=1);
 
 namespace RoachPHP\Scheduling\Timing;
 
-use DateTimeImmutable;
-
 final class SystemClock implements ClockInterface
 {
-    public function now(): DateTimeImmutable
+    public function now(): \DateTimeImmutable
     {
-        return new DateTimeImmutable();
+        return new \DateTimeImmutable();
     }
 
     /**
@@ -30,7 +28,7 @@ final class SystemClock implements ClockInterface
         \sleep($seconds);
     }
 
-    public function sleepUntil(DateTimeImmutable $date): void
+    public function sleepUntil(\DateTimeImmutable $date): void
     {
         $now = $this->now()->getTimestamp();
         $target = $date->getTimestamp();

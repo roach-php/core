@@ -23,7 +23,9 @@ interface RequestSchedulerInterface
      * Return the next number of requests as defined by $batchSize as soon
      * as they are ready.
      *
-     * @return array<Request>
+     * @phpstan-impure
+     *
+     * @return array<array-key, Request>
      */
     public function nextRequests(int $batchSize): array;
 
@@ -31,7 +33,7 @@ interface RequestSchedulerInterface
      * Immediately return the next number of requests as defined by $batchSize
      * regardless of the configured delay.
      *
-     * @return array<Request>
+     * @return array<array-key, Request>
      */
     public function forceNextRequests(int $batchSize): array;
 

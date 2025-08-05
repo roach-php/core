@@ -57,18 +57,6 @@ final class StatsCollectorExtensionTest extends ExtensionTestCase
         $this->assertStatWasLogged($scenario['stat'], $eventCount);
     }
 
-    /**
-     * @dataProvider runtimeProvider
-     */
-    public function testLogRuntime(int $seconds, string $expected): void
-    {
-        $this->extension->configure([]);
-
-        $this->withRun(fn () => $this->clock->sleep($seconds));
-
-        $this->assertStatWasLogged('duration', $expected);
-    }
-
     public static function statsScenarioProvider(): iterable
     {
         $scenarios = [
@@ -102,6 +90,18 @@ final class StatsCollectorExtensionTest extends ExtensionTestCase
                 yield "{$stat}: {$eventCount}" => [$scenario, $eventCount];
             }
         }
+    }
+
+    /**
+     * @dataProvider runtimeProvider
+     */
+    public function testLogRuntime(int $seconds, string $expected): void
+    {
+        $this->extension->configure([]);
+
+        $this->withRun(fn () => $this->clock->sleep($seconds));
+
+        $this->assertStatWasLogged('duration', $expected);
     }
 
     public static function runtimeProvider(): iterable

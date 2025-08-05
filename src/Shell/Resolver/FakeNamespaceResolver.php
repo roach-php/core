@@ -13,13 +13,17 @@ declare(strict_types=1);
 
 namespace RoachPHP\Shell\Resolver;
 
+use RoachPHP\Spider\SpiderInterface;
+
 /**
  * @internal
  */
 final class FakeNamespaceResolver implements NamespaceResolverInterface
 {
     /**
-     * @psalm-suppress LessSpecificReturnStatement, MoreSpecificReturnType
+     * @param class-string<SpiderInterface> $spiderClass
+     *
+     * @return class-string<SpiderInterface>
      */
     public function resolveSpiderNamespace(string $spiderClass): string
     {

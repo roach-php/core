@@ -47,8 +47,11 @@ final class MaxRequestExtension implements ExtensionInterface
 
     private function dropRequestIfLimitReached(RequestScheduling|RequestSending $event): void
     {
-        if ($this->option('limit') <= $this->sentRequests) {
-            $event->request = $event->request->drop("Reached maximum request limit of {$this->option('limit')}");
+        /** @var int $limit */
+        $limit = $this->option('limit');
+
+        if ($limit <= $this->sentRequests) {
+            $event->request = $event->request->drop("Reached maximum request limit of {$limit}");
         }
     }
 

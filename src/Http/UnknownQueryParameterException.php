@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace RoachPHP\Http;
 
-use Exception;
-
-final class UnknownQueryParameterException extends Exception
+final class UnknownQueryParameterException extends \Exception
 {
     public static function forParameter(string $parameter): self
     {

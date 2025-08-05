@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'fetch')]
 final class FetchCommand extends Command
 {
-    protected static $defaultName = 'fetch';
+    protected static string $defaultName = 'fetch';
 
     protected function configure(): void
     {
