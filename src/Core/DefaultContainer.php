@@ -72,7 +72,7 @@ final class DefaultContainer implements ContainerInterface
             EventDispatcher::class,
         );
         $this->container->add(ClockInterface::class, SystemClock::class);
-        $this->container->add(
+        $this->container->addShared(
             RequestSchedulerInterface::class,
             /** @phpstan-ignore return.type */
             fn (): RequestSchedulerInterface => $this->container->get(ArrayRequestScheduler::class),
