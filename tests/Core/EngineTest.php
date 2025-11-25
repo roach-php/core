@@ -214,6 +214,40 @@ final class EngineTest extends IntegrationTestCase
         ]));
     }
 
+    public function testOnlyOneMessageLoggedPerRequestWhenSpiderDispatchedBackToBack(): void
+    {
+        $url = 'http://localhost:8000/test1';
+
+        $logger = new FakeLogger();
+        $run = new Run(
+            [
+                $this->makeRequest($url),
+            ],
+            '::namespace::',
+            extensions: [new LoggerExtension($logger)],
+        );
+
+        $logger2 = new FakeLogger();
+        $run2 = new Run(
+            [
+                $this->makeRequest($url),
+            ],
+            '::namespace::',
+            extensions: [new LoggerExtension($logger2)],
+        );
+
+        $this->engine->start($run);
+
+        self::assertSame(1, $logger->countMessages('info', 'Dispatching request', ['uri' => $url]));
+
+        $this->engine->start($run2);
+
+        self::assertSame(1, $logger2->countMessages('info', 'Dispatching request', ['uri' => $url]));
+
+        // Verify no duplicate messages in the first logger (should still be 1)
+        self::assertSame(1, $logger->countMessages('info', 'Dispatching request', ['uri' => $url]));
+    }
+
     public function testCollectAndReturnScrapedItems(): void
     {
         $parseCallback = static function () {

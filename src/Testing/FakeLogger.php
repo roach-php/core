@@ -132,4 +132,19 @@ final class FakeLogger implements LoggerInterface
                 && (null === $context || $log['context'] === $context);
         }));
     }
+
+    /**
+     * @param array<array-key, mixed> $context
+     */
+    public function countMessages(string $level, string $message, ?array $context = null): int
+    {
+        if (empty($this->logs[$level])) {
+            return 0;
+        }
+
+        return \count(\array_filter($this->logs[$level], static function (array $log) use ($message, $context) {
+            return $log['message'] === $message
+                && (null === $context || $log['context'] === $context);
+        }));
+    }
 }

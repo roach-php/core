@@ -30,7 +30,7 @@
         "ergebnis/composer-normalize": "^2.45",
         "ergebnis/php-cs-fixer-config": "^6.45.0",
         "http-interop/http-factory-guzzle": "^1.2",
-        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan": "^2.1.29",
         "phpunit/phpunit": "^10.4.2",
         "psr/http-message": "^1.1.0",
         "roave/security-advisories": "dev-latest",

@@ -49,6 +49,8 @@ final class Engine implements EngineInterface
 
         $this->start($run);
 
+        $this->eventDispatcher->removeSubscriber($extension);
+
         return $extension->getScrapedItems();
     }
 
@@ -68,6 +70,8 @@ final class Engine implements EngineInterface
         }
 
         $this->work($run);
+
+        $this->cleanup($run);
     }
 
     private function work(Run $run): void
@@ -154,6 +158,13 @@ final class Engine implements EngineInterface
 
         foreach ($run->extensions as $extension) {
             $this->eventDispatcher->addSubscriber($extension);
+        }
+    }
+
+    private function cleanup(Run $run): void
+    {
+        foreach ($run->extensions as $extension) {
+            $this->eventDispatcher->removeSubscriber($extension);
         }
     }
 }
