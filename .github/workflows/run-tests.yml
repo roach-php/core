@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: ['8.2', '8.3', '8.4']
+        php: ['8.2', '8.3', '8.4', '8.5']
         dependency-version: [prefer-lowest, prefer-stable]
 
     name: P${{ matrix.php }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
@@ -31,19 +31,19 @@ jobs:
           extensions: dom, curl
           coverage: none
 
-      - name: "Validate composer.json and composer.lock"
-        run: "composer validate --strict"
+      - name: 'Validate composer.json and composer.lock'
+        run: 'composer validate --strict'
 
-      - name: "Determine composer cache directory"
-        id: "determine-composer-cache-directory"
+      - name: 'Determine composer cache directory'
+        id: 'determine-composer-cache-directory'
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v4"
+      - name: 'Cache dependencies installed with composer'
+        uses: 'actions/cache@v4'
         with:
-          path: "${{ steps.determine-composer-cache-directory.outputs.dir }}"
+          path: '${{ steps.determine-composer-cache-directory.outputs.dir }}'
           key: "php-${{ matrix.php }}-composer-${{ matrix.dependency-version }}-${{ hashFiles('composer.lock') }}"
-          restore-keys: "php-${{ matrix.php }}-composer-${{ matrix.dependency-version }}-"
+          restore-keys: 'php-${{ matrix.php }}-composer-${{ matrix.dependency-version }}-'
 
       - name: Install dependencies
         run: composer update --${{ matrix.dependency-version }} --no-interaction --prefer-dist

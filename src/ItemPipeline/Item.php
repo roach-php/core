@@ -59,6 +59,7 @@ final class Item implements ItemInterface
     public function offsetSet(mixed $offset, mixed $value): void
     {
         /** @psalm-suppress PossiblyNullArrayOffset */
+        /** @phpstan-ignore offsetAccess.invalidOffset */
         $this->data[$offset] = $value;
     }
 
