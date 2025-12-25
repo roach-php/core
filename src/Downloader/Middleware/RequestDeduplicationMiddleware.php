@@ -48,7 +48,7 @@ final class RequestDeduplicationMiddleware implements RequestMiddlewareInterface
             $replaceFlags |= \HTTP_URL_STRIP_QUERY;
         }
 
-        $uri = http_build_url($uri, $parts, $replaceFlags);
+        $uri = http_build_url($uri, $parts !== false ? $parts : [], $replaceFlags);
 
         if (\in_array($uri, $this->seenUris, true)) {
             $this->logger->info(
