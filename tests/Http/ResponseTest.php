@@ -14,11 +14,13 @@ declare(strict_types=1);
 namespace RoachPHP\Tests\Http;
 
 use GuzzleHttp\Psr7\Stream;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RoachPHP\Http\Response;
 use RoachPHP\Support\DroppableInterface;
 use RoachPHP\Testing\Concerns\InteractsWithRequestsAndResponses;
 use RoachPHP\Tests\Support\DroppableTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * @internal
@@ -37,6 +39,7 @@ final class ResponseTest extends TestCase
         self::assertCount(1, $links);
     }
 
+    #[DataProvider('responseCodeProvider')]
     /**
      * @dataProvider responseCodeProvider
      */
@@ -60,6 +63,7 @@ final class ResponseTest extends TestCase
         ];
     }
 
+    #[DataProvider('responseBodyProvider')]
     /**
      * @dataProvider responseBodyProvider
      */
@@ -81,6 +85,7 @@ final class ResponseTest extends TestCase
 
             'stream' => [static function (string $body) {
                 $stream = \fopen('php://memory', 'r+b');
+                self::assertIsResource($stream);
                 \fwrite($stream, $body);
                 \rewind($stream);
 
@@ -89,6 +94,7 @@ final class ResponseTest extends TestCase
 
             'StreamInterface' => [static function (string $body) {
                 $stream = \fopen('php://memory', 'r+b');
+                self::assertIsResource($stream);
                 \fwrite($stream, $body);
                 \rewind($stream);
 
@@ -123,6 +129,18 @@ final class ResponseTest extends TestCase
         $response = $response->withBody($newBody);
 
         self::assertSame('New', $response->filter('p')->text(''));
+    }
+
+    public function testDomCrawlerIsLazyLoadedOnDemand(): void
+    {
+        $response = $this->makeResponse(body: '<html lang="en"><body></body></html>');
+
+        $crawlerProperty = new \ReflectionProperty(Response::class, 'crawler');
+
+        self::assertNull($crawlerProperty->getValue($response));
+
+        self::assertSame(0, $response->filter('p')->count());
+        self::assertInstanceOf(Crawler::class, $crawlerProperty->getValue($response));
     }
 
     protected function createDroppable(): DroppableInterface

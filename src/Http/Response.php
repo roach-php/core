@@ -25,21 +25,28 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 final class Response implements DroppableInterface
 {
-    use HasMetaData;
     use Droppable;
+    use HasMetaData;
 
-    private Crawler $crawler;
+    private ?Crawler $crawler = null;
 
     public function __construct(
         private ResponseInterface $response,
         private Request $request,
     ) {
-        $this->crawler = new Crawler((string) $response->getBody(), $request->getUri());
     }
 
+    /**
+     * @param array<int, mixed> $args
+     */
     public function __call(string $method, array $args): mixed
     {
-        return $this->crawler->{$method}(...$args);
+        return $this->getCrawler()->{$method}(...$args);
+    }
+
+    public function getCrawler(): Crawler
+    {
+        return $this->crawler ??= new Crawler((string) $this->response->getBody(), (string) $this->request->getUri());
     }
 
     public function getRequest(): Request
@@ -60,7 +67,7 @@ final class Response implements DroppableInterface
     public function withBody(string $body): self
     {
         $this->response = $this->response->withBody(Utils::streamFor($body));
-        $this->crawler = new Crawler($body, $this->request->getUri());
+        $this->crawler = null;
 
         return $this;
     }
